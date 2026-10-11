@@ -64,7 +64,10 @@ button,input{font:inherit;color:inherit}
 .seg button[aria-pressed=true]{background:#fff;color:#0b1220;box-shadow:0 3px 0 #a9bad6}
 
 /* tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10.5rem),1fr));gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile[data-metric=total]{grid-column:span 2;background:linear-gradient(135deg,var(--panel),color-mix(in srgb,var(--blue) 10%,var(--panel)))}
+.tile[data-metric=total] .val{font-size:40px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 14px 12px;display:grid;gap:3px;cursor:pointer;text-align:left;transition:transform .15s,border-color .15s}
 .tile:hover{transform:translateY(-2px)}
 .tile[aria-pressed=true]{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
@@ -146,24 +149,25 @@ th:first-child,td:first-child{text-align:left;font-weight:700}
   </header>
 
   <section class="tiles" id="tiles" aria-label="Headline numbers, tap one to chart it">
-    <button class="tile" data-metric="signups" aria-pressed="true"><span class="lab">Waitlist signups</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
+    <button class="tile" data-metric="total" aria-pressed="false"><span class="lab">On the waitlist</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
+    <button class="tile" data-metric="opens" aria-pressed="true"><span class="lab">"Join waitlist" taps</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
+    <button class="tile" data-metric="signups" aria-pressed="false"><span class="lab">Joined</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
+    <button class="tile" data-metric="conversion" aria-pressed="false"><span class="lab">Tap → join rate</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="views" aria-pressed="false"><span class="lab">Page visits</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
-    <button class="tile" data-metric="opens" aria-pressed="false"><span class="lab">"Join" taps</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
-    <button class="tile" data-metric="conversion" aria-pressed="false"><span class="lab">Visit → signup</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="replies" aria-pressed="false"><span class="lab">Bot replies</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="followers" aria-pressed="false"><span class="lab">Followers</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
   </section>
 
   <div class="grid">
     <article class="card wide">
-      <h2 id="trendTitle">Waitlist signups per day</h2>
+      <h2 id="trendTitle">"Join waitlist" taps per day</h2>
       <p class="note">Drag the dashed goal line or type a number. Blue days hit the goal.</p>
       <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
       <div class="goalrow"><label for="goalInput">Daily goal</label><input id="goalInput" type="number" min="0" step="1" inputmode="decimal"><span id="goalHit"></span></div>
     </article>
     <article class="card">
       <h2>Waitlist funnel</h2>
-      <p class="note" id="funnelNote">Visits, taps on "join waitlist", finished signups</p>
+      <p class="note" id="funnelNote">Taps on "join waitlist", and how many finished</p>
       <div class="funnel" id="funnel"></div>
     </article>
     <article class="card">
@@ -202,23 +206,25 @@ const API = "https://etdbjahwegsmuelcawgf.supabase.co/rest/v1";
 const KEY = "sb_publishable_p8exB2dS5lpdz-p1chueJA_n9zRQdnG";
 const STATS = "https://raw.githubusercontent.com/blackbargoat/height-reply-bot/main/stats/daily.json";
 const rpc = (fn) => fetch(`${API}/rpc/${fn}`, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: "{}" }).then((r) => (r.ok ? r.json() : Promise.reject(r.status)));
-let site = [], refs = [], ig = [], loadedAt = null;
+let site = [], refs = [], ig = [], total = null, loadedAt = null;
 
 const fmt = d3.format(","), pct = d3.format(".1%"), dayFmt = d3.utcFormat("%b %-d");
 const META = {
-  signups: { title: "Waitlist signups per day", f: fmt, goal: 25 },
+  total: { title: "Total on the waitlist", f: fmt, goal: 1000, level: true },
+  signups: { title: "People who joined the waitlist per day", f: fmt, goal: 25 },
   views: { title: "Page visits per day", f: fmt, goal: 300 },
   opens: { title: '"Join" taps per day', f: fmt, goal: 60 },
-  conversion: { title: "Visit → signup rate per day", f: pct, goal: 0.1, rate: true },
+  conversion: { title: "Tap → join rate per day", f: pct, goal: 0.5, rate: true },
   replies: { title: "Bot replies per day", f: fmt, goal: 500 },
   followers: { title: "Followers", f: fmt, goal: 10000, level: true },
 };
-let metric = "signups", days = 7, acct = "all", animate = true;
+let metric = "opens", days = 7, acct = "all", animate = true;
 const goal = (m) => { const v = parseFloat(store.get("gp-goal-" + m)); return Number.isFinite(v) ? v : META[m].goal; };
 const setGoal = (m, v) => { store.set("gp-goal-" + m, v); draw(); };
 
 async function load() {
-  const [s, r, g] = await Promise.allSettled([rpc("site_daily"), rpc("site_refs"), fetch(STATS + "?t=" + Date.now()).then((x) => x.json())]);
+  const [s, r, g, t] = await Promise.allSettled([rpc("site_daily"), rpc("site_refs"), fetch(STATS + "?t=" + Date.now()).then((x) => x.json()), rpc("waitlist_count")]);
+  if (t.status === "fulfilled") total = +t.value;
   if (s.status === "fulfilled") site = s.value;
   if (r.status === "fulfilled") refs = r.value;
   if (g.status === "fulfilled") ig = g.value;
@@ -237,16 +243,21 @@ function daily() {
     if (r.followers != null) row.followers = (row.followers ?? 0) + r.followers;
     by.set(r.day, row);
   }
-  return [...by.values()].sort((a, b) => a.day.localeCompare(b.day)).map((r) => ({ ...r, conversion: r.views ? r.signups / r.views : null }));
+  const rows = [...by.values()].sort((a, b) => a.day.localeCompare(b.day));
+  // running total on the waitlist, counted back from today's total in the waitlist table
+  let run = total ?? rows.reduce((a, r) => a + r.signups, 0);
+  for (let i = rows.length - 1; i >= 0; i--) { rows[i].total = run; run -= rows[i].signups; }
+  return rows.map((r) => ({ ...r, conversion: r.opens ? r.signups / r.opens : null }));
 }
 
 function kpis(rows) {
   const last = rows.slice(-days), prev = rows.slice(-2 * days, -days);
   const sum = (rs, k) => rs.reduce((a, r) => a + (+r[k] || 0), 0);
-  const rate = (rs) => (sum(rs, "views") ? sum(rs, "signups") / sum(rs, "views") : null);
+  const rate = (rs) => (sum(rs, "opens") ? sum(rs, "signups") / sum(rs, "opens") : null);
   const withF = rows.filter((r) => r.followers != null);
   const fNow = withF.at(-1)?.followers ?? null, fThen = withF.length > 1 ? withF[Math.max(0, withF.length - 1 - days)].followers : null;
   return {
+    total: [total, total == null ? null : total - sum(last, "signups")],
     signups: [sum(last, "signups"), prev.length ? sum(prev, "signups") : null],
     views: [sum(last, "views"), prev.length ? sum(prev, "views") : null],
     opens: [sum(last, "opens"), prev.length ? sum(prev, "opens") : null],
@@ -265,6 +276,7 @@ function draw() {
     const target = META[m].level || META[m].rate ? goal(m) : goal(m) * days;
     el.querySelector(".bar i").style.width = v == null ? "0" : Math.min(100, (v / target) * 100) + "%";
     const c = el.querySelector(".chg");
+    if (m === "total") { const d = v == null || p == null ? 0 : v - p; c.textContent = `+${fmt(d)} in the last ${days} days`; c.className = "chg" + (d > 0 ? " up" : ""); continue; }
     if (v == null || p == null) { c.textContent = m === "followers" ? "tracking since Oct 11" : "no earlier period yet"; c.className = "chg"; continue; }
     const d = v - p;
     c.textContent = (d >= 0 ? "+" : "−") + (META[m].rate ? (Math.abs(d) * 100).toFixed(1) + " pts" : fmt(Math.abs(d))) + ` vs prior ${days} days`;
@@ -272,15 +284,15 @@ function draw() {
   }
   // takeaway
   const t = document.getElementById("take"); t.replaceChildren();
-  const bits = [[`Last ${days} days: `], [fmt(k.signups[0]), 1], [" waitlist signups from "], [fmt(k.views[0]), 1], [" page visits"],
-    [k.conversion[0] != null ? ` (${pct(k.conversion[0])} convert)` : ""], [", and the bot answered "], [fmt(k.replies[0]), 1], [" height comments."]];
+  const bits = [[fmt(total ?? 0), 1], [" people on the waitlist. Last " + days + " days: "], [fmt(k.opens[0]), 1], [k.opens[0] === 1 ? ' tap on "join waitlist", ' : ' taps on "join waitlist", '], [fmt(k.signups[0]), 1], [" actually joined"],
+    [k.conversion[0] != null ? ` (${pct(k.conversion[0])})` : ""], [", and the bot answered "], [fmt(k.replies[0]), 1], [" height comments."]];
   for (const [s, b] of bits) { const n = b ? document.createElement("b") : document.createTextNode(s); if (b) n.textContent = s; t.appendChild(n); }
   drawFunnel(k); drawChart(rows); drawRefs(); drawAccounts();
 }
 
 function drawFunnel(k) {
   const box = document.getElementById("funnel"); box.replaceChildren();
-  const steps = [["Visited the page", k.views[0]], ['Tapped "join waitlist"', k.opens[0]], ["Signed up", k.signups[0]]];
+  const steps = [['Tapped "join waitlist"', k.opens[0]], ["Joined (in the waitlist database)", k.signups[0]]];
   const top = Math.max(1, steps[0][1]);
   const losses = steps.slice(1).map((s, i) => (steps[i][1] ? 1 - s[1] / steps[i][1] : 0)), worst = losses.indexOf(Math.max(...losses));
   steps.forEach(([label, v], i) => {
@@ -290,10 +302,10 @@ function drawFunnel(k) {
     row.append(a, b);
     const tr = document.createElement("div"); tr.className = "track"; const f = document.createElement("div"); f.className = "fill"; tr.appendChild(f);
     s.append(row, tr);
-    if (i) { const l = document.createElement("div"); l.className = "loss" + (i - 1 === worst && losses[worst] > 0 ? " worst" : ""); l.textContent = steps[i - 1][1] ? pct(losses[i - 1]) + " drop from the step before" : "no visits yet"; s.appendChild(l); }
+    if (i) { const l = document.createElement("div"); l.className = "loss" + (i - 1 === worst && losses[worst] > 0 ? " worst" : ""); l.textContent = steps[i - 1][1] ? pct(losses[i - 1]) + " tapped but didn't finish" : "no taps yet"; s.appendChild(l); }
     box.appendChild(s); requestAnimationFrame(() => (f.style.width = (v / top) * 100 + "%"));
   });
-  document.getElementById("funnelNote").textContent = `Last ${days} days: visits, taps on "join waitlist", finished signups`;
+  document.getElementById("funnelNote").textContent = `Last ${days} days: people who tapped "join waitlist", and how many finished`;
 }
 
 const goalInput = document.getElementById("goalInput");

@@ -194,7 +194,7 @@ th:first-child,td:first-child{text-align:left;font-weight:700}
 
 <script>
 // Password gate. This keeps the page private to people with the password; the numbers it shows are counts only, no emails.
-const HASH = "eaf1a71b5ee6d2a6decfb5066dee2bb71a3a99baa2f0af72556c7aaab96654b6";
+const HASH = "cdb97dcb3a6528cf5ef3bff3c615601483f298c2b28007a736d17b26a6d7c53b";
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }, del: (k) => { try { localStorage.removeItem(k); } catch {} } };
 // SHA-256 in plain JS, so the password check also works on http (browsers only allow crypto.subtle on https).
 function sha256(str) {

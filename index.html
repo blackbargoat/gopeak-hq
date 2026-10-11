@@ -84,6 +84,11 @@ button,input{font:inherit;color:inherit}
 .note{margin:4px 0 0;font-size:12.5px;color:var(--muted)}
 .wide{grid-column:1/-1}
 
+.chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.seg-dark{background:var(--bg);border-color:var(--line)}
+.seg-dark button{color:var(--muted)}
+.seg-dark button[aria-pressed=true]{background:var(--blue);color:#fff;box-shadow:0 3px 0 #1b4fa8}
+.tile[data-metric=igviews] .val{color:var(--blue)}
 .chart{position:relative;min-height:300px;margin-top:12px;touch-action:pan-y}
 .chart svg{display:block;overflow:visible}
 .goalrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted)}
@@ -153,6 +158,7 @@ th:first-child,td:first-child{text-align:left;font-weight:700}
     <button class="tile" data-metric="opens" aria-pressed="true"><span class="lab">"Join waitlist" taps</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="signups" aria-pressed="false"><span class="lab">Joined</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="conversion" aria-pressed="false"><span class="lab">Tap → join rate</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
+    <button class="tile" data-metric="igviews" aria-pressed="false"><span class="lab">Instagram views</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="views" aria-pressed="false"><span class="lab">Page visits</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="replies" aria-pressed="false"><span class="lab">Bot replies</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
     <button class="tile" data-metric="followers" aria-pressed="false"><span class="lab">Followers</span><span class="val">—</span><span class="chg"></span><span class="bar"><i></i></span></button>
@@ -160,10 +166,11 @@ th:first-child,td:first-child{text-align:left;font-weight:700}
 
   <div class="grid">
     <article class="card wide">
-      <h2 id="trendTitle">"Join waitlist" taps per day</h2>
-      <p class="note">Drag the dashed goal line or type a number. Blue days hit the goal.</p>
+      <div class="chart-head"><div><h2 id="trendTitle">"Join waitlist" taps per day</h2>
+      <p class="note" id="trendNote">Drag the dashed goal line or type a number.</p></div>
+      <div class="seg seg-dark" role="group" aria-label="Goal period" id="periodPick"><button data-period="day" aria-pressed="true">Daily</button><button data-period="week" aria-pressed="false">Weekly</button></div></div>
       <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
-      <div class="goalrow"><label for="goalInput">Daily goal</label><input id="goalInput" type="number" min="0" step="1" inputmode="decimal"><span id="goalHit"></span></div>
+      <div class="goalrow"><label for="goalInput" id="goalLabel">Daily goal</label><input id="goalInput" type="number" min="0" step="1" inputmode="decimal"><span id="goalHit"></span></div>
     </article>
     <article class="card">
       <h2>Waitlist funnel</h2>
@@ -235,16 +242,19 @@ let site = [], refs = [], ig = [], total = null, loadedAt = null;
 const fmt = d3.format(","), pct = d3.format(".1%"), dayFmt = d3.utcFormat("%b %-d");
 const META = {
   total: { title: "Total on the waitlist", f: fmt, goal: 1000, level: true },
-  signups: { title: "People who joined the waitlist per day", f: fmt, goal: 25 },
-  views: { title: "Page visits per day", f: fmt, goal: 300 },
-  opens: { title: '"Join" taps per day', f: fmt, goal: 60 },
-  conversion: { title: "Tap → join rate per day", f: pct, goal: 0.5, rate: true },
-  replies: { title: "Bot replies per day", f: fmt, goal: 500 },
+  signups: { title: "People who joined the waitlist", f: fmt, goal: 25 },
+  views: { title: "Page visits", f: fmt, goal: 300 },
+  igviews: { title: "Instagram views", f: d3.format(".3~s"), goal: 50000, line: true },
+  opens: { title: '"Join waitlist" taps', f: fmt, goal: 60 },
+  conversion: { title: "Tap → join rate", f: pct, goal: 0.5, rate: true },
+  replies: { title: "Bot replies", f: fmt, goal: 500 },
   followers: { title: "Followers", f: fmt, goal: 10000, level: true },
 };
-let metric = "opens", days = 7, acct = "all", animate = true;
-const goal = (m) => { const v = parseFloat(store.get("gp-goal-" + m)); return Number.isFinite(v) ? v : META[m].goal; };
-const setGoal = (m, v) => { store.set("gp-goal-" + m, v); draw(); };
+let metric = "opens", days = 7, acct = "all", animate = true, period = "day";
+// Separate daily and weekly goals for every number. A weekly goal starts at 7x the daily one (same for totals and rates).
+const flat = (m) => META[m].level || META[m].rate;
+const goal = (m, p = period) => { const v = parseFloat(store.get(`gp-goal-${p}-${m}`)); if (Number.isFinite(v)) return v; return p === "week" && !flat(m) ? goal(m, "day") * 7 : META[m].goal; };
+const setGoal = (m, v) => { store.set(`gp-goal-${period}-${m}`, v); draw(); };
 
 async function load() {
   const [s, r, g, t] = await Promise.allSettled([rpc("site_daily"), rpc("site_refs"), fetch(STATS + "?t=" + Date.now()).then((x) => x.json()), rpc("waitlist_count")]);
@@ -259,11 +269,12 @@ async function load() {
 
 function daily() {
   const by = new Map();
-  for (const r of site) by.set(r.day, { day: r.day, views: +r.views, opens: +r.opens, signups: +r.waitlist_signups, replies: 0, followers: null });
+  for (const r of site) by.set(r.day, { day: r.day, views: +r.views, opens: +r.opens, signups: +r.waitlist_signups, replies: 0, followers: null, igviews: null });
   for (const r of ig) {
     if (acct !== "all" && r.account !== acct) continue;
     const row = by.get(r.day) ?? { day: r.day, views: 0, opens: 0, signups: 0, replies: 0, followers: null };
     row.replies += +r.replies || 0;
+    if (r.views != null) row.igviews = (row.igviews ?? 0) + r.views;
     if (r.followers != null) row.followers = (row.followers ?? 0) + r.followers;
     by.set(r.day, row);
   }
@@ -287,6 +298,7 @@ function kpis(rows) {
     opens: [sum(last, "opens"), prev.length ? sum(prev, "opens") : null],
     conversion: [rate(last), rate(prev)],
     replies: [sum(last, "replies"), prev.length ? sum(prev, "replies") : null],
+    igviews: [last.some((r) => r.igviews != null) ? sum(last, "igviews") : null, prev.some((r) => r.igviews != null) ? sum(prev, "igviews") : null],
     followers: [fNow, fThen],
   };
 }
@@ -297,10 +309,11 @@ function draw() {
   for (const el of document.querySelectorAll(".tile")) {
     const m = el.dataset.metric, [v, p] = k[m];
     el.querySelector(".val").textContent = v == null ? "—" : META[m].f(v);
-    const target = META[m].level || META[m].rate ? goal(m) : goal(m) * days;
+    const target = flat(m) ? goal(m, "day") : days === 7 ? goal(m, "week") : goal(m, "day") * days;
     el.querySelector(".bar i").style.width = v == null ? "0" : Math.min(100, (v / target) * 100) + "%";
     const c = el.querySelector(".chg");
     if (m === "total") { const d = v == null || p == null ? 0 : v - p; c.textContent = `+${fmt(d)} in the last ${days} days`; c.className = "chg" + (d > 0 ? " up" : ""); continue; }
+    if (v == null && m === "igviews") { c.textContent = "needs Instagram insights permission"; c.className = "chg"; continue; }
     if (v == null || p == null) { c.textContent = m === "followers" ? "tracking since Oct 11" : "no earlier period yet"; c.className = "chg"; continue; }
     const d = v - p;
     c.textContent = (d >= 0 ? "+" : "−") + (META[m].rate ? (Math.abs(d) * 100).toFixed(1) + " pts" : fmt(Math.abs(d))) + ` vs prior ${days} days`;
@@ -335,17 +348,40 @@ function drawFunnel(k) {
 const goalInput = document.getElementById("goalInput");
 goalInput.addEventListener("change", () => { let v = parseFloat(goalInput.value); if (!(v >= 0)) return; if (META[metric].rate) v /= 100; setGoal(metric, v); });
 
+// Group days into Monday-start weeks: counts add up, totals take the week's last value, the rate is joins / taps.
+function weekly(all) {
+  const by = new Map();
+  for (const r of all) {
+    const d = new Date(r.day + "T00:00:00Z"), wk = d3.utcMonday.floor(d).toISOString().slice(0, 10);
+    const w = by.get(wk) ?? { day: wk, views: 0, opens: 0, signups: 0, replies: 0, igviews: null, followers: null, total: null };
+    for (const k of ["views", "opens", "signups", "replies"]) w[k] += +r[k] || 0;
+    if (r.igviews != null) w.igviews = (w.igviews ?? 0) + r.igviews;
+    if (r.followers != null) w.followers = r.followers;
+    if (r.total != null) w.total = r.total;
+    by.set(wk, w);
+  }
+  return [...by.values()].map((w) => ({ ...w, conversion: w.opens ? w.signups / w.opens : null }));
+}
+
 function drawChart(all) {
-  const box = document.getElementById("chart"), tip = document.getElementById("tip"), m = META[metric];
-  document.getElementById("trendTitle").textContent = m.title + (metric === "replies" || metric === "followers" ? (acct === "all" ? " (both accounts)" : " (@" + acct + ")") : "");
+  const box = document.getElementById("chart"), tip = document.getElementById("tip"), m = META[metric], wk = period === "week";
+  const who = metric === "replies" || metric === "followers" || metric === "igviews" ? (acct === "all" ? " (both accounts)" : " (@" + acct + ")") : "";
+  document.getElementById("trendTitle").textContent = m.title + (m.level ? "" : wk ? " per week" : " per day") + who;
+  document.getElementById("goalLabel").textContent = wk ? "Weekly goal" : "Daily goal";
+  document.getElementById("trendNote").textContent = (m.line ? "Line shows the trend. " : "Blue bars hit the goal. ") + "Drag the dashed goal line or type a number.";
   box.querySelectorAll("svg,.empty").forEach((n) => n.remove());
-  let rows = all.slice(-days).map((r) => ({ date: new Date(r.day + "T00:00:00Z"), v: r[metric] }));
-  if (m.level) rows = rows.filter((r) => r.v != null);
+  const src = wk ? weekly(all).slice(-8) : all.slice(-days);
+  let rows = src.map((r) => ({ date: new Date(r.day + "T00:00:00Z"), v: r[metric] }));
+  if (m.level || m.line) rows = rows.filter((r) => r.v != null);
   const g = goal(metric); goalInput.value = m.rate ? +(g * 100).toFixed(1) : g;
-  if (!rows.length) { const e = document.createElement("p"); e.className = "empty"; e.textContent = "No days with this number yet."; box.appendChild(e); document.getElementById("goalHit").textContent = ""; return; }
-  const hits = () => rows.filter((r) => (r.v ?? 0) >= cur).length;
+  if (!rows.length) {
+    const e = document.createElement("p"); e.className = "empty";
+    e.textContent = metric === "igviews" ? "No Instagram views yet. Instagram only shares views once the Meta app has the instagram_business_manage_insights permission and the accounts have new tokens." : "No data for this yet.";
+    box.appendChild(e); document.getElementById("goalHit").textContent = ""; return;
+  }
   let cur = g;
-  const hitEl = document.getElementById("goalHit"), showHit = () => { hitEl.replaceChildren("Hit it on ", Object.assign(document.createElement("b"), { textContent: hits() }), ` of ${rows.length} days`); };
+  const unit = wk ? "weeks" : "days";
+  const hitEl = document.getElementById("goalHit"), showHit = () => hitEl.replaceChildren("Hit it ", Object.assign(document.createElement("b"), { textContent: rows.filter((r) => (r.v ?? 0) >= cur).length }), ` of ${rows.length} ${unit}`);
   showHit();
 
   const W = box.clientWidth || 600, H = 300, mT = 16, mB = 26, right = 66;
@@ -354,19 +390,41 @@ function drawChart(all) {
   const svg = d3.select(box).append("svg").attr("width", "100%").attr("viewBox", `0 0 ${W} ${H}`).attr("role", "img").attr("aria-label", m.title);
   const tw = d3.max(ticks, (t) => { const n = svg.append("text").attr("font-size", 11).text(m.f(t)); const w = n.node().getComputedTextLength(); n.remove(); return w; });
   const left = tw + 12;
-  const x = d3.scaleBand(rows.map((r) => r.date), [left, W - right]).padding(0.28);
+  const x = d3.scaleBand(rows.map((r) => r.date), [left, W - right]).padding(m.line ? 0 : 0.28);
+  const cx = (r) => x(r.date) + x.bandwidth() / 2;
   svg.append("g").selectAll("line").data(ticks).join("line").attr("x1", left).attr("x2", W - right).attr("y1", y).attr("y2", y).attr("stroke", "var(--grid)");
   svg.append("g").selectAll("text").data(ticks).join("text").attr("x", left - 8).attr("y", y).attr("dy", ".32em").attr("text-anchor", "end").attr("font-size", 11).attr("fill", "var(--muted)").text(m.f);
-  const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - left - right) / 60)));
-  svg.append("g").selectAll("text").data(rows.filter((_, i) => i % every === 0)).join("text").attr("x", (r) => x(r.date) + x.bandwidth() / 2).attr("y", H - 6).attr("text-anchor", "middle").attr("font-size", 11).attr("fill", "var(--muted)").text((r) => dayFmt(r.date));
+  const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - left - right) / 64)));
+  const lab = wk ? (d) => "wk of " + dayFmt(d) : dayFmt;
+  svg.append("g").selectAll("text").data(rows.filter((_, i) => i % every === 0)).join("text").attr("x", cx).attr("y", H - 6).attr("text-anchor", "middle").attr("font-size", 11).attr("fill", "var(--muted)").text((r) => lab(r.date));
   const gid = "g" + Math.random().toString(36).slice(2, 7);
-  const lg = svg.append("defs").append("linearGradient").attr("id", gid).attr("x1", 0).attr("x2", 0).attr("y1", 0).attr("y2", 1);
+  const defs = svg.append("defs");
+  const lg = defs.append("linearGradient").attr("id", gid).attr("x1", 0).attr("x2", 0).attr("y1", 0).attr("y2", 1);
   lg.append("stop").attr("offset", 0).attr("stop-color", "#5aa6fa"); lg.append("stop").attr("offset", 1).attr("stop-color", "#2a5cc6");
-  const fill = (r) => ((r.v ?? 0) >= cur ? `url(#${gid})` : "var(--bar-off)");
-  const bars = svg.append("g").selectAll("rect").data(rows).join("rect").attr("x", (r) => x(r.date)).attr("width", x.bandwidth()).attr("rx", Math.min(6, x.bandwidth() / 2)).attr("fill", fill);
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (animate && !still) { bars.attr("y", y(0)).attr("height", 0).transition().duration(700).delay((_, i) => i * 30).attr("y", (r) => y(r.v ?? 0)).attr("height", (r) => y(0) - y(r.v ?? 0)); animate = false; }
-  else bars.attr("y", (r) => y(r.v ?? 0)).attr("height", (r) => y(0) - y(r.v ?? 0));
+  let marks, recolor;
+
+  if (m.line) {
+    // area + line + dots; a dot turns solid when it hits the goal
+    const ag = defs.append("linearGradient").attr("id", gid + "a").attr("x1", 0).attr("x2", 0).attr("y1", 0).attr("y2", 1);
+    [[0, .32], [.5, .1], [1, 0]].forEach(([o, a]) => ag.append("stop").attr("offset", o).attr("stop-color", "#3f86ef").attr("stop-opacity", a));
+    const area = d3.area().x(cx).y0(y(0)).y1((r) => y(r.v)), line = d3.line().x(cx).y((r) => y(r.v));
+    svg.append("path").datum(rows).attr("d", area).attr("fill", `url(#${gid}a)`);
+    const path = svg.append("path").datum(rows).attr("d", line).attr("fill", "none").attr("stroke", "#3f86ef").attr("stroke-width", 3).attr("stroke-linecap", "round").attr("stroke-linejoin", "round");
+    if (animate && !still) { const L = path.node().getTotalLength(); path.attr("stroke-dasharray", `${L} ${L}`).attr("stroke-dashoffset", L).transition().duration(900).attr("stroke-dashoffset", 0); }
+    marks = svg.append("g").selectAll("circle").data(rows).join("circle").attr("cx", cx).attr("cy", (r) => y(r.v)).attr("r", 5).attr("stroke", "#3f86ef").attr("stroke-width", 2.5);
+    recolor = () => marks.attr("fill", (r) => (r.v >= cur ? "#3f86ef" : "var(--panel)"));
+    recolor();
+    // wide invisible hit areas for the tooltip
+    marks = svg.append("g").selectAll("rect").data(rows).join("rect").attr("x", (r) => x(r.date)).attr("width", x.bandwidth()).attr("y", mT).attr("height", H - mB - mT).attr("fill", "transparent");
+  } else {
+    const fill = (r) => ((r.v ?? 0) >= cur ? `url(#${gid})` : "var(--bar-off)");
+    marks = svg.append("g").selectAll("rect").data(rows).join("rect").attr("x", (r) => x(r.date)).attr("width", x.bandwidth()).attr("rx", Math.min(6, x.bandwidth() / 2)).attr("fill", fill);
+    if (animate && !still) marks.attr("y", y(0)).attr("height", 0).transition().duration(700).delay((_, i) => i * 30).attr("y", (r) => y(r.v ?? 0)).attr("height", (r) => y(0) - y(r.v ?? 0));
+    else marks.attr("y", (r) => y(r.v ?? 0)).attr("height", (r) => y(0) - y(r.v ?? 0));
+    const bars = marks; recolor = () => bars.attr("fill", fill);
+  }
+  animate = false;
 
   // goal line you can drag
   const gl = svg.append("g").attr("cursor", "ns-resize").attr("transform", `translate(0,${y(g)})`).style("touch-action", "none");
@@ -378,19 +436,19 @@ function drawChart(all) {
   gl.call(d3.drag().on("drag", (e) => {
     cur = Math.max(0, y.invert(Math.max(mT, Math.min(H - mB, e.y))));
     cur = m.rate ? Math.round(cur * 1000) / 1000 : Math.round(cur);
-    gl.attr("transform", `translate(0,${y(cur)})`); gt.text("goal " + m.f(cur)); bars.attr("fill", fill); showHit();
+    gl.attr("transform", `translate(0,${y(cur)})`); gt.text("goal " + m.f(cur)); recolor(); showHit();
     goalInput.value = m.rate ? +(cur * 100).toFixed(1) : cur;
-  }).on("end", () => { store.set("gp-goal-" + metric, cur); drawTilesOnly(); }));
+  }).on("end", () => { store.set(`gp-goal-${period}-${metric}`, cur); drawTilesOnly(); }));
 
-  bars.on("pointerenter pointermove", (e, r) => {
-    tip.replaceChildren(Object.assign(document.createElement("div"), { className: "d", textContent: dayFmt(r.date) }), Object.assign(document.createElement("div"), { textContent: r.v == null ? "no data" : m.f(r.v) + ((r.v ?? 0) >= cur ? "  ✓ goal" : "") }));
+  marks.on("pointerenter pointermove", (e, r) => {
+    tip.replaceChildren(Object.assign(document.createElement("div"), { className: "d", textContent: lab(r.date) }), Object.assign(document.createElement("div"), { textContent: r.v == null ? "no data" : (m.line ? fmt(r.v) : m.f(r.v)) + ((r.v ?? 0) >= cur ? "  ✓ goal" : "") }));
     tip.style.opacity = 1;
     const b = box.getBoundingClientRect(), w = tip.offsetWidth;
     tip.style.left = Math.max(0, Math.min(b.width - w, e.clientX - b.left - w / 2)) + "px";
     tip.style.top = Math.max(0, (y(r.v ?? 0) / H) * box.clientHeight - 50) + "px";
   }).on("pointerleave", () => (tip.style.opacity = 0));
 }
-function drawTilesOnly() { const k = kpis(daily()); for (const el of document.querySelectorAll(".tile")) { const m = el.dataset.metric, v = k[m][0], target = META[m].level || META[m].rate ? goal(m) : goal(m) * days; el.querySelector(".bar i").style.width = v == null ? "0" : Math.min(100, (v / target) * 100) + "%"; } }
+function drawTilesOnly() { const k = kpis(daily()); for (const el of document.querySelectorAll(".tile")) { const m = el.dataset.metric, v = k[m][0], target = flat(m) ? goal(m, "day") : days === 7 ? goal(m, "week") : goal(m, "day") * days; el.querySelector(".bar i").style.width = v == null ? "0" : Math.min(100, (v / target) * 100) + "%"; } }
 
 function drawRefs() {
   const box = document.getElementById("refs"); box.replaceChildren();
@@ -430,6 +488,7 @@ function start() {
   if (started) return; started = true;
   pick("range", "days", (v) => (days = +v));
   pick("acctPick", "acct", (v) => (acct = v));
+  pick("periodPick", "period", (v) => (period = v));
   document.getElementById("tiles").addEventListener("click", (e) => {
     const t = e.target.closest(".tile"); if (!t) return;
     metric = t.dataset.metric; for (const x of document.querySelectorAll(".tile")) x.setAttribute("aria-pressed", x === t);

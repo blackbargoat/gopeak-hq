@@ -51,7 +51,7 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .live{width:8px;height:8px;border-radius:50%;background:var(--good)}
 
 /* bottom tab bar, floating like the app */
-nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:flex;gap:4px;padding:6px;background:#141416;border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+nav.tabs{position:fixed;left:0;right:0;margin:0 auto;width:max-content;transform:translateZ(0);-webkit-transform:translateZ(0);bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:flex;gap:4px;padding:6px;background:#141416;border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
 nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;width:76px;padding:8px 0;border-radius:999px;font-size:11px;font-weight:700;color:var(--dim)}
 nav.tabs button svg{width:22px;height:22px}
 nav.tabs button[aria-selected=true]{background:var(--card2);color:#fff}
@@ -216,6 +216,18 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .bars .key em{font-style:normal;display:inline-flex;align-items:center;gap:2px;height:20px;padding:0 6px;border-radius:999px;background:#fff;color:#000;font-size:10px;font-weight:900}
 .bars .goal{position:absolute;left:0;right:0;border-top:2px dashed var(--good);opacity:.7}
 .bars .goal span{position:absolute;right:0;top:-18px;font-size:11px;font-weight:800;color:var(--good)}
+
+.revbig{text-align:center;margin-top:12px}
+.revbig b{display:block;font-size:64px;font-weight:900;letter-spacing:-2px;color:var(--good);line-height:1}
+.revbig small{display:block;margin-top:6px;font-size:13px;font-weight:700;color:var(--dim)}
+.steps{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:4px}
+.steps .st{flex:1;text-align:center;min-width:0}
+.steps .st b{display:block;font-size:20px;font-weight:900;letter-spacing:-.5px}
+.steps .st span{font-size:11px;font-weight:700;color:var(--dim)}
+.steps .ar{flex:none;font-size:11px;font-weight:800;color:var(--blue-hi);text-align:center;line-height:1.1}
+.src{display:grid;gap:8px;margin-top:14px}
+.src div{background:var(--card);border-radius:16px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.4;color:var(--dim)}
+.src b{color:#fff}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -267,24 +279,22 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       </div>
 
       <div class="card">
-        <span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>forecast</span>
-        <div class="fcgrid">
-          <div class="fcbox"><span>today</span><b id="fToday">0</b><small id="fTodayR">expected</small></div>
-          <div class="fcbox"><span>tomorrow</span><b id="fTom">0</b><small>if you post nothing</small></div>
-        </div>
-        <div class="plan" id="plan"></div>
+        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.2-4.5 3 1.8 2.6 4.5 3.2 4.5 1.5 4.5 3.3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>waitlist value</span><button class="chip" id="revHow">how</button></div>
+        <div class="revbig"><b id="revMid">$0</b><small id="revRange">first year, after apple's cut</small></div>
+        <div class="steps" id="revSteps"></div>
         <div class="mini3" style="margin-top:14px">
-          <div class="stat"><b id="rate1k">0</b><span>per 1k views</span></div>
           <div class="stat"><b id="visitConv">0%</b><span>visit to signup</span></div>
-          <div class="stat"><b id="perVid">0</b><span>per video total</span></div>
+          <div class="stat"><b id="rate1k">0</b><span>signups per 1k views</span></div>
+          <div class="stat"><b id="perSignup">$0</b><span>per signup</span></div>
         </div>
+      </div>
       </div>
     </div>
 
     <div class="grid2">
       <div class="card">
-        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><div class="toggle" id="rangeT" role="group" aria-label="Range"><button aria-pressed="true" data-r="14">14d</button><button aria-pressed="false" data-r="30">30d</button></div></div>
-        <div id="trend" class="bars"></div>
+        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><span class="chip">30 days</span></div>
+        <svg class="chart" id="trend" viewBox="0 0 320 170" preserveAspectRatio="none"></svg>
       </div>
       <div class="card">
         <span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>funnel · 7 days</span>
@@ -473,52 +483,54 @@ function renderToday() {
   $("#totN").textContent = fmt(D.count ?? D.site.reduce((a, r) => a + (r.waitlist_signups || 0), 0));
   renderForecast(); renderTrend(); renderFunnel();
 }
-// Automatic forecast: no inputs. Today = Instagram views so far x signups per 1k views (or actual pace),
-// tomorrow = recent views fading with no new posts, plan = videos needed for 100 tomorrow.
-function igToday() { return igViewsByDay()[today()] || 0; }
-function baselineNext(days = 7) {
-  const ig = igViewsByDay(), keys = Object.keys(ig).sort().filter((d) => d < today()).slice(-3);
-  let base = keys.length ? keys.reduce((a, d) => a + ig[d], 0) / keys.length : M.typical;
-  const out = [];
-  for (let i = 1; i <= days; i++) { base *= 0.82; out.push(Math.max(0, (base * M.rate) / 1000)); } // views fade ~18%/day without new posts
-  return out;
-}
+// Waitlist value, conservative on purpose: an email waitlist is warm but most people never install, and only a
+// small share of installs pay. Benchmarks: RevenueCat State of Subscription Apps (health and fitness trial start
+// about 5-7% of installs), Adapty 2026 (health and fitness trial to paid about 35%), waitlist roundups (invite
+// activation 25-85%, assumed much lower here for an email list of teens).
+const REV = {
+  install: [0.08, 0.15, 0.25],   // low / mid / high: waitlist email -> downloads at launch
+  trial: [0.05, 0.08, 0.12],     // download -> starts the free trial (GoPeak lets people skip to free mode)
+  paid: [0.20, 0.30, 0.40],      // trial -> paying (teens often need a parent to pay)
+  // first-year net per payer after Apple's 15%: 70% yearly $39.99, 20% monthly $7.99 (~3 mo), 10% weekly $3.99 (~4 wk)
+  arpu: 0.7 * 39.99 * 0.85 + 0.2 * 7.99 * 3 * 0.85 + 0.1 * 3.99 * 4 * 0.85,
+};
 function renderForecast() {
-  const n = signupsOn(today()), fromViews = (igToday() * M.rate) / 1000;
-  const hr = new Date().getHours() + new Date().getMinutes() / 60, paced = hr > 3 ? (n * 24) / hr : n;
-  const exp = Math.round(Math.max(n, fromViews, Math.min(paced, Math.max(n, fromViews) * 3)));
-  $("#fToday").textContent = exp; $("#fTodayR").textContent = `${n} so far`;
-  const next = baselineNext(), tom = Math.round(next[0]);
-  $("#fTom").textContent = tom;
-  const pv = perVideo("typical") * M.day1, need = Math.max(0, Math.ceil((GOAL - tom) / Math.max(0.1, pv)));
-  const out = Math.max(1, Math.ceil((GOAL - tom) / Math.max(0.1, perVideo("outlier") * M.day1)));
-  let ph = ""; for (let i = 0; i < Math.min(need, 8); i++) ph += `<span class="phone"></span>`;
-  $("#plan").innerHTML = tom >= GOAL ? `<b>on track for 100 tomorrow</b>` : `<div class="phones">${ph}${need > 8 ? `<b style="align-self:center">+${need - 8}</b>` : ""}</div>
-    <div><b>post ${need} video${need === 1 ? "" : "s"} tomorrow for 100</b><small>or ${out} outlier${out === 1 ? "" : "s"} · about ${Math.round(pv)} signups each on day one</small></div>`;
+  const W = D.count ?? D.site.reduce((a, r) => a + (r.waitlist_signups || 0), 0);
+  const at = (i) => W * REV.install[i] * REV.trial[i] * REV.paid[i];
+  const money = [0, 1, 2].map((i) => at(i) * REV.arpu);
+  const usd = (n) => "$" + (n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "k" : Math.round(n));
+  $("#revMid").textContent = usd(money[1]);
+  $("#revRange").textContent = `${usd(money[0])} to ${usd(money[2])} · first year, after apple's cut`;
+  const dl = W * REV.install[1], tr = dl * REV.trial[1], pd = tr * REV.paid[1];
+  const pct = (x) => Math.round(x * 100) + "%", arrow = (x) => `<span class="ar">→<br>${pct(x)}</span>`;
+  $("#revSteps").innerHTML = `<div class="st"><b>${fmt(W)}</b><span>waitlist</span></div>${arrow(REV.install[1])}<div class="st"><b>${fmt(dl)}</b><span>download</span></div>${arrow(REV.trial[1])}<div class="st"><b>${Math.round(tr)}</b><span>trial</span></div>${arrow(REV.paid[1])}<div class="st"><b>${Math.round(pd)}</b><span>pay</span></div>`;
   const r = D.site.slice(-30), v = r.reduce((a, x) => a + (x.views || 0), 0), s30 = r.reduce((a, x) => a + (x.waitlist_signups || 0), 0);
-  $("#rate1k").textContent = M.rate.toFixed(1); $("#visitConv").textContent = v ? Math.round((100 * s30) / v) + "%" : "-"; $("#perVid").textContent = Math.round(perVideo("typical"));
+  $("#visitConv").textContent = v ? Math.round((100 * s30) / v) + "%" : "-";
+  $("#rate1k").textContent = M.rate.toFixed(1);
+  $("#perSignup").textContent = "$" + (W ? money[1] / W : 0).toFixed(2);
 }
-let RANGE = 14;
+$("#revHow").onclick = () => openSheet(`<h3>how this is worked out</h3>
+  <div class="src">
+    <div><b>waitlist to download ${Math.round(REV.install[1] * 100)}%</b> (${REV.install[0] * 100} to ${REV.install[2] * 100}%). most email signups never open the launch email. waitlist tools report 25 to 85% of invited people activate, we assume far less for a teen email list.</div>
+    <div><b>download to trial ${REV.trial[1] * 100}%</b> (${REV.trial[0] * 100} to ${REV.trial[2] * 100}%). revenuecat: health and fitness apps start trials for about 5 to 7% of installs. gopeak lets people skip to free mode.</div>
+    <div><b>trial to paid ${REV.paid[1] * 100}%</b> (${REV.paid[0] * 100} to ${REV.paid[2] * 100}%). adapty 2026: health and fitness trials convert about 35%. lowered because teens often need a parent to pay.</div>
+    <div><b>$${REV.arpu.toFixed(0)} per payer, first year</b>. mostly yearly ($39.99), some monthly and weekly, minus apple's 15%.</div>
+    <div>overall about <b>${(REV.install[1] * REV.trial[1] * REV.paid[1] * 100).toFixed(2)}%</b> of the waitlist ends up paying.</div>
+  </div><button class="btn3d" style="width:100%;margin-top:16px" onclick="closeSheet()">got it</button>`);
 function renderTrend() {
-  const rows = D.site.slice(-RANGE);
+  const rows = D.site.slice(-30);
   if (!rows.length) return;
-  const posted = {};
-  for (const p of Object.values(D.posts)) { const d = p.timestamp && new Date(p.timestamp).toLocaleDateString("en-CA"); if (d) posted[d] = (posted[d] || 0) + 1; }
-  for (const p of T?.posts || []) { const d = new Date(p.posted_at || p.detected_at).toLocaleDateString("en-CA"); posted[d] = (posted[d] || 0) + 1; }
-  const vals = rows.map((r) => r.waitlist_signups || 0), max = Math.max(1, ...vals), t = today();
-  const showGoal = max >= GOAL * 0.6, top = Math.max(max, showGoal ? GOAL : 0) * 1.12;
-  const phone = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="2" width="12" height="20" rx="3"/></svg>';
-  const every = RANGE > 14 ? 5 : 2;
-  $("#trend").innerHTML = `
-    <div class="cols">${showGoal ? `<div class="goal" style="bottom:${(100 * GOAL) / top}%"><span>100</span></div>` : ""}
-      ${rows.map((r, i) => `<div class="col${vals[i] ? "" : " zero"}${r.day === t ? " today" : ""}" title="${r.day}: ${vals[i]} signups"><b>${RANGE > 14 && vals[i] < max * 0.05 && vals[i] ? "" : vals[i]}</b><i style="height:${Math.max(vals[i] ? 4 : 2, (100 * vals[i]) / top)}%"></i></div>`).join("")}</div>
-    <div class="row">${rows.map((r, i) => `<span>${r.day === t ? "today" : i % every === (rows.length - 1) % every ? new Date(r.day + "T12:00").toLocaleDateString([], { month: "numeric", day: "numeric" }) : ""}</span>`).join("")}</div>
-    <div class="row posts">${rows.map((r) => `<span>${posted[r.day] ? `<em>${phone}${posted[r.day]}</em>` : ""}</span>`).join("")}</div>
-    <div class="key"><em>${phone}2</em> videos posted that day</div>`;
+  const W = 320, H = 170, pad = 18, bw = (W - 8) / rows.length;
+  const maxS = Math.max(GOAL, ...rows.map((r) => r.waitlist_signups || 0));
+  const gy = H - pad - ((H - pad - 8) * GOAL) / maxS;
+  let h = `<line x1="0" x2="${W}" y1="${gy}" y2="${gy}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="4 5"/><text x="${W - 2}" y="${gy - 4}" text-anchor="end" style="fill:var(--good)">100</text>`;
+  rows.forEach((r, i) => {
+    const v = r.waitlist_signups || 0, bh = Math.max(v ? 3 : 1.5, ((H - pad - 8) * v) / maxS);
+    h += `<rect x="${4 + i * bw + 1.5}" y="${H - pad - bh}" width="${bw - 3}" height="${bh}" rx="${Math.min(4, (bw - 3) / 2)}" fill="${v ? "var(--blue)" : "#1f1f24"}"><title>${r.day}: ${v} signups</title></rect>`;
+  });
+  [0, rows.length - 1].forEach((i) => h += `<text x="${i ? W - 2 : 2}" y="${H - 3}" text-anchor="${i ? "end" : "start"}">${new Date(rows[i].day + "T12:00").toLocaleDateString([], { month: "short", day: "numeric" })}</text>`);
+  $("#trend").innerHTML = h;
 }
-document.querySelectorAll("#rangeT button").forEach((b) => b.onclick = () => {
-  RANGE = +b.dataset.r; document.querySelectorAll("#rangeT button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderTrend();
-});
 function renderFunnel() {
   const r = D.site.slice(-7), v = r.reduce((a, x) => a + (x.views || 0), 0), o = r.reduce((a, x) => a + (x.opens || 0), 0), s = r.reduce((a, x) => a + (x.waitlist_signups || 0), 0);
   const sz = (n) => 44 + Math.min(40, Math.sqrt(n) * 3);

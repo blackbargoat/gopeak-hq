@@ -243,6 +243,27 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .acc-row .nums b{font-size:14px}
 .acc-row .rm{margin-left:8px;width:26px;height:26px;border-radius:50%;background:#2a2a30;color:var(--dim);font-weight:900;flex:none}
 .acc-add{width:100%;padding:12px 14px;border-top:1px solid var(--line);font-size:13px;font-weight:800;color:var(--blue-hi);text-align:left}
+
+.botcard .seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.seg4 button{height:46px;border-radius:16px;background:var(--card2);box-shadow:0 4px 0 #050506;font-size:14px;font-weight:900;color:var(--dim);transition:transform .12s,box-shadow .12s}
+.seg4 button:active{transform:translateY(3px);box-shadow:0 1px 0 #050506}
+.seg4 button[aria-pressed=true]{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-lo)}
+.seg4 button[data-m=paused][aria-pressed=true]{background:#ff453a;box-shadow:0 4px 0 #9b1c14}
+.botstat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.hbars{display:flex;align-items:flex-end;gap:2px;height:110px;margin-top:14px;border-bottom:1px solid var(--line)}
+.hbars .h{flex:1;display:flex;align-items:flex-end;gap:1px;height:100%;min-width:0}
+.hbars .h i{flex:1;border-radius:3px 3px 1px 1px;min-height:2px}
+.hbars .h i.c{background:#fff}.hbars .h i.r{background:var(--blue)}
+.hlbl{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;font-weight:700;color:var(--dim)}
+.hkey{display:flex;gap:12px;margin-top:8px;font-size:12px;font-weight:700;color:var(--dim)}
+.hkey i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.flow .fl{background:var(--card2);border-radius:20px;padding:12px;box-shadow:0 4px 0 #050506}
+.flow .fl b{display:block;font-size:24px;font-weight:900;letter-spacing:-.6px}
+.flow .fl span{font-size:11px;font-weight:700;color:var(--dim)}
+.flow .fl svg{display:block;width:100%;height:30px;margin-top:8px}
+.accpause{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;border-top:1px solid var(--line);font-size:14px;font-weight:800}
+.accpause:first-of-type{border-top:0}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -293,6 +314,26 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
         </div>
       </div>
 
+
+    <div class="card botcard">
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="4"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg>reply bot</span><span class="chip" id="botLive">-</span></div>
+      <div class="seg4" id="botMode" role="group" aria-label="Bot mode">
+        <button data-m="auto">auto</button><button data-m="max">max</button><button data-m="normal">normal</button><button data-m="paused">pause</button></div>
+      <div class="botstat">
+        <div class="stat"><b id="bIn">0</b><span>comments / hr</span></div>
+        <div class="stat"><b id="bOut">0</b><span>replies / hr</span></div>
+        <div class="stat"><b id="bWait">0</b><span>waiting</span></div>
+      </div>
+      <div class="hbars" id="bHours"></div>
+      <div class="hlbl"><span>24h ago</span><span>now</span></div>
+      <div class="hkey"><span><i style="background:#fff"></i>comments in</span><span><i style="background:var(--blue)"></i>replies out</span></div>
+      <div class="flow">
+        <div class="fl"><b id="fClicks">0</b><span>link clicks today</span><svg id="sClicks" viewBox="0 0 100 30" preserveAspectRatio="none"></svg></div>
+        <div class="fl"><b id="fSign">0</b><span>signups today</span><svg id="sSign" viewBox="0 0 100 30" preserveAspectRatio="none"></svg></div>
+        <div class="fl"><b id="fPhone">0</b><span>phones today</span><svg id="sPhone" viewBox="0 0 100 30" preserveAspectRatio="none"></svg></div>
+      </div>
+      <div id="botAccs" style="margin-top:12px"></div>
+    </div>
       <div class="card">
         <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.2-4.5 3 1.8 2.6 4.5 3.2 4.5 1.5 4.5 3.3-2 3-4.5 3-4.5-1.3-4.5-3"/></svg>waitlist value</span><button class="chip" id="revHow">how</button></div>
         <div class="revbig"><b id="revMid">$0</b><small id="revRange">first year, after apple's cut</small></div>
@@ -446,7 +487,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderIdeas(); loadTeam();
+  model(); renderToday(); renderVideos(); renderIdeas(); loadTeam(); loadBot();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -652,6 +693,61 @@ function openIdea(o) {
     <div class="row" style="margin-top:16px"><a class="btn3d" style="flex:1;display:grid;place-items:center" href="${esc(o.url)}" target="_blank" rel="noopener">watch original</a><button class="btn3d ghost" onclick="closeSheet()">close</button></div>`);
 }
 
+
+// ---------- reply bot panel ----------
+let BOTS = { hourly: {}, bot: null, site: [] };
+async function loadBot() {
+  const [h, b, site] = await Promise.allSettled([getJSON(BOT + "hourly.json"), getJSON(BOT + "bot.json"), rpc("hq_hourly")]);
+  if (h.status === "fulfilled") BOTS.hourly = h.value;
+  if (b.status === "fulfilled") BOTS.bot = b.value;
+  if (site.status === "fulfilled") BOTS.site = site.value;
+  renderBot();
+}
+function hourKeys(n = 24) {
+  const out = [], now = new Date(); now.setUTCMinutes(0, 0, 0);
+  for (let i = n - 1; i >= 0; i--) out.push(new Date(now - i * 36e5).toISOString().slice(0, 13) + ":00:00Z");
+  return out;
+}
+function sparkline(vals) {
+  const m = Math.max(1, ...vals); return `<path d="${vals.map((v, i) => `${i ? "L" : "M"}${(100 * i) / Math.max(1, vals.length - 1)},${28 - (26 * v) / m}`).join("")}" fill="none" stroke="var(--blue-hi)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
+}
+function renderBot() {
+  const keys = hourKeys(24), accs = Object.keys(BOTS.hourly || {});
+  const sum = (k, f) => accs.reduce((a, acc) => a + ((BOTS.hourly[acc] || {})[k]?.[f] || 0), 0);
+  const cin = keys.map((k) => sum(k, "comments")), rout = keys.map((k) => sum(k, "replies"));
+  const last = keys.length - 2; // last full hour
+  $("#bIn").textContent = fmt(cin[last] + 0); $("#bOut").textContent = fmt(rout[last] + 0);
+  const bl = BOTS.bot?.backlog || {}; $("#bWait").textContent = fmt(Object.values(bl).reduce((a, b) => a + b, 0));
+  const m = Math.max(1, ...cin, ...rout);
+  $("#bHours").innerHTML = keys.map((k, i) => `<div class="h" title="${new Date(k).toLocaleTimeString([], { hour: "numeric" })}: ${cin[i]} in, ${rout[i]} out"><i class="c" style="height:${(100 * cin[i]) / m}%"></i><i class="r" style="height:${(100 * rout[i]) / m}%"></i></div>`).join("");
+  const setting = BOTS.cfg?.mode || BOTS.bot?.setting || "auto";
+  document.querySelectorAll("#botMode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.m === setting));
+  const upd = BOTS.bot?.updated ? Math.round((Date.now() - Date.parse(BOTS.bot.updated)) / 6e4) : null;
+  $("#botLive").innerHTML = BOTS.bot ? `<span class="live" style="background:${upd != null && upd < 40 ? "var(--good)" : "var(--warn)"}"></span>${esc(BOTS.bot.mode)} · ${upd == null ? "-" : upd < 60 ? upd + "m ago" : Math.round(upd / 60) + "h ago"}` : "starting";
+  // site flow per hour (Eastern) from Supabase, today totals + 24h sparklines
+  const rows = BOTS.site.slice(-24), todayKey = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  const todays = BOTS.site.filter((r) => String(r.hour).slice(0, 10) === todayKey);
+  const tot = (f) => todays.reduce((a, r) => a + Number(r[f] || 0), 0);
+  $("#fClicks").textContent = fmt(tot("ig_visits")); $("#fSign").textContent = fmt(tot("signups")); $("#fPhone").textContent = fmt(tot("phones"));
+  $("#sClicks").innerHTML = sparkline(rows.map((r) => Number(r.ig_visits || 0)));
+  $("#sSign").innerHTML = sparkline(rows.map((r) => Number(r.signups || 0)));
+  $("#sPhone").innerHTML = sparkline(rows.map((r) => Number(r.phones || 0)));
+  // per-account pause switches
+  const paused = new Set(BOTS.cfg?.paused_accounts || BOTS.bot?.paused_accounts || []);
+  const names = [...new Set([...accs, ...accounts()])];
+  $("#botAccs").innerHTML = names.map((a) => `<div class="accpause"><span>@${esc(a)}<small style="display:block;font-size:11px;color:var(--dim)">${bl[a] != null ? fmt(bl[a]) + " waiting" : ""}</small></span><button class="switch" role="switch" aria-checked="${!paused.has(a)}" data-acc="${esc(a)}" aria-label="Replies on for ${esc(a)}"></button></div>`).join("");
+  $("#botAccs").querySelectorAll("[data-acc]").forEach((sw) => sw.onclick = async () => {
+    const on = sw.getAttribute("aria-checked") !== "true"; sw.setAttribute("aria-checked", on);
+    const p = new Set(BOTS.cfg?.paused_accounts || BOTS.bot?.paused_accounts || []); on ? p.delete(sw.dataset.acc) : p.add(sw.dataset.acc);
+    await setBot({ paused_accounts: [...p] });
+  });
+}
+async function setBot(patch) {
+  if (!PW) return toast("log in again first");
+  try { await cp("admin/bot-config", patch); BOTS.cfg = { ...(BOTS.cfg || BOTS.bot || {}), ...patch }; toast("bot updated, takes effect within a minute"); renderBot(); }
+  catch (e) { toast(/not found|404|relation/i.test(String(e.message)) ? "bot control needs the one-time setup" : "couldn't save"); }
+}
+document.querySelectorAll("#botMode button").forEach((b) => b.onclick = () => setBot({ mode: b.dataset.m }));
 // ---------- team (creator program) ----------
 const CP = "https://etdbjahwegsmuelcawgf.supabase.co/functions/v1/creators/";
 const cp = (route, body = {}) => fetch(CP + route, { method: "POST", headers: { apikey: KEY, "content-type": "application/json", "x-hq-key": PW || "" }, body: JSON.stringify(body) })

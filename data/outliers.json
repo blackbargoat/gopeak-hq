@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-06T02:21:23.122083Z",
+ "generated": "2026-11-06T02:43:54.040574+00:00",
  "sources": [
   {
    "handle": "@gotall.app",
@@ -85,7 +85,7 @@
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@mansuhn.gotall/video/7650565359690321183",
-   "account": "@mansuhn.gotall",
+   "account": "mansuhn.gotall",
    "followers": 1287,
    "views": 2000000,
    "account_median_views": 1805.5,
@@ -103,24 +103,24 @@
    "cta": "Caption only: height tracking plus better habits with the app, app tagged",
    "audio_name": "som original - Who Is Reina?",
    "audio_url": "https://www.tiktok.com/music/som-original-7603219089250667282",
-   "gopeak_recreation": {
-    "shot_list": [
-     "prop phone at eye level, plain room",
-     "stare at lens, small head nod",
-     "add 3-item list overlay in white bold",
-     "end card: 1 sec GoPeak prediction screen"
-    ],
-    "on_screen_text": "signs you'll be tall",
-    "audio": "trending low-key sound, no voice",
-    "difficulty": "easy",
-    "est_film_minutes": 5
-   },
-   "local_file": "01_mansuhn.gotall_7650565359690321183.mp4"
+   "local_file": "01_mansuhn.gotall_7650565359690321183.mp4",
+   "shot_list": [
+    "prop phone at eye level, plain room",
+    "stare at lens, small head nod",
+    "add 3-item list overlay in white bold",
+    "end card: 1 sec GoPeak prediction screen"
+   ],
+   "on_screen_text": "signs you'll be tall",
+   "audio_idea": "trending low-key sound, no voice",
+   "difficulty": "easy",
+   "est_film_minutes": 5,
+   "id": "7650565359690321183",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/ogxIAE0BRS7IqARfscyLsELGOEJDEBF1VewEP9~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=4RQVXJgxwj7wX%2FlyR2C4rrw%2B5hc%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallapp/video/7595999160319364366",
-   "account": "@gotallapp",
+   "account": "gotallapp",
    "followers": 17500,
    "views": 905400,
    "account_median_views": 20600,
@@ -138,25 +138,25 @@
    "cta": "Brand account; app shown in later days",
    "audio_name": "original sound - GoTall",
    "audio_url": "https://www.tiktok.com/music/original-sound-7595999186202479415",
-   "gopeak_recreation": {
-    "shot_list": [
-     "outdoor, tape measure overhead",
-     "text: trying to get taller day 1/30",
-     "film 3 stretches from GoPeak Grow, overlay name",
-     "corner: GoPeak exercise art",
-     "same spot every day"
-    ],
-    "on_screen_text": "trying to get taller day 1/30",
-    "audio": "original sound - GoTall (voice + music)",
-    "difficulty": "med",
-    "est_film_minutes": 15
-   },
-   "local_file": "02_gotallapp_7595999160319364366.mp4"
+   "local_file": "02_gotallapp_7595999160319364366.mp4",
+   "shot_list": [
+    "outdoor, tape measure overhead",
+    "text: trying to get taller day 1/30",
+    "film 3 stretches from GoPeak Grow, overlay name",
+    "corner: GoPeak exercise art",
+    "same spot every day"
+   ],
+   "on_screen_text": "trying to get taller day 1/30",
+   "audio_idea": "original sound - GoTall (voice + music)",
+   "difficulty": "med",
+   "est_film_minutes": 15,
+   "id": "7595999160319364366",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oUfjqjdADBBEAFgfrDD3SpISaImhhaRymFMExt~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=qFd7aebrIErbT02WMg850wfH0kA%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@bledarrrrg/video/7647636676449275167",
-   "account": "@bledarrrrg",
+   "account": "bledarrrrg",
    "followers": 2223,
    "views": 880600,
    "account_median_views": 3958,
@@ -174,24 +174,24 @@
    "cta": "On-screen: take the quiz and see what your build says, app tagged in caption",
    "audio_name": "original sound - Juliette",
    "audio_url": "https://www.tiktok.com/music/original-sound-7582553092709813047",
-   "gopeak_recreation": {
-    "shot_list": [
-     "film 4 sec deadpan at a wall",
-     "overlay a two-option height question",
-     "cut to GoPeak You tab stats screen",
-     "text: take the quiz"
-    ],
-    "on_screen_text": "6ft or 5'10?",
-    "audio": "original sound - Juliette (quiet ambient loop)",
-    "difficulty": "easy",
-    "est_film_minutes": 6
-   },
-   "local_file": "03_bledarrrrg_7647636676449275167.mp4"
+   "local_file": "03_bledarrrrg_7647636676449275167.mp4",
+   "shot_list": [
+    "film 4 sec deadpan at a wall",
+    "overlay a two-option height question",
+    "cut to GoPeak You tab stats screen",
+    "text: take the quiz"
+   ],
+   "on_screen_text": "6ft or 5'10?",
+   "audio_idea": "original sound - Juliette (quiet ambient loop)",
+   "difficulty": "easy",
+   "est_film_minutes": 6,
+   "id": "7647636676449275167",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/o4QkDUeIJC7H4AjDWmQAxLIIjuGfnQBFmeG9nq~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=oehM4qfMs4J8%2F7W2Uw0YNVMJvxU%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@bledarrrrg/video/7659177300814073102",
-   "account": "@bledarrrrg",
+   "account": "bledarrrrg",
    "followers": 2223,
    "views": 776400,
    "account_median_views": 3958,
@@ -209,25 +209,25 @@
    "cta": "Caption tags the app",
    "audio_name": "som original - USE HEADSET",
    "audio_url": "https://www.tiktok.com/music/som-original-7641675766942157586",
-   "gopeak_recreation": {
-    "shot_list": [
-     "repeat your best hook outdoors",
-     "same text, new background",
-     "no talking"
-    ],
-    "on_screen_text": "6ft or 5'10?",
-    "audio": "som original - USE HEADSET (ambient)",
-    "difficulty": "easy",
-    "est_film_minutes": 4
-   },
-   "local_file": "04_bledarrrrg_7659177300814073102.mp4"
+   "local_file": "04_bledarrrrg_7659177300814073102.mp4",
+   "shot_list": [
+    "repeat your best hook outdoors",
+    "same text, new background",
+    "no talking"
+   ],
+   "on_screen_text": "6ft or 5'10?",
+   "audio_idea": "som original - USE HEADSET (ambient)",
+   "difficulty": "easy",
+   "est_film_minutes": 4,
+   "id": "7659177300814073102",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/osR9UDdPA8wQKFUqCtSFEzqSQBgfXeZKSgD3Eb~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=C85qRaM8cGQix6LgBE4s7YZP%2B%2Fs%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@brady.gotall/video/7696031824576777485",
-   "account": "@brady.gotall",
+   "account": "brady.gotall",
    "followers": 2072,
-   "views": 752000,
+   "views": 752100,
    "account_median_views": 2150,
    "multiple": 349.8,
    "posted_date": "2026-10-13",
@@ -244,24 +244,24 @@
    "cta": "Caption hashtags the app; spoken mention",
    "audio_name": "Motivational - Drew",
    "audio_url": "https://www.tiktok.com/music/Motivational-7298748072409942018",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam close, energetic",
-     "text: wrist bump at 14",
-     "show your wrist on camera",
-     "say what doctors actually use (growth plates), plug GoPeak"
-    ],
-    "on_screen_text": "wrist bump at 14",
-    "audio": "Motivational - Drew (soft background)",
-    "difficulty": "med",
-    "est_film_minutes": 10
-   },
-   "local_file": "05_brady.gotall_7696031824576777485.mp4"
+   "local_file": "05_brady.gotall_7696031824576777485.mp4",
+   "shot_list": [
+    "face-cam close, energetic",
+    "text: wrist bump at 14",
+    "show your wrist on camera",
+    "say what doctors actually use (growth plates), plug GoPeak"
+   ],
+   "on_screen_text": "wrist bump at 14",
+   "audio_idea": "Motivational - Drew (soft background)",
+   "difficulty": "med",
+   "est_film_minutes": 10,
+   "id": "7696031824576777485",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oszEREKDgMABhwhFfSqRDBAfIXN3FzIkccYjFS~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=WIxX%2B9QR3PPnRKWq47NYTaNBv3o%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallkae/video/7653751513633819918",
-   "account": "@gotallkae",
+   "account": "gotallkae",
    "followers": 418,
    "views": 691700,
    "account_median_views": 113250,
@@ -279,23 +279,23 @@
    "cta": "Caption tags the app",
    "audio_name": "som original - user14420459960",
    "audio_url": "https://www.tiktok.com/music/som-original-7652175968571788033",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam, beanie or hoodie",
-     "text: ever notice late bloomers end up 6ft+",
-     "end on GoPeak late bloomer / puberty quiz screen"
-    ],
-    "on_screen_text": "late bloomers end up 6ft+",
-    "audio": "som original (low ambient)",
-    "difficulty": "easy",
-    "est_film_minutes": 3
-   },
-   "local_file": "06_gotallkae_7653751513633819918.mp4"
+   "local_file": "06_gotallkae_7653751513633819918.mp4",
+   "shot_list": [
+    "face-cam, beanie or hoodie",
+    "text: ever notice late bloomers end up 6ft+",
+    "end on GoPeak late bloomer / puberty quiz screen"
+   ],
+   "on_screen_text": "late bloomers end up 6ft+",
+   "audio_idea": "som original (low ambient)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "id": "7653751513633819918",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/ooUukl3JlCRQyALjeHPQVqMCebIzAIeAZolGI6~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=ukS2eKr99s3U4z2rKhAIrvsZV60%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@brady.gotall/video/7644048049144073485",
-   "account": "@brady.gotall",
+   "account": "brady.gotall",
    "followers": 2072,
    "views": 690900,
    "account_median_views": 2150,
@@ -313,24 +313,24 @@
    "cta": "Caption: comment your height + age",
    "audio_name": "оригинальный звук - Sinekrey",
    "audio_url": "https://www.tiktok.com/music/%D0%BE%D1%80%D0%B8%D0%B3%D0%B8%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9-%D0%B7%D0%B2%D1%83%D0%BA-7611461675052894996",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam, blank stare",
-     "overlay: my top 5 horror movies + 5 lines of 'stop growing at 15'",
-     "caption: comment your height + age",
-     "reply to comments with GoPeak predictions (bot already does this)"
-    ],
-    "on_screen_text": "my top 5 horror movies",
-    "audio": "оригинальный звук - Sinekrey",
-    "difficulty": "easy",
-    "est_film_minutes": 3
-   },
-   "local_file": "07_brady.gotall_7644048049144073485.mp4"
+   "local_file": "07_brady.gotall_7644048049144073485.mp4",
+   "shot_list": [
+    "face-cam, blank stare",
+    "overlay: my top 5 horror movies + 5 lines of 'stop growing at 15'",
+    "caption: comment your height + age",
+    "reply to comments with GoPeak predictions (bot already does this)"
+   ],
+   "on_screen_text": "my top 5 horror movies",
+   "audio_idea": "оригинальный звук - Sinekrey",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "id": "7644048049144073485",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/owRBArhfwVHqFDAlIwU1RHLDgEvESsBfE5FtIY~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=6twyRaoF709pBM2btRqJKVmXcd0%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@mansuhn.gotall/video/7658023824717335839",
-   "account": "@mansuhn.gotall",
+   "account": "mansuhn.gotall",
    "followers": 1287,
    "views": 627100,
    "account_median_views": 1805.5,
@@ -348,24 +348,24 @@
    "cta": "Shows the app's predicted height screen as the answer",
    "audio_name": "original sound - ren",
    "audio_url": "https://www.tiktok.com/music/original-sound-7654085411592997663",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam, chewing or casual",
-     "overlay: if you're 13 + 3 height ranges",
-     "cut to GoPeak Home ring with predicted height",
-     "text: what about 18?"
-    ],
-    "on_screen_text": "if you're 13",
-    "audio": "original sound - ren (same low-key loop)",
-    "difficulty": "easy",
-    "est_film_minutes": 8
-   },
-   "local_file": "08_mansuhn.gotall_7658023824717335839.mp4"
+   "local_file": "08_mansuhn.gotall_7658023824717335839.mp4",
+   "shot_list": [
+    "face-cam, chewing or casual",
+    "overlay: if you're 13 + 3 height ranges",
+    "cut to GoPeak Home ring with predicted height",
+    "text: what about 18?"
+   ],
+   "on_screen_text": "if you're 13",
+   "audio_idea": "original sound - ren (same low-key loop)",
+   "difficulty": "easy",
+   "est_film_minutes": 8,
+   "id": "7658023824717335839",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/ogsETRC6yFJuABVHFqvgRfA4QEQzfEbDQNiEy4~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=u5qHo3VRc5ubgcdkZfzEPzfA5BM%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallkae/video/7642570802000350477",
-   "account": "@gotallkae",
+   "account": "gotallkae",
    "followers": 418,
    "views": 620000,
    "account_median_views": 113250,
@@ -382,23 +382,23 @@
    "cta": "Caption tags the app",
    "audio_name": "original sound - EXO ™",
    "audio_url": "https://www.tiktok.com/music/original-sound-7614208360556727062",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam close",
-     "text: short mom is the worst nerf",
-     "end card: GoPeak parents' height step"
-    ],
-    "on_screen_text": "short mom is the worst nerf",
-    "audio": "original sound - EXO",
-    "difficulty": "easy",
-    "est_film_minutes": 3
-   },
-   "local_file": "09_gotallkae_7642570802000350477.mp4"
+   "local_file": "09_gotallkae_7642570802000350477.mp4",
+   "shot_list": [
+    "face-cam close",
+    "text: short mom is the worst nerf",
+    "end card: GoPeak parents' height step"
+   ],
+   "on_screen_text": "short mom is the worst nerf",
+   "audio_idea": "original sound - EXO",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "id": "7642570802000350477",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/o81apIPzxAzIfAiI0BNIucxA1BCdwiv8qd3BiZ~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=sjoRakxtnx4PBRSbFZ3cmliaufo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@bledarrrrg/video/7658798292490407182",
-   "account": "@bledarrrrg",
+   "account": "bledarrrrg",
    "followers": 2223,
    "views": 526900,
    "account_median_views": 3958,
@@ -416,24 +416,24 @@
    "cta": "Caption: track your height with the app",
    "audio_name": "original sound - Teddy",
    "audio_url": "https://www.tiktok.com/music/original-sound-7578235105971030805",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam, serious look",
-     "overlay: if you are X at 14, you will be Y at 18",
-     "add one twist row",
-     "pin a comment: get your real number in the app"
-    ],
-    "on_screen_text": "you WILL be",
-    "audio": "original sound - Teddy",
-    "difficulty": "easy",
-    "est_film_minutes": 5
-   },
-   "local_file": "10_bledarrrrg_7658798292490407182.mp4"
+   "local_file": "10_bledarrrrg_7658798292490407182.mp4",
+   "shot_list": [
+    "face-cam, serious look",
+    "overlay: if you are X at 14, you will be Y at 18",
+    "add one twist row",
+    "pin a comment: get your real number in the app"
+   ],
+   "on_screen_text": "you WILL be",
+   "audio_idea": "original sound - Teddy",
+   "difficulty": "easy",
+   "est_film_minutes": 5,
+   "id": "7658798292490407182",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/o0EfCXREQDAfSQSTCqxgpqNnSBFR3CSDYB55ws~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=D5b%2FLkNr%2FHs3ek71EHn38pOlkwI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallapp/video/7590761660176960823",
-   "account": "@gotallapp",
+   "account": "gotallapp",
    "followers": 17500,
    "views": 494800,
    "account_median_views": 20600,
@@ -451,23 +451,23 @@
    "cta": "Brand account",
    "audio_name": "original sound - GoTall",
    "audio_url": "https://www.tiktok.com/music/original-sound-7590761854008412983",
-   "gopeak_recreation": {
-    "shot_list": [
-     "start your own day 1/30 with a real measurement",
-     "3 stretches with name labels",
-     "end: follow for day 2"
-    ],
-    "on_screen_text": "day 1/30",
-    "audio": "original sound - GoTall",
-    "difficulty": "med",
-    "est_film_minutes": 15
-   },
-   "local_file": "11_gotallapp_7590761660176960823.mp4"
+   "local_file": "11_gotallapp_7590761660176960823.mp4",
+   "shot_list": [
+    "start your own day 1/30 with a real measurement",
+    "3 stretches with name labels",
+    "end: follow for day 2"
+   ],
+   "on_screen_text": "day 1/30",
+   "audio_idea": "original sound - GoTall",
+   "difficulty": "med",
+   "est_film_minutes": 15,
+   "id": "7590761660176960823",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oApbISiB8ofDE4RBzpeXE6QIcKiuWRAVvUBStg~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=5%2Bp7oytp5HbhMKvrldfc24tZATo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@brady.gotall/video/7691813934591937806",
-   "account": "@brady.gotall",
+   "account": "brady.gotall",
    "followers": 2072,
    "views": 247100,
    "account_median_views": 2150,
@@ -484,21 +484,21 @@
    "cta": "Caption hashtags the app",
    "audio_name": "Motivational - Drew",
    "audio_url": "https://www.tiktok.com/music/Motivational-7298748072409942018",
-   "gopeak_recreation": {
-    "shot_list": [
-     "repeat the wrist bump topic with a new opener line"
-    ],
-    "on_screen_text": "wrist bump at 14",
-    "audio": "Motivational - Drew",
-    "difficulty": "med",
-    "est_film_minutes": 10
-   },
-   "local_file": "12_brady.gotall_7691813934591937806.mp4"
+   "local_file": "12_brady.gotall_7691813934591937806.mp4",
+   "shot_list": [
+    "repeat the wrist bump topic with a new opener line"
+   ],
+   "on_screen_text": "wrist bump at 14",
+   "audio_idea": "Motivational - Drew",
+   "difficulty": "med",
+   "est_film_minutes": 10,
+   "id": "7691813934591937806",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/o0BJA0IvxFlQaEsCQqEDrCfyQGBBg887DSe7NR~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=4D1c9TCElj91GILz4UY9QSEe0Es%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallapp/video/7645380802812906766",
-   "account": "@gotallapp",
+   "account": "gotallapp",
    "followers": 17500,
    "views": 219600,
    "account_median_views": 20600,
@@ -516,24 +516,24 @@
    "cta": "Caption: drop your height, app plug",
    "audio_name": "original sound - GoTall",
    "audio_url": "https://www.tiktok.com/music/original-sound-7645380910015875854",
-   "gopeak_recreation": {
-    "shot_list": [
-     "face-cam, wall background",
-     "text: 3 worst heights",
-     "reveal 3, 2, 1 with jokes",
-     "end: drop yours, I'll predict it"
-    ],
-    "on_screen_text": "3 worst heights",
-    "audio": "original sound - GoTall (talking)",
-    "difficulty": "med",
-    "est_film_minutes": 12
-   },
-   "local_file": "13_gotallapp_7645380802812906766.mp4"
+   "local_file": "13_gotallapp_7645380802812906766.mp4",
+   "shot_list": [
+    "face-cam, wall background",
+    "text: 3 worst heights",
+    "reveal 3, 2, 1 with jokes",
+    "end: drop yours, I'll predict it"
+   ],
+   "on_screen_text": "3 worst heights",
+   "audio_idea": "original sound - GoTall (talking)",
+   "difficulty": "med",
+   "est_film_minutes": 12,
+   "id": "7645380802812906766",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/ogfU2dbgDQsZsZkhAqFCSARWRBf1q7DQEZgWEG~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=h9%2BdjzZ9qiJr87%2BbdIIHcx0N6EU%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@mansuhn.gotall/video/7659169338003311885",
-   "account": "@mansuhn.gotall",
+   "account": "mansuhn.gotall",
    "followers": 1287,
    "views": 218800,
    "account_median_views": 1805.5,
@@ -550,23 +550,23 @@
    "cta": "App prediction screen at the end",
    "audio_name": "original sound - ren",
    "audio_url": "https://www.tiktok.com/music/original-sound-7654085411592997663",
-   "gopeak_recreation": {
-    "shot_list": [
-     "reuse the 'if you're 13' template with age 14 or 15",
-     "new location so it reads as fresh",
-     "end on GoPeak prediction"
-    ],
-    "on_screen_text": "if you're 14",
-    "audio": "original sound - ren",
-    "difficulty": "easy",
-    "est_film_minutes": 5
-   },
-   "local_file": "14_mansuhn.gotall_7659169338003311885.mp4"
+   "local_file": "14_mansuhn.gotall_7659169338003311885.mp4",
+   "shot_list": [
+    "reuse the 'if you're 13' template with age 14 or 15",
+    "new location so it reads as fresh",
+    "end on GoPeak prediction"
+   ],
+   "on_screen_text": "if you're 14",
+   "audio_idea": "original sound - ren",
+   "difficulty": "easy",
+   "est_film_minutes": 5,
+   "id": "7659169338003311885",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oQNXtmDIQIaf9bUHaqUIVGfClQqxkMseAAtLaj~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=7NtXhg202fk4o5kWOE5kpGDRLyo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@bledarrrrg/video/7655086512194751758",
-   "account": "@bledarrrrg",
+   "account": "bledarrrrg",
    "followers": 2223,
    "views": 199600,
    "account_median_views": 3958,
@@ -584,23 +584,23 @@
    "cta": "Caption tags the app",
    "audio_name": "sonido original - tu mejor version",
    "audio_url": "https://www.tiktok.com/music/sonido-original-7454792227714370326",
-   "gopeak_recreation": {
-    "shot_list": [
-     "sit at a desk, look at lens",
-     "text: if you're 5'5 at 13...",
-     "cut to GoPeak prediction screen"
-    ],
-    "on_screen_text": "if you're 5'5 at 13",
-    "audio": "sonido original - tu mejor version",
-    "difficulty": "easy",
-    "est_film_minutes": 5
-   },
-   "local_file": "15_bledarrrrg_7655086512194751758.mp4"
+   "local_file": "15_bledarrrrg_7655086512194751758.mp4",
+   "shot_list": [
+    "sit at a desk, look at lens",
+    "text: if you're 5'5 at 13...",
+    "cut to GoPeak prediction screen"
+   ],
+   "on_screen_text": "if you're 5'5 at 13",
+   "audio_idea": "sonido original - tu mejor version",
+   "difficulty": "easy",
+   "est_film_minutes": 5,
+   "id": "7655086512194751758",
+   "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oU01zkj3WAE0BIpVwIihHVpBqf29OLiiBCAw8I~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=joYBmu8I%2B86ZguL%2FI1IhhpjUOvU%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   },
   {
    "platform": "tiktok",
    "url": "https://www.tiktok.com/@gotallapp/video/7604156736521506062",
-   "account": "@gotallapp",
+   "account": "gotallapp",
    "followers": 17500,
    "views": 188700,
    "account_median_views": 20600,
@@ -618,18 +618,18 @@
    "cta": "App result card overlaid on video",
    "audio_name": "original sound - GoTall",
    "audio_url": "https://www.tiktok.com/music/original-sound-7604156794914622221",
-   "gopeak_recreation": {
-    "shot_list": [
-     "day 15 check-in with tape",
-     "overlay GoPeak Home ring (current + predicted)",
-     "text: day 15/30"
-    ],
-    "on_screen_text": "day 15/30",
-    "audio": "original sound - GoTall",
-    "difficulty": "med",
-    "est_film_minutes": 10
-   },
-   "local_file": "16_gotallapp_7604156736521506062.mp4"
+   "local_file": "16_gotallapp_7604156736521506062.mp4",
+   "shot_list": [
+    "day 15 check-in with tape",
+    "overlay GoPeak Home ring (current + predicted)",
+    "text: day 15/30"
+   ],
+   "on_screen_text": "day 15/30",
+   "audio_idea": "original sound - GoTall",
+   "difficulty": "med",
+   "est_film_minutes": 10,
+   "id": "7604156736521506062",
+   "thumb": "https://p19-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oMphpMXA4dEBPBgladkHqIi9UaiGHaY3IZZBv~tplv-tiktokx-origin.image?dr=9636&x-expires=1794103200&x-signature=dBgjmxuzvjDZOQkfz2naui4Q1IE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast8"
   }
  ]
 }

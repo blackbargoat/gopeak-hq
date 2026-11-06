@@ -1,0 +1,26 @@
+name: Daily reference scout
+on:
+  schedule:
+    - cron: "40 13 * * *"   # every day, ~9:40 AM Eastern
+  workflow_dispatch:
+concurrency: { group: scout, cancel-in-progress: false }
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q -U yt-dlp
+      - run: python scout/scout.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      - name: Save
+        run: |
+          git config user.name "gopeak-scout"; git config user.email "scout@users.noreply.github.com"
+          git add data/outliers.json
+          git diff --cached --quiet && exit 0
+          git commit -qm "scout $(date -u +%F)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && exit 0; sleep 5; done; exit 1

@@ -178,6 +178,27 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;z-index:50;background:#fff;color:#000;font-weight:800;font-size:14px;padding:10px 16px;border-radius:999px;transition:all .25s}
 .toast.on{opacity:1;transform:translateX(-50%)}
 
+
+.fcgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.fcbox{background:var(--card2);border-radius:22px;padding:16px;box-shadow:0 4px 0 #050506}
+.fcbox span{display:block;font-size:12px;font-weight:800;color:var(--dim)}
+.fcbox b{display:block;font-size:46px;font-weight:900;letter-spacing:-1.5px;line-height:1.05;margin-top:6px;color:var(--blue-hi)}
+.fcbox small{font-size:12px;font-weight:700;color:var(--dim)}
+.plan{display:flex;align-items:center;gap:14px;margin-top:12px;background:rgba(19,127,249,.14);border-radius:22px;padding:14px 16px}
+.plan .phones{min-width:0;justify-content:flex-start;flex:none;max-width:132px}
+.plan b{font-size:15px;font-weight:800;line-height:1.3}
+.plan small{display:block;font-size:12px;font-weight:700;color:var(--dim);margin-top:2px}
+.idea .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.idea .art.has img+svg,.idea .art.has>svg{display:none}
+.idea .art.has::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.35))}
+.idea .art .mult,.idea .art .plat,.idea .art .eye,.idea .art .new{z-index:1}
+.idea .appr{margin:0 12px 12px;height:40px;border-radius:999px;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--card2);box-shadow:0 4px 0 #050506;color:#fff}
+.idea .appr.on{background:var(--good);box-shadow:0 4px 0 #1e7a37;color:#04210d}
+.idea .appr:active{transform:translateY(3px);box-shadow:0 1px 0 #050506}
+.idea .new{position:absolute;left:10px;bottom:10px;height:24px;padding:0 9px;border-radius:999px;background:var(--blue);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center}
+.idea .art{aspect-ratio:3/4}
+.player{margin:14px auto 0;width:100%;max-width:330px;aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#0b0b0d}
+.player iframe{width:100%;height:100%;border:0;display:block}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -229,20 +250,24 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       </div>
 
       <div class="card">
-        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>post more</span>
-          <div class="toggle" role="group" aria-label="Video type"><button aria-pressed="true" data-kind="typical">typical</button><button aria-pressed="false" data-kind="outlier">outlier</button></div></div>
-        <div class="stepper"><button class="pm" id="minus" aria-label="One less video">-</button><div class="phones" id="phones"></div><button class="pm" id="plus" aria-label="One more video">+</button></div>
-        <div class="fc-out"><span class="big" id="fcAdd">+0</span></div>
-        <div style="text-align:center;font-weight:700;color:var(--dim);font-size:14px;margin-top:6px" id="fcLine">signups</div>
-        <div class="fc-bar" aria-hidden="true"><i class="add" id="barAdd"></i><i class="now" id="barNow"></i><span class="goal" id="barGoal"></span></div>
-        <div class="between" style="margin-top:14px"><span class="chip" id="needChip">need 0 videos</span><span class="chip" id="rateChip">5 / 1k views</span></div>
+        <span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>forecast</span>
+        <div class="fcgrid">
+          <div class="fcbox"><span>today</span><b id="fToday">0</b><small id="fTodayR">expected</small></div>
+          <div class="fcbox"><span>tomorrow</span><b id="fTom">0</b><small>if you post nothing</small></div>
+        </div>
+        <div class="plan" id="plan"></div>
+        <div class="mini3" style="margin-top:14px">
+          <div class="stat"><b id="rate1k">0</b><span>per 1k views</span></div>
+          <div class="stat"><b id="visitConv">0%</b><span>visit to signup</span></div>
+          <div class="stat"><b id="perVid">0</b><span>per video total</span></div>
+        </div>
       </div>
     </div>
 
     <div class="grid2">
       <div class="card">
-        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>30 days</span><span class="chip" id="legend"><i style="width:10px;height:10px;border-radius:3px;background:var(--blue);display:inline-block"></i>signups <i style="width:14px;height:3px;border-radius:2px;background:#fff;display:inline-block;margin-left:6px"></i>views</span></div>
-        <svg class="chart" id="trend" viewBox="0 0 320 170" preserveAspectRatio="none"></svg>
+        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><span class="chip" id="legend"><i style="width:10px;height:10px;border-radius:3px;background:var(--blue);display:inline-block"></i>actual <i style="width:14px;height:3px;border-radius:2px;background:#fff;display:inline-block;margin-left:6px"></i>model <i style="width:10px;height:10px;border-radius:3px;border:1.5px dashed var(--blue-hi);display:inline-block;margin-left:6px"></i>next 7 <i style="width:12px;height:12px;border-radius:50%;background:#fff;display:inline-block;margin-left:6px"></i>posts</span></div>
+        <svg class="chart" id="trend" viewBox="0 0 320 190" preserveAspectRatio="none" style="height:190px"></svg>
       </div>
       <div class="card">
         <span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>funnel · 7 days</span>
@@ -430,40 +455,57 @@ function renderToday() {
   $("#totN").textContent = fmt(D.count ?? D.site.reduce((a, r) => a + (r.waitlist_signups || 0), 0));
   renderForecast(); renderTrend(); renderFunnel();
 }
-function renderForecast() {
-  const n = signupsOn(today()), pv = perVideo(), add = M.n * pv * M.day1;
-  const ph = Math.max(M.n, 1); let h = "";
-  for (let i = 0; i < Math.max(5, M.n); i++) h += `<span class="phone${i < M.n ? "" : " off"}"></span>`;
-  $("#phones").innerHTML = h;
-  $("#fcAdd").textContent = "+" + Math.round(add);
-  const lo = Math.round(M.n * ((M.kind === "outlier" ? M.outlier : M.typical) * M.rateLo / 1000) * M.day1), hi = Math.round(M.n * ((M.kind === "outlier" ? M.outlier : M.typical) * M.rateHi / 1000) * M.day1);
-  $("#fcLine").textContent = M.n ? `signups today (${lo} to ${hi}) · ${Math.round(M.n * pv)} all-time` : "add videos to see the bump";
-  const top = Math.max(GOAL, n + add) * 1.08;
-  $("#barNow").style.width = (100 * n) / top + "%"; $("#barAdd").style.width = (100 * (n + add)) / top + "%"; $("#barGoal").style.left = (100 * GOAL) / top + "%";
-  const need = Math.max(0, Math.ceil((GOAL - n) / (pv * M.day1)));
-  $("#needChip").innerHTML = n >= GOAL ? "goal hit" : `<b>${need}</b>&nbsp;${M.kind} video${need === 1 ? "" : "s"} to 100`;
-  $("#rateChip").innerHTML = `<b>${M.rate.toFixed(1)}</b>&nbsp;/ 1k views`;
+// Automatic forecast: no inputs. Today = Instagram views so far x signups per 1k views (or actual pace),
+// tomorrow = recent views fading with no new posts, plan = videos needed for 100 tomorrow.
+function igToday() { return igViewsByDay()[today()] || 0; }
+function baselineNext(days = 7) {
+  const ig = igViewsByDay(), keys = Object.keys(ig).sort().filter((d) => d < today()).slice(-3);
+  let base = keys.length ? keys.reduce((a, d) => a + ig[d], 0) / keys.length : M.typical;
+  const out = [];
+  for (let i = 1; i <= days; i++) { base *= 0.82; out.push(Math.max(0, (base * M.rate) / 1000)); } // views fade ~18%/day without new posts
+  return out;
 }
-$("#plus").onclick = () => { M.n = Math.min(12, M.n + 1); renderForecast(); };
-$("#minus").onclick = () => { M.n = Math.max(0, M.n - 1); renderForecast(); };
-document.querySelectorAll(".toggle [data-kind]").forEach((b) => b.onclick = () => {
-  M.kind = b.dataset.kind; document.querySelectorAll(".toggle [data-kind]").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderForecast();
-});
+function renderForecast() {
+  const n = signupsOn(today()), fromViews = (igToday() * M.rate) / 1000;
+  const hr = new Date().getHours() + new Date().getMinutes() / 60, paced = hr > 3 ? (n * 24) / hr : n;
+  const exp = Math.round(Math.max(n, fromViews, Math.min(paced, Math.max(n, fromViews) * 3)));
+  $("#fToday").textContent = exp; $("#fTodayR").textContent = `${n} so far`;
+  const next = baselineNext(), tom = Math.round(next[0]);
+  $("#fTom").textContent = tom;
+  const pv = perVideo("typical") * M.day1, need = Math.max(0, Math.ceil((GOAL - tom) / Math.max(0.1, pv)));
+  const out = Math.max(1, Math.ceil((GOAL - tom) / Math.max(0.1, perVideo("outlier") * M.day1)));
+  let ph = ""; for (let i = 0; i < Math.min(need, 8); i++) ph += `<span class="phone"></span>`;
+  $("#plan").innerHTML = tom >= GOAL ? `<b>on track for 100 tomorrow</b>` : `<div class="phones">${ph}${need > 8 ? `<b style="align-self:center">+${need - 8}</b>` : ""}</div>
+    <div><b>post ${need} video${need === 1 ? "" : "s"} tomorrow for 100</b><small>or ${out} outlier${out === 1 ? "" : "s"} · about ${Math.round(pv)} signups each on day one</small></div>`;
+  const r = D.site.slice(-30), v = r.reduce((a, x) => a + (x.views || 0), 0), s30 = r.reduce((a, x) => a + (x.waitlist_signups || 0), 0);
+  $("#rate1k").textContent = M.rate.toFixed(1); $("#visitConv").textContent = v ? Math.round((100 * s30) / v) + "%" : "-"; $("#perVid").textContent = Math.round(perVideo("typical"));
+}
 function renderTrend() {
-  const rows = D.site.slice(-30), ig = igViewsByDay();
+  const rows = D.site.slice(-30), ig = igViewsByDay(), next = baselineNext(7);
   if (!rows.length) return;
-  const W = 320, H = 170, pad = 18, bw = (W - 8) / rows.length;
-  const maxS = Math.max(GOAL, ...rows.map((r) => r.waitlist_signups || 0)), maxV = Math.max(1, ...rows.map((r) => ig[r.day] || 0));
-  let h = "";
-  const gy = H - pad - ((H - pad - 8) * GOAL) / maxS;
-  h += `<line x1="0" x2="${W}" y1="${gy}" y2="${gy}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="4 5"/><text x="${W - 2}" y="${gy - 4}" text-anchor="end" style="fill:var(--good)">100</text>`;
+  const W = 320, H = 190, pad = 18, top = 26, N = rows.length + next.length, bw = (W - 8) / N;
+  // videos posted per day (both Instagram accounts + creator posts), shown as numbered dots above the bars
+  const posted = {};
+  for (const p of Object.values(D.posts)) { const d = p.timestamp && new Date(p.timestamp).toLocaleDateString("en-CA"); if (d) posted[d] = (posted[d] || 0) + 1; }
+  for (const p of T?.posts || []) { const d = new Date(p.posted_at || p.detected_at).toLocaleDateString("en-CA"); posted[d] = (posted[d] || 0) + 1; }
+  const model = rows.map((r) => (ig[r.day] != null ? (ig[r.day] * M.rate) / 1000 : null));
+  const maxS = Math.max(GOAL, ...rows.map((r) => r.waitlist_signups || 0), ...model.filter((x) => x != null), ...next);
+  const y = (v) => H - pad - ((H - pad - top) * v) / maxS;
+  let h = `<line x1="0" x2="${W}" y1="${y(GOAL)}" y2="${y(GOAL)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="4 5"/><text x="${W - 2}" y="${y(GOAL) - 4}" text-anchor="end" style="fill:var(--good)">100</text>`;
   rows.forEach((r, i) => {
-    const v = r.waitlist_signups || 0, bh = Math.max(v ? 3 : 1.5, ((H - pad - 8) * v) / maxS);
-    h += `<rect x="${4 + i * bw + 1.5}" y="${H - pad - bh}" width="${bw - 3}" height="${bh}" rx="${Math.min(4, (bw - 3) / 2)}" fill="${v ? "var(--blue)" : "#1f1f24"}"><title>${r.day}: ${v} signups, ${fmt(ig[r.day] || 0)} views</title></rect>`;
+    const v = r.waitlist_signups || 0, bh = Math.max(v ? 3 : 1.5, H - pad - y(v));
+    h += `<rect x="${4 + i * bw + 1}" y="${H - pad - bh}" width="${bw - 2}" height="${bh}" rx="${Math.min(3, (bw - 2) / 2)}" fill="${v ? "var(--blue)" : "#1f1f24"}"><title>${r.day}: ${v} signups, model ${Math.round(model[i] ?? 0)}</title></rect>`;
   });
-  const pts = rows.map((r, i) => [4 + i * bw + bw / 2, H - pad - ((H - pad - 8) * (ig[r.day] || 0)) / maxV]);
-  h += `<path d="M${pts.map((p) => p.join(",")).join("L")}" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>`;
-  [0, rows.length - 1].forEach((i) => h += `<text x="${i ? W - 2 : 2}" y="${H - 3}" text-anchor="${i ? "end" : "start"}">${new Date(rows[i].day + "T12:00").toLocaleDateString([], { month: "short", day: "numeric" })}</text>`);
+  next.forEach((v, j) => {
+    const i = rows.length + j, bh = Math.max(2, H - pad - y(v));
+    h += `<rect x="${4 + i * bw + 1.5}" y="${H - pad - bh}" width="${bw - 3}" height="${bh}" rx="${Math.min(3, (bw - 3) / 2)}" fill="none" stroke="var(--blue-hi)" stroke-width="1.2" stroke-dasharray="3 2"><title>forecast: ${Math.round(v)}</title></rect>`;
+  });
+  const pts = model.map((m, i) => (m == null ? null : [4 + i * bw + bw / 2, y(m)])).filter(Boolean);
+  if (pts.length > 1) h += `<path d="M${pts.map((p) => p.join(",")).join("L")}" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>`;
+  rows.forEach((r, i) => { const c = posted[r.day]; if (!c) return; const cx = 4 + i * bw + bw / 2;
+    h += `<circle cx="${cx}" cy="10" r="${Math.max(5, Math.min(8, bw / 2))}" fill="#fff"><title>${r.day}: ${c} video${c === 1 ? "" : "s"} posted</title></circle><text x="${cx}" y="13.5" text-anchor="middle" style="fill:#000;font-size:9px;font-weight:900">${c}</text>`; });
+  const lbl = (i, d) => `<text x="${4 + i * bw + bw / 2}" y="${H - 3}" text-anchor="middle">${d}</text>`;
+  h += lbl(1, new Date(rows[0].day + "T12:00").toLocaleDateString([], { month: "short", day: "numeric" })) + lbl(rows.length - 1, "today") + lbl(N - 1, "+7d");
   $("#trend").innerHTML = h;
 }
 function renderFunnel() {
@@ -530,13 +572,27 @@ function renderIdeas() {
   const list = O.map((o, i) => ({ ...o, i })).filter((o) => fmtSel === "all" || o.format === fmtSel).sort((a, b) => (b.multiple || 0) - (a.multiple || 0));
   $("#ideas").innerHTML = list.map((o) => {
     const f = fmtOf(o.format), d = { easy: 1, med: 2, medium: 2, hard: 3 }[o.difficulty] || 2;
-    return `<button class="idea" data-i="${o.i}"><div class="art" style="background:linear-gradient(160deg,${f.c[0]},${f.c[1]})">
+    const fresh = o.added && Date.now() - Date.parse(o.added) < 4 * 864e5;
+    return `<button class="idea" data-i="${o.i}"><div class="art${o.thumb ? " has" : ""}" style="background:linear-gradient(160deg,${f.c[0]},${f.c[1]})">
+      ${o.thumb ? `<img src="${esc(o.thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.classList.remove('has');this.remove()">` : ""}${fresh ? `<span class="new">new</span>` : ""}
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${f.i}</svg>
       <span class="mult">${o.multiple ? Math.round(o.multiple) + "x" : fmt(o.views)}</span>${PLAT[o.platform || "instagram"] ? `<span class="plat"><svg viewBox="0 0 24 24">${PLAT[o.platform || "instagram"]}</svg></span>` : ""}
-      ${refByUrl(o.url)?.visible ? `<span class="eye">creators</span>` : ""}</div><div class="meta"><b>${esc((o.on_screen_text || o.hook_paraphrase || "").slice(0, 46))}</b><small><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>${fmt(o.views)}<span class="dots">${[1, 2, 3].map((k) => `<i class="${k <= d ? "on" : ""}"></i>`).join("")}</span></small></div></button>`;
+      ${refByUrl(o.url)?.visible ? `<span class="eye">creators</span>` : ""}</div><div class="meta"><b>${esc((o.on_screen_text || o.hook_paraphrase || "").slice(0, 46))}</b><small><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>${fmt(o.views)}<span class="dots">${[1, 2, 3].map((k) => `<i class="${k <= d ? "on" : ""}"></i>`).join("")}</span></small></div>
+      ${refByUrl(o.url) ? `<span class="appr${refByUrl(o.url).visible ? " on" : ""}" role="button" data-appr="${o.i}">${refByUrl(o.url).visible ? "approved" : "approve"}</span>` : ""}</button>`;
   }).join("");
-  $("#ideas").querySelectorAll(".idea").forEach((b) => b.onclick = () => openIdea(O[b.dataset.i]));
+  $("#ideas").querySelectorAll(".idea").forEach((b) => b.onclick = (e) => {
+    const ap = e.target.closest("[data-appr]");
+    if (ap) { e.stopPropagation(); return setVisible(O[ap.dataset.appr], !refByUrl(O[ap.dataset.appr].url).visible); }
+    openIdea(O[b.dataset.i]);
+  });
 }
+// Approve = creators see it in their ideas tab as a video to remake
+async function setVisible(o, on) {
+  const r = refByUrl(o.url); if (!r) return toast("loading, try again");
+  try { await cp("admin/reference", { id: r.id, visible: on }); r.visible = on; toast(on ? "approved for creators" : "removed from creators"); renderIdeas(); }
+  catch { toast("couldn't save"); }
+}
+const tiktokId = (o) => (o.platform || "tiktok") === "tiktok" ? (o.id || (String(o.url).match(/\/video\/(\d+)/) || [])[1]) : null;
 const refByUrl = (u) => (T?.references || []).find((r) => r.url === u);
 function openIdea(o) {
   setTimeout(() => { const v = $("#vis"); if (v) v.onclick = async () => { const r = refByUrl(o.url), on = v.getAttribute("aria-checked") !== "true"; v.setAttribute("aria-checked", on);
@@ -544,12 +600,13 @@ function openIdea(o) {
   const f = fmtOf(o.format), beats = (o.structure || []).slice(0, 5), shots = (o.shot_list || []).slice(0, 6);
   openSheet(`
     <div class="row" style="gap:12px"><div class="av" style="background:linear-gradient(160deg,${f.c[0]},${f.c[1]});box-shadow:none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${f.i}</svg></div>
-      <div><h3>${esc(o.hook_paraphrase || o.format)}</h3><span class="label" style="margin-top:4px">@${esc(o.account)} · ${fmt(o.views)} views${o.multiple ? " · " + Math.round(o.multiple) + "x usual" : ""}</span></div></div>
-    ${o.on_screen_text ? `<div class="ost"><span>${esc(o.on_screen_text)}</span></div>` : ""}
+      <div><h3>${esc(o.hook_paraphrase || o.format)}</h3><span class="label" style="margin-top:4px">@${esc(String(o.account || "").replace(/^@+/, ""))} · ${fmt(o.views)} views${o.multiple ? " · " + Math.round(o.multiple) + "x usual" : ""}</span></div></div>
+    ${tiktokId(o) ? `<div class="player"><iframe src="https://www.tiktok.com/player/v1/${tiktokId(o)}?music_info=1&description=1&rel=0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Reference video"></iframe></div>` : ""}
+    ${o.on_screen_text ? `<div class="label" style="margin-top:18px">your text</div><div class="ost" style="margin-top:8px;aspect-ratio:auto;padding:22px 12px"><span>${esc(o.on_screen_text)}</span></div>` : ""}
     ${beats.length ? `<div class="beats">${beats.map((b, i) => `<div class="beat"><i>${i + 1}</i>${esc(b)}</div>`).join("")}</div>` : ""}
-    <div class="label" style="margin-top:18px">film it</div>
+    ${shots.length ? `<div class="label" style="margin-top:18px">film it</div>` : ""}
     <div class="shots">${shots.map((s, i) => `<div class="shot"><span class="n">${i + 1}</span><p>${esc(s)}</p></div>`).join("")}</div>
-    <div class="kv"><div><b>${esc(o.est_film_minutes ?? "-")}m</b><span>to film</span></div><div><b>${esc(o.length_sec ?? "-")}s</b><span>length</span></div><div><b>${esc(o.difficulty ?? "-")}</b><span>effort</span></div></div>
+    <div class="kv">${o.est_film_minutes ? `<div><b>${esc(o.est_film_minutes)}m</b><span>to film</span></div>` : ""}${o.length_sec ? `<div><b>${esc(o.length_sec)}s</b><span>length</span></div>` : ""}${o.difficulty ? `<div><b>${esc(o.difficulty)}</b><span>effort</span></div>` : ""}</div>
     ${o.audio_name || o.audio ? (o.audio_url ? `<a class="chip blue" style="margin-top:12px" href="${esc(o.audio_url)}" target="_blank" rel="noopener">♪ ${esc(o.audio_name || o.audio)}</a>` : `<div class="chip" style="margin-top:12px">♪ ${esc(o.audio_name || o.audio)}</div>`) : ""}
     ${o.local_file ? `<div class="chip good" style="margin-top:12px">iCloud · GoPeak References · ${esc(o.local_file)}</div>` : ""}
     <div class="kv" style="grid-template-columns:1fr"><div><b>+${Math.round((o.views || M.typical) * 0.25 * M.rate / 1000)}</b><span>signups if it gets a quarter of their views</span></div></div>

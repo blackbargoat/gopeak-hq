@@ -374,7 +374,8 @@ $("#lockRow").addEventListener("submit", async (e) => {
   if ((await sha(pw)) === HASH) { PW = pw.trim().toLowerCase(); store.set("gp-hq", HASH); store.set("gp-hq-k", btoa(PW)); unlock(); return; }
   const row = $("#lockRow"); row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake");
 });
-if (store.get("gp-hq") === HASH) { try { PW = atob(store.get("gp-hq-k") || ""); } catch {} unlock(); }
+// Older logins only saved the hash; the boss actions need the password itself, so ask once more in that case.
+if (store.get("gp-hq") === HASH) { try { PW = atob(store.get("gp-hq-k") || ""); } catch {} if (PW && sha256(PW) === HASH) unlock(); else PW = null; }
 
 // ---------- tabs ----------
 document.querySelectorAll("nav.tabs button").forEach((b) => b.addEventListener("click", () => {

@@ -1,0 +1,635 @@
+{
+ "generated": "2026-11-06T02:21:23.122083Z",
+ "sources": [
+  {
+   "handle": "@gotall.app",
+   "platform": "instagram",
+   "followers": 6119,
+   "median_views": 2350,
+   "videos_checked": 12,
+   "outliers": 0,
+   "notes": "Brand IG is small; no 3x outliers. Tagged page needs login (not accessed)."
+  },
+  {
+   "handle": "@gotallapp",
+   "platform": "tiktok",
+   "followers": 17500,
+   "median_views": 20600,
+   "videos_checked": 77,
+   "outliers": 4
+  },
+  {
+   "handle": "@mansuhn.gotall",
+   "platform": "tiktok",
+   "followers": 1287,
+   "median_views": 1805.5,
+   "videos_checked": 48,
+   "outliers": 3
+  },
+  {
+   "handle": "@bledarrrrg",
+   "platform": "tiktok",
+   "followers": 2223,
+   "median_views": 3958,
+   "videos_checked": 96,
+   "outliers": 4
+  },
+  {
+   "handle": "@brady.gotall",
+   "platform": "tiktok",
+   "followers": 2072,
+   "median_views": 2150,
+   "videos_checked": 66,
+   "outliers": 3
+  },
+  {
+   "handle": "@gotallkae",
+   "platform": "tiktok",
+   "followers": 418,
+   "median_views": 113250,
+   "videos_checked": 12,
+   "outliers": 2
+  },
+  {
+   "handle": "@gotallheightprediction",
+   "platform": "tiktok",
+   "followers": 11,
+   "median_views": 834,
+   "videos_checked": 29,
+   "outliers": 0,
+   "notes": "Top video 4K (4.8x); too small to include."
+  }
+ ],
+ "patterns": [
+  "GoTall grows on TikTok, not Instagram: its IG has 6K followers and no outliers, while small UGC accounts named <name>.gotall hit 200K to 2M views.",
+  "Top format: text-on-screen over a deadpan face-cam (no talking), 7 to 14 seconds. 7 of 16 outliers.",
+  "Second: face-cam hook then a cut to the app prediction screen (app-screen-recording), 8 to 25 seconds. 4 of 16.",
+  "Third: talking face-cam on a body or height myth (wrist bump, worst heights), 40 to 76 seconds. 3 of 16. Series challenges (day X of 50) work on the brand account.",
+  "Hooks name a specific age + height or force a choice (would you rather), so viewers comment their own numbers. Comment counts on winners: 470 to 7.6K.",
+  "Winners get re-filmed: the same hook in a new location hit outlier level again (torso question twice, wrist bump twice, age chart twice).",
+  "Audio is almost always a quiet 'original sound' loop or the creator's own voice, not a big trending song.",
+  "CTA is soft: caption tag of the app; the strongest show the app result as the payoff at the end.",
+  "Engine (per a public write-up of GoTall's founder): 10 TikToks a day to find a format, then DM about 50 creators a day to copy it, then paid ads behind organic winners."
+ ],
+ "reference_bledarrrrg": {
+  "handle": "@bledarrrrg",
+  "platform": "tiktok",
+  "followers": 2223,
+  "median_views": 3958,
+  "videos_checked": 96,
+  "app_promoted": "GoTall (competitor; 87 of 96 recent captions tag @GoTall). Reference only, not a GoPeak creator.",
+  "best_video_url": "https://www.tiktok.com/@bledarrrrg/video/7647636676449275167",
+  "notes": "Posts daily-ish, almost all text-on-screen face-cam under 15 sec. 4 outliers (880K, 776K, 527K, 200K) vs a 4K median; best hooks are a would-you-rather on torso length and an 'if you are X at 14 you WILL be Y at 18' table. Reuses winning hooks in new locations."
+ },
+ "outliers": [
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@mansuhn.gotall/video/7650565359690321183",
+   "account": "@mansuhn.gotall",
+   "followers": 1287,
+   "views": 2000000,
+   "account_median_views": 1805.5,
+   "multiple": 1107.7,
+   "posted_date": "2026-06-12",
+   "length_sec": 8,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Shirtless guy staring at camera under a numbered list of 'signs you are genetically taller'",
+   "structure": [
+    "deadpan face-cam, no talking",
+    "bold 3-item list of body signs plus an honorable mention",
+    "holds for 8 sec so people pause to read and check themselves"
+   ],
+   "why_it_works": "Viewers check their own bodies against the list and comment to argue, which drives the algorithm.",
+   "cta": "Caption only: height tracking plus better habits with the app, app tagged",
+   "audio_name": "som original - Who Is Reina?",
+   "audio_url": "https://www.tiktok.com/music/som-original-7603219089250667282",
+   "gopeak_recreation": {
+    "shot_list": [
+     "prop phone at eye level, plain room",
+     "stare at lens, small head nod",
+     "add 3-item list overlay in white bold",
+     "end card: 1 sec GoPeak prediction screen"
+    ],
+    "on_screen_text": "signs you'll be tall",
+    "audio": "trending low-key sound, no voice",
+    "difficulty": "easy",
+    "est_film_minutes": 5
+   },
+   "local_file": "01_mansuhn.gotall_7650565359690321183.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallapp/video/7595999160319364366",
+   "account": "@gotallapp",
+   "followers": 17500,
+   "views": 905400,
+   "account_median_views": 20600,
+   "multiple": 44.0,
+   "posted_date": "2026-01-16",
+   "length_sec": 27,
+   "format": "tutorial/routine",
+   "hook_paraphrase": "Teen holds a tape measure overhead: trying to get taller, day 8 of 50",
+   "structure": [
+    "measure on camera with day counter",
+    "3-4 named stretches (e.g. jumps) with a small cartoon demo in the corner",
+    "ends with height or app"
+   ],
+   "why_it_works": "Series format: people follow to see if day 50 shows growth.",
+   "cta": "Brand account; app shown in later days",
+   "audio_name": "original sound - GoTall",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7595999186202479415",
+   "gopeak_recreation": {
+    "shot_list": [
+     "outdoor, tape measure overhead",
+     "text: trying to get taller day 1/30",
+     "film 3 stretches from GoPeak Grow, overlay name",
+     "corner: GoPeak exercise art",
+     "same spot every day"
+    ],
+    "on_screen_text": "trying to get taller day 1/30",
+    "audio": "original sound - GoTall (voice + music)",
+    "difficulty": "med",
+    "est_film_minutes": 15
+   },
+   "local_file": "02_gotallapp_7595999160319364366.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@bledarrrrg/video/7647636676449275167",
+   "account": "@bledarrrrg",
+   "followers": 2223,
+   "views": 880600,
+   "account_median_views": 3958,
+   "multiple": 222.5,
+   "posted_date": "2026-06-04",
+   "length_sec": 9,
+   "format": "app-screen-recording",
+   "hook_paraphrase": "Deadpan face under a would-you-rather: 6 ft with long torso or 5'10 with short torso",
+   "structure": [
+    "face-cam, would-you-rather question in 3 lines",
+    "about 4 sec in, cut to app results screen with 'take the quiz' line",
+    "ends on app"
+   ],
+   "why_it_works": "Would-you-rather questions force a comment choice; the app screen arrives as the payoff.",
+   "cta": "On-screen: take the quiz and see what your build says, app tagged in caption",
+   "audio_name": "original sound - Juliette",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7582553092709813047",
+   "gopeak_recreation": {
+    "shot_list": [
+     "film 4 sec deadpan at a wall",
+     "overlay a two-option height question",
+     "cut to GoPeak You tab stats screen",
+     "text: take the quiz"
+    ],
+    "on_screen_text": "6ft or 5'10?",
+    "audio": "original sound - Juliette (quiet ambient loop)",
+    "difficulty": "easy",
+    "est_film_minutes": 6
+   },
+   "local_file": "03_bledarrrrg_7647636676449275167.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@bledarrrrg/video/7659177300814073102",
+   "account": "@bledarrrrg",
+   "followers": 2223,
+   "views": 776400,
+   "account_median_views": 3958,
+   "multiple": 196.2,
+   "posted_date": "2026-07-05",
+   "length_sec": 11,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Same torso would-you-rather filmed outdoors in front of cliffs",
+   "structure": [
+    "outdoor selfie, same 3-line question",
+    "holds on face",
+    "app tag in caption"
+   ],
+   "why_it_works": "Reposting a winning hook in a new location hit 196x median again.",
+   "cta": "Caption tags the app",
+   "audio_name": "som original - USE HEADSET",
+   "audio_url": "https://www.tiktok.com/music/som-original-7641675766942157586",
+   "gopeak_recreation": {
+    "shot_list": [
+     "repeat your best hook outdoors",
+     "same text, new background",
+     "no talking"
+    ],
+    "on_screen_text": "6ft or 5'10?",
+    "audio": "som original - USE HEADSET (ambient)",
+    "difficulty": "easy",
+    "est_film_minutes": 4
+   },
+   "local_file": "04_bledarrrrg_7659177300814073102.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@brady.gotall/video/7696031824576777485",
+   "account": "@brady.gotall",
+   "followers": 2072,
+   "views": 752000,
+   "account_median_views": 2150,
+   "multiple": 349.8,
+   "posted_date": "2026-10-13",
+   "length_sec": 44,
+   "format": "face-cam-reaction",
+   "hook_paraphrase": "Close face-cam talking with text 'wrist bump at 14', showing a wrist close-up",
+   "structure": [
+    "hook text about the wrist (ulnar) bump",
+    "talks through what it supposedly means for growth",
+    "shows his own wrist",
+    "comment bait: do you have it?"
+   ],
+   "why_it_works": "Body-check myths make every viewer look at their own wrist and comment.",
+   "cta": "Caption hashtags the app; spoken mention",
+   "audio_name": "Motivational - Drew",
+   "audio_url": "https://www.tiktok.com/music/Motivational-7298748072409942018",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam close, energetic",
+     "text: wrist bump at 14",
+     "show your wrist on camera",
+     "say what doctors actually use (growth plates), plug GoPeak"
+    ],
+    "on_screen_text": "wrist bump at 14",
+    "audio": "Motivational - Drew (soft background)",
+    "difficulty": "med",
+    "est_film_minutes": 10
+   },
+   "local_file": "05_brady.gotall_7696031824576777485.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallkae/video/7653751513633819918",
+   "account": "@gotallkae",
+   "followers": 418,
+   "views": 691700,
+   "account_median_views": 113250,
+   "multiple": 6.1,
+   "posted_date": "2026-06-21",
+   "length_sec": 14,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Face-cam with text: ever notice people with late puberty always grow over 6 ft",
+   "structure": [
+    "one-line observation",
+    "holds on face",
+    "comments debate late bloomers"
+   ],
+   "why_it_works": "Late bloomer hope is the biggest emotion in the niche.",
+   "cta": "Caption tags the app",
+   "audio_name": "som original - user14420459960",
+   "audio_url": "https://www.tiktok.com/music/som-original-7652175968571788033",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam, beanie or hoodie",
+     "text: ever notice late bloomers end up 6ft+",
+     "end on GoPeak late bloomer / puberty quiz screen"
+    ],
+    "on_screen_text": "late bloomers end up 6ft+",
+    "audio": "som original (low ambient)",
+    "difficulty": "easy",
+    "est_film_minutes": 3
+   },
+   "local_file": "06_gotallkae_7653751513633819918.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@brady.gotall/video/7644048049144073485",
+   "account": "@brady.gotall",
+   "followers": 2072,
+   "views": 690900,
+   "account_median_views": 2150,
+   "multiple": 321.3,
+   "posted_date": "2026-05-26",
+   "length_sec": 12,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "'My top 5 horror movies' list where all five say 'stop growing at 15'",
+   "structure": [
+    "joke setup in text",
+    "punchline repeated 5 times",
+    "caption asks: comment your height + age"
+   ],
+   "why_it_works": "Relatable fear as a meme plus a direct comment prompt; 80K likes.",
+   "cta": "Caption: comment your height + age",
+   "audio_name": "оригинальный звук - Sinekrey",
+   "audio_url": "https://www.tiktok.com/music/%D0%BE%D1%80%D0%B8%D0%B3%D0%B8%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9-%D0%B7%D0%B2%D1%83%D0%BA-7611461675052894996",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam, blank stare",
+     "overlay: my top 5 horror movies + 5 lines of 'stop growing at 15'",
+     "caption: comment your height + age",
+     "reply to comments with GoPeak predictions (bot already does this)"
+    ],
+    "on_screen_text": "my top 5 horror movies",
+    "audio": "оригинальный звук - Sinekrey",
+    "difficulty": "easy",
+    "est_film_minutes": 3
+   },
+   "local_file": "07_brady.gotall_7644048049144073485.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@mansuhn.gotall/video/7658023824717335839",
+   "account": "@mansuhn.gotall",
+   "followers": 1287,
+   "views": 627100,
+   "account_median_views": 1805.5,
+   "multiple": 347.3,
+   "posted_date": "2026-07-02",
+   "length_sec": 11,
+   "format": "app-screen-recording",
+   "hook_paraphrase": "Text lists short, average and tall height ranges for a 12 year old over a face-cam",
+   "structure": [
+    "face-cam with age height chart (short / average / tall)",
+    "cut: 'what about 18?' over the app prediction screen",
+    "app shows current vs predicted height and percentile"
+   ],
+   "why_it_works": "Teens instantly place themselves in a bracket, then want their own 18 number; comments exploded (7.6K).",
+   "cta": "Shows the app's predicted height screen as the answer",
+   "audio_name": "original sound - ren",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7654085411592997663",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam, chewing or casual",
+     "overlay: if you're 13 + 3 height ranges",
+     "cut to GoPeak Home ring with predicted height",
+     "text: what about 18?"
+    ],
+    "on_screen_text": "if you're 13",
+    "audio": "original sound - ren (same low-key loop)",
+    "difficulty": "easy",
+    "est_film_minutes": 8
+   },
+   "local_file": "08_mansuhn.gotall_7658023824717335839.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallkae/video/7642570802000350477",
+   "account": "@gotallkae",
+   "followers": 418,
+   "views": 620000,
+   "account_median_views": 113250,
+   "multiple": 5.5,
+   "posted_date": "2026-05-22",
+   "length_sec": 7,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Face-cam with text: having a short mom is the most brutal nerf even if dad is tall",
+   "structure": [
+    "one-line hot take",
+    "7 sec hold"
+   ],
+   "why_it_works": "Gaming slang ('nerf') + parents' height is instantly relatable; short length loops.",
+   "cta": "Caption tags the app",
+   "audio_name": "original sound - EXO ™",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7614208360556727062",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam close",
+     "text: short mom is the worst nerf",
+     "end card: GoPeak parents' height step"
+    ],
+    "on_screen_text": "short mom is the worst nerf",
+    "audio": "original sound - EXO",
+    "difficulty": "easy",
+    "est_film_minutes": 3
+   },
+   "local_file": "09_gotallkae_7642570802000350477.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@bledarrrrg/video/7658798292490407182",
+   "account": "@bledarrrrg",
+   "followers": 2223,
+   "views": 526900,
+   "account_median_views": 3958,
+   "multiple": 133.1,
+   "posted_date": "2026-07-04",
+   "length_sec": 12,
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Big text table: if you are 5'4, 5'6, 5'8 at 14 you WILL be 6'0, 6'3, 5'8 at 18",
+   "structure": [
+    "face-cam with confident claim table",
+    "last row is a twist (5'8 stays 5'8)",
+    "viewers comment their own numbers"
+   ],
+   "why_it_works": "Bold, slightly wrong claims bait corrections and 'what about me' comments.",
+   "cta": "Caption: track your height with the app",
+   "audio_name": "original sound - Teddy",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7578235105971030805",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam, serious look",
+     "overlay: if you are X at 14, you will be Y at 18",
+     "add one twist row",
+     "pin a comment: get your real number in the app"
+    ],
+    "on_screen_text": "you WILL be",
+    "audio": "original sound - Teddy",
+    "difficulty": "easy",
+    "est_film_minutes": 5
+   },
+   "local_file": "10_bledarrrrg_7658798292490407182.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallapp/video/7590761660176960823",
+   "account": "@gotallapp",
+   "followers": 17500,
+   "views": 494800,
+   "account_median_views": 20600,
+   "multiple": 24.0,
+   "posted_date": "2026-01-02",
+   "length_sec": 31,
+   "format": "tutorial/routine",
+   "hook_paraphrase": "Day 1 of the same 50 day grow-taller challenge, measuring barefoot on a mat",
+   "structure": [
+    "day 1 measurement",
+    "stretch sequence with names",
+    "promise to post daily"
+   ],
+   "why_it_works": "Day 1 of a challenge is the most shareable entry point.",
+   "cta": "Brand account",
+   "audio_name": "original sound - GoTall",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7590761854008412983",
+   "gopeak_recreation": {
+    "shot_list": [
+     "start your own day 1/30 with a real measurement",
+     "3 stretches with name labels",
+     "end: follow for day 2"
+    ],
+    "on_screen_text": "day 1/30",
+    "audio": "original sound - GoTall",
+    "difficulty": "med",
+    "est_film_minutes": 15
+   },
+   "local_file": "11_gotallapp_7590761660176960823.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@brady.gotall/video/7691813934591937806",
+   "account": "@brady.gotall",
+   "followers": 2072,
+   "views": 247100,
+   "account_median_views": 2150,
+   "multiple": 114.9,
+   "posted_date": "2026-10-01",
+   "length_sec": 45,
+   "format": "face-cam-reaction",
+   "hook_paraphrase": "Second version of the wrist bump talk, new shirt",
+   "structure": [
+    "same hook text",
+    "same talking beats"
+   ],
+   "why_it_works": "Second take of a winning topic still hit 115x median.",
+   "cta": "Caption hashtags the app",
+   "audio_name": "Motivational - Drew",
+   "audio_url": "https://www.tiktok.com/music/Motivational-7298748072409942018",
+   "gopeak_recreation": {
+    "shot_list": [
+     "repeat the wrist bump topic with a new opener line"
+    ],
+    "on_screen_text": "wrist bump at 14",
+    "audio": "Motivational - Drew",
+    "difficulty": "med",
+    "est_film_minutes": 10
+   },
+   "local_file": "12_brady.gotall_7691813934591937806.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallapp/video/7645380802812906766",
+   "account": "@gotallapp",
+   "followers": 17500,
+   "views": 219600,
+   "account_median_views": 20600,
+   "multiple": 10.7,
+   "posted_date": "2026-05-29",
+   "length_sec": 76,
+   "format": "face-cam-reaction",
+   "hook_paraphrase": "Talking head counting down the 3 worst heights for guys",
+   "structure": [
+    "numbered list empty at start (3, 2, 1)",
+    "fills each slot with a reason",
+    "asks viewers to drop their height"
+   ],
+   "why_it_works": "Ranked lists hold watch time until number 1; strong opinions drive comments.",
+   "cta": "Caption: drop your height, app plug",
+   "audio_name": "original sound - GoTall",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7645380910015875854",
+   "gopeak_recreation": {
+    "shot_list": [
+     "face-cam, wall background",
+     "text: 3 worst heights",
+     "reveal 3, 2, 1 with jokes",
+     "end: drop yours, I'll predict it"
+    ],
+    "on_screen_text": "3 worst heights",
+    "audio": "original sound - GoTall (talking)",
+    "difficulty": "med",
+    "est_film_minutes": 12
+   },
+   "local_file": "13_gotallapp_7645380802812906766.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@mansuhn.gotall/video/7659169338003311885",
+   "account": "@mansuhn.gotall",
+   "followers": 1287,
+   "views": 218800,
+   "account_median_views": 1805.5,
+   "multiple": 121.2,
+   "posted_date": "2026-07-05",
+   "length_sec": 8,
+   "format": "app-screen-recording",
+   "hook_paraphrase": "Same age height-range chart format, different room and outfit",
+   "structure": [
+    "face-cam + age height ranges",
+    "cut to app prediction"
+   ],
+   "why_it_works": "Proves the format repeats: second post of the same template still hit 121x the median.",
+   "cta": "App prediction screen at the end",
+   "audio_name": "original sound - ren",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7654085411592997663",
+   "gopeak_recreation": {
+    "shot_list": [
+     "reuse the 'if you're 13' template with age 14 or 15",
+     "new location so it reads as fresh",
+     "end on GoPeak prediction"
+    ],
+    "on_screen_text": "if you're 14",
+    "audio": "original sound - ren",
+    "difficulty": "easy",
+    "est_film_minutes": 5
+   },
+   "local_file": "14_mansuhn.gotall_7659169338003311885.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@bledarrrrg/video/7655086512194751758",
+   "account": "@bledarrrrg",
+   "followers": 2223,
+   "views": 199600,
+   "account_median_views": 3958,
+   "multiple": 50.4,
+   "posted_date": "2026-06-24",
+   "length_sec": 8,
+   "format": "face-cam-reaction",
+   "hook_paraphrase": "Sitting at a table: if you're 5'5 at 13, here is your final height",
+   "structure": [
+    "face-cam, hands folded",
+    "one-line promise of a final height",
+    "reveal / tease"
+   ],
+   "why_it_works": "Specific age + height in the hook makes a slice of viewers feel called out.",
+   "cta": "Caption tags the app",
+   "audio_name": "sonido original - tu mejor version",
+   "audio_url": "https://www.tiktok.com/music/sonido-original-7454792227714370326",
+   "gopeak_recreation": {
+    "shot_list": [
+     "sit at a desk, look at lens",
+     "text: if you're 5'5 at 13...",
+     "cut to GoPeak prediction screen"
+    ],
+    "on_screen_text": "if you're 5'5 at 13",
+    "audio": "sonido original - tu mejor version",
+    "difficulty": "easy",
+    "est_film_minutes": 5
+   },
+   "local_file": "15_bledarrrrg_7655086512194751758.mp4"
+  },
+  {
+   "platform": "tiktok",
+   "url": "https://www.tiktok.com/@gotallapp/video/7604156736521506062",
+   "account": "@gotallapp",
+   "followers": 17500,
+   "views": 188700,
+   "account_median_views": 20600,
+   "multiple": 9.2,
+   "posted_date": "2026-02-07",
+   "length_sec": 25,
+   "format": "app-screen-recording",
+   "hook_paraphrase": "Day 30 of 50 measurement with the app's current vs predicted height card on screen",
+   "structure": [
+    "tape measure check-in",
+    "app card overlay with prediction",
+    "progress update"
+   ],
+   "why_it_works": "Mid-series payoff with real numbers.",
+   "cta": "App result card overlaid on video",
+   "audio_name": "original sound - GoTall",
+   "audio_url": "https://www.tiktok.com/music/original-sound-7604156794914622221",
+   "gopeak_recreation": {
+    "shot_list": [
+     "day 15 check-in with tape",
+     "overlay GoPeak Home ring (current + predicted)",
+     "text: day 15/30"
+    ],
+    "on_screen_text": "day 15/30",
+    "audio": "original sound - GoTall",
+    "difficulty": "med",
+    "est_film_minutes": 10
+   },
+   "local_file": "16_gotallapp_7604156736521506062.mp4"
+  }
+ ]
+}

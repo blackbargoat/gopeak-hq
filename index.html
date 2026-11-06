@@ -199,6 +199,23 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .idea .art{aspect-ratio:3/4}
 .player{margin:14px auto 0;width:100%;max-width:330px;aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#0b0b0d}
 .player iframe{width:100%;height:100%;border:0;display:block}
+
+.bars{margin-top:14px}
+.bars .cols{display:flex;align-items:flex-end;gap:4px;height:170px;border-bottom:1px solid var(--line);position:relative}
+.bars .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bars .col b{font-size:11px;font-weight:800;color:#fff;margin-bottom:4px;white-space:nowrap}
+.bars .col i{display:block;width:100%;max-width:22px;border-radius:6px 6px 3px 3px;background:var(--blue);min-height:3px;transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.bars .col.zero i{background:#26262c}.bars .col.zero b{color:var(--dim)}
+.bars .col.today i{background:var(--blue-hi)}
+.bars .row{display:flex;gap:4px;margin-top:8px}
+.bars .row span{flex:1;min-width:0;text-align:center;font-size:10px;font-weight:700;color:var(--dim);white-space:nowrap;overflow:hidden}
+.bars .row.posts span{height:22px;display:flex;align-items:center;justify-content:center}
+.bars .row.posts em{font-style:normal;display:inline-flex;align-items:center;gap:2px;height:20px;padding:0 5px;border-radius:999px;background:#fff;color:#000;font-size:10px;font-weight:900}
+.bars .row.posts em svg{width:9px;height:9px}
+.bars .key{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;font-weight:700;color:var(--dim)}
+.bars .key em{font-style:normal;display:inline-flex;align-items:center;gap:2px;height:20px;padding:0 6px;border-radius:999px;background:#fff;color:#000;font-size:10px;font-weight:900}
+.bars .goal{position:absolute;left:0;right:0;border-top:2px dashed var(--good);opacity:.7}
+.bars .goal span{position:absolute;right:0;top:-18px;font-size:11px;font-weight:800;color:var(--good)}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -266,8 +283,8 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 
     <div class="grid2">
       <div class="card">
-        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><span class="chip" id="legend"><i style="width:10px;height:10px;border-radius:3px;background:var(--blue);display:inline-block"></i>actual <i style="width:14px;height:3px;border-radius:2px;background:#fff;display:inline-block;margin-left:6px"></i>model <i style="width:10px;height:10px;border-radius:3px;border:1.5px dashed var(--blue-hi);display:inline-block;margin-left:6px"></i>next 7 <i style="width:12px;height:12px;border-radius:50%;background:#fff;display:inline-block;margin-left:6px"></i>posts</span></div>
-        <svg class="chart" id="trend" viewBox="0 0 320 190" preserveAspectRatio="none" style="height:190px"></svg>
+        <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><div class="toggle" id="rangeT" role="group" aria-label="Range"><button aria-pressed="true" data-r="14">14d</button><button aria-pressed="false" data-r="30">30d</button></div></div>
+        <div id="trend" class="bars"></div>
       </div>
       <div class="card">
         <span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg>funnel · 7 days</span>
@@ -481,34 +498,27 @@ function renderForecast() {
   const r = D.site.slice(-30), v = r.reduce((a, x) => a + (x.views || 0), 0), s30 = r.reduce((a, x) => a + (x.waitlist_signups || 0), 0);
   $("#rate1k").textContent = M.rate.toFixed(1); $("#visitConv").textContent = v ? Math.round((100 * s30) / v) + "%" : "-"; $("#perVid").textContent = Math.round(perVideo("typical"));
 }
+let RANGE = 14;
 function renderTrend() {
-  const rows = D.site.slice(-30), ig = igViewsByDay(), next = baselineNext(7);
+  const rows = D.site.slice(-RANGE);
   if (!rows.length) return;
-  const W = 320, H = 190, pad = 18, top = 26, N = rows.length + next.length, bw = (W - 8) / N;
-  // videos posted per day (both Instagram accounts + creator posts), shown as numbered dots above the bars
   const posted = {};
   for (const p of Object.values(D.posts)) { const d = p.timestamp && new Date(p.timestamp).toLocaleDateString("en-CA"); if (d) posted[d] = (posted[d] || 0) + 1; }
   for (const p of T?.posts || []) { const d = new Date(p.posted_at || p.detected_at).toLocaleDateString("en-CA"); posted[d] = (posted[d] || 0) + 1; }
-  const model = rows.map((r) => (ig[r.day] != null ? (ig[r.day] * M.rate) / 1000 : null));
-  const maxS = Math.max(GOAL, ...rows.map((r) => r.waitlist_signups || 0), ...model.filter((x) => x != null), ...next);
-  const y = (v) => H - pad - ((H - pad - top) * v) / maxS;
-  let h = `<line x1="0" x2="${W}" y1="${y(GOAL)}" y2="${y(GOAL)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="4 5"/><text x="${W - 2}" y="${y(GOAL) - 4}" text-anchor="end" style="fill:var(--good)">100</text>`;
-  rows.forEach((r, i) => {
-    const v = r.waitlist_signups || 0, bh = Math.max(v ? 3 : 1.5, H - pad - y(v));
-    h += `<rect x="${4 + i * bw + 1}" y="${H - pad - bh}" width="${bw - 2}" height="${bh}" rx="${Math.min(3, (bw - 2) / 2)}" fill="${v ? "var(--blue)" : "#1f1f24"}"><title>${r.day}: ${v} signups, model ${Math.round(model[i] ?? 0)}</title></rect>`;
-  });
-  next.forEach((v, j) => {
-    const i = rows.length + j, bh = Math.max(2, H - pad - y(v));
-    h += `<rect x="${4 + i * bw + 1.5}" y="${H - pad - bh}" width="${bw - 3}" height="${bh}" rx="${Math.min(3, (bw - 3) / 2)}" fill="none" stroke="var(--blue-hi)" stroke-width="1.2" stroke-dasharray="3 2"><title>forecast: ${Math.round(v)}</title></rect>`;
-  });
-  const pts = model.map((m, i) => (m == null ? null : [4 + i * bw + bw / 2, y(m)])).filter(Boolean);
-  if (pts.length > 1) h += `<path d="M${pts.map((p) => p.join(",")).join("L")}" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>`;
-  rows.forEach((r, i) => { const c = posted[r.day]; if (!c) return; const cx = 4 + i * bw + bw / 2;
-    h += `<circle cx="${cx}" cy="10" r="${Math.max(5, Math.min(8, bw / 2))}" fill="#fff"><title>${r.day}: ${c} video${c === 1 ? "" : "s"} posted</title></circle><text x="${cx}" y="13.5" text-anchor="middle" style="fill:#000;font-size:9px;font-weight:900">${c}</text>`; });
-  const lbl = (i, d) => `<text x="${4 + i * bw + bw / 2}" y="${H - 3}" text-anchor="middle">${d}</text>`;
-  h += lbl(1, new Date(rows[0].day + "T12:00").toLocaleDateString([], { month: "short", day: "numeric" })) + lbl(rows.length - 1, "today") + lbl(N - 1, "+7d");
-  $("#trend").innerHTML = h;
+  const vals = rows.map((r) => r.waitlist_signups || 0), max = Math.max(1, ...vals), t = today();
+  const showGoal = max >= GOAL * 0.6, top = Math.max(max, showGoal ? GOAL : 0) * 1.12;
+  const phone = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="2" width="12" height="20" rx="3"/></svg>';
+  const every = RANGE > 14 ? 5 : 2;
+  $("#trend").innerHTML = `
+    <div class="cols">${showGoal ? `<div class="goal" style="bottom:${(100 * GOAL) / top}%"><span>100</span></div>` : ""}
+      ${rows.map((r, i) => `<div class="col${vals[i] ? "" : " zero"}${r.day === t ? " today" : ""}" title="${r.day}: ${vals[i]} signups"><b>${RANGE > 14 && vals[i] < max * 0.05 && vals[i] ? "" : vals[i]}</b><i style="height:${Math.max(vals[i] ? 4 : 2, (100 * vals[i]) / top)}%"></i></div>`).join("")}</div>
+    <div class="row">${rows.map((r, i) => `<span>${r.day === t ? "today" : i % every === (rows.length - 1) % every ? new Date(r.day + "T12:00").toLocaleDateString([], { month: "numeric", day: "numeric" }) : ""}</span>`).join("")}</div>
+    <div class="row posts">${rows.map((r) => `<span>${posted[r.day] ? `<em>${phone}${posted[r.day]}</em>` : ""}</span>`).join("")}</div>
+    <div class="key"><em>${phone}2</em> videos posted that day</div>`;
 }
+document.querySelectorAll("#rangeT button").forEach((b) => b.onclick = () => {
+  RANGE = +b.dataset.r; document.querySelectorAll("#rangeT button").forEach((x) => x.setAttribute("aria-pressed", x === b)); renderTrend();
+});
 function renderFunnel() {
   const r = D.site.slice(-7), v = r.reduce((a, x) => a + (x.views || 0), 0), o = r.reduce((a, x) => a + (x.opens || 0), 0), s = r.reduce((a, x) => a + (x.waitlist_signups || 0), 0);
   const sz = (n) => 44 + Math.min(40, Math.sqrt(n) * 3);
@@ -628,7 +638,7 @@ async function loadTeam() {
     const have = new Set((T.references || []).map((r) => r.url)), fresh = D.outliers.outliers.filter((o) => !have.has(o.url));
     if (fresh.length) { await cp("admin/references-import", { items: fresh }).catch(() => {}); T = await cp("admin/overview").catch(() => T); }
   }
-  renderTeam(); renderIdeas();
+  renderTeam(); renderIdeas(); renderTrend();
 }
 function refStats(ref) {
   const rows = D.refs.filter((r) => r.ref === ref);

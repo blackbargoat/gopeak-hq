@@ -228,6 +228,21 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .src{display:grid;gap:8px;margin-top:14px}
 .src div{background:var(--card);border-radius:16px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.4;color:var(--dim)}
 .src b{color:#fff}
+
+.accs{margin-top:12px;border-radius:18px;background:var(--card2);overflow:hidden}
+.accs summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;font-size:14px;font-weight:800}
+.accs summary::-webkit-details-marker{display:none}
+.accs summary .chev{transition:transform .2s;color:var(--dim)}
+.accs[open] summary .chev{transform:rotate(180deg)}
+.acc-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line)}
+.acc-row .pi{width:30px;height:30px;border-radius:50%;background:#2a2a30;display:grid;place-items:center;flex:none}
+.acc-row .pi svg{width:15px;height:15px}
+.acc-row b{font-size:14px;font-weight:800}
+.acc-row small{display:block;font-size:11px;font-weight:700;color:var(--dim)}
+.acc-row .nums{margin-left:auto;text-align:right}
+.acc-row .nums b{font-size:14px}
+.acc-row .rm{margin-left:8px;width:26px;height:26px;border-radius:50%;background:#2a2a30;color:var(--dim);font-weight:900;flex:none}
+.acc-add{width:100%;padding:12px 14px;border-top:1px solid var(--line);font-size:13px;font-weight:800;color:var(--blue-hi);text-align:left}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -667,7 +682,7 @@ function renderTeam() {
     $("#team").innerHTML = `<div class="card"><div class="empty">${/not found|404|Failed/i.test(T.error) ? "creator program goes live after the one-time setup" : "couldn't load the team"}</div></div>`;
     $("#queue").innerHTML = $("#flaggedBox").innerHTML = $("#invitesBox").innerHTML = ""; return;
   }
-  const cs = T.creators || [], owed = cs.filter((c) => !c.house && c.counted >= c.retainer_videos).reduce((a, c) => a + Number(c.retainer_pay), 0);
+  const cs = (T.creators || []).filter((c) => !c.house), owed = cs.filter((c) => c.counted >= c.retainer_videos).reduce((a, c) => a + Number(c.retainer_pay), 0);
   const bc = $("#bossChip"); bc.style.display = T.queue.length ? "" : "none"; bc.textContent = `${T.queue.length} to review`;
   bc.onclick = () => document.querySelector('nav.tabs button[data-p="team"]').click();
   $("#tQueue").textContent = T.queue.length; $("#tVideos").textContent = cs.reduce((a, c) => a + c.counted, 0); $("#tOwed").textContent = "$" + fmt(owed);
@@ -686,26 +701,20 @@ function renderTeam() {
   });
   // creators
   $("#team").innerHTML = cs.map((c) => {
-    if (c.house) {
-      // Your own accounts: Instagram numbers from the reply bot, no retainer
-      const acc = c.instagram, ps = Object.values(D.posts).filter((p) => p.account === acc && Date.now() - Date.parse(p.timestamp) < 30 * 864e5);
-      const rows = D.ig.filter((r) => r.account === acc), last = rows[rows.length - 1] || {};
-      const v30 = rows.filter((r) => Date.now() - Date.parse(r.day) < 30 * 864e5).reduce((a, r) => a + (r.views || 0), 0);
-      return `<div class="card"><div class="crt"><div class="av">${esc(acc[0].toUpperCase())}</div><div style="flex:1;min-width:0"><b style="font-size:17px;font-weight:800">@${esc(acc)}</b>
-        <span class="label" style="margin-top:3px"><svg viewBox="0 0 24 24">${PLAT.instagram}</svg>your account</span></div><span class="chip blue">house</span></div>
-        <div class="cstats"><div><b>${ps.length}</b><span>posts 30d</span></div><div><b>${fmt(v30)}</b><span>views 30d</span></div><div><b>${fmt(last.followers)}</b><span>followers</span></div><div><b>${Math.round((v30 * M.rate) / 1000)}</b><span>est. signups</span></div></div></div>`;
-    }
     const st = refStats(c.tiktok || c.instagram || ""), done = c.counted >= c.retainer_videos;
-    const handles = [["tiktok", c.tiktok], ["instagram", c.instagram], ["youtube", c.youtube]].filter((h) => h[1]);
+    const accs = c.accounts || [];
     return `<div class="card"><div class="crt">${progRing(c.counted, c.retainer_videos)}<div style="flex:1;min-width:0"><b style="font-size:17px;font-weight:800">${esc(c.name)}</b>
-        <span class="label" style="margin-top:3px">${handles.map((h) => `<svg viewBox="0 0 24 24">${PLAT[h[0]] || PLAT.tiktok}</svg>${esc(h[1])}`).join(" ") || "no handles"}</span></div>
+        <span class="label" style="margin-top:3px">${accs.length ? accs.map((a) => `<svg viewBox="0 0 24 24">${PLAT[a.platform] || PLAT.tiktok}</svg>`).join("") + ` ${accs.length} account${accs.length === 1 ? "" : "s"}` : "no accounts yet"}</span></div>
         <button class="chip${c.status === "active" ? "" : " warn"}" data-edit="${c.id}">${c.status === "active" ? "edit" : c.status}</button></div>
       <div class="cstats"><div><b>${c.counted}/${c.retainer_videos}</b><span>videos</span></div><div><b>${fmt(c.views)}</b><span>views</span></div><div><b>${c.flagged}</b><span>flagged</span></div><div><b>$${fmt(c.paid_total)}</b><span>paid</span></div></div>
+      ${accountsBox(c)}
       ${done ? `<button class="btn3d good" style="width:100%;margin-top:14px" data-pay="${c.id}">pay $${fmt(c.retainer_pay)}</button>` : `<div class="fc-bar" style="margin-top:14px"><i class="add" style="width:${Math.min(100, (100 * c.counted) / c.retainer_videos)}%"></i></div>`}</div>`;
   }).join("") || `<div class="card"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/></svg>invite your first creator</div></div>`;
   $("#team").querySelectorAll("[data-pay]").forEach((b) => b.onclick = async () => { const c = byId[b.dataset.pay];
     confirmSheet(`pay ${esc(c.name)} $${fmt(c.retainer_pay)}?`, "mark paid", async () => { await cp("admin/payout", { id: c.id }).then((r) => toast(`logged $${r.amount}`)).catch((e) => toast(e.message)); loadTeam(); }); });
   $("#team").querySelectorAll("[data-edit]").forEach((b) => b.onclick = () => editCreator(byId[b.dataset.edit]));
+  $("#team").querySelectorAll("[data-addacc]").forEach((b) => b.onclick = () => addAccount(byId[b.dataset.addacc]));
+  $("#team").querySelectorAll("[data-rmacc]").forEach((b) => b.onclick = () => confirmSheet("remove this account?", "remove", async () => { await cp("admin/account-delete", { id: b.dataset.rmacc }).catch(() => {}); toast("removed"); loadTeam(); }));
   // flagged posts
   $("#flaggedBox").innerHTML = T.flagged.length ? `<div class="card"><span class="label" style="color:var(--bad)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>posted without approval</span>
     ${T.flagged.slice(0, 20).map((p) => `<div class="flag"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24">${PLAT[p.platform] || PLAT.tiktok}</svg></span><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(byId[p.creator_id]?.name || "")}</b><small>${fmt(p.views)} views · ${ago(p.posted_at || p.detected_at)} ago</small></div>
@@ -714,6 +723,34 @@ function renderTeam() {
   // pending invites
   $("#invitesBox").innerHTML = T.invites.length ? `<div class="card"><span class="label">invites waiting</span>${T.invites.map((i) => `<div class="link"><span>${esc(i.name || i.email)}</span><button data-copy="${esc(i.link)}">copy link</button></div>`).join("")}</div>` : "";
   $("#invitesBox").querySelectorAll("[data-copy]").forEach((b) => b.onclick = () => shareLink(b.dataset.copy));
+}
+// One row per linked account. Instagram numbers come from the reply bot (if that account is connected there),
+// TikTok / YouTube numbers from the creator post detector.
+function accStats(c, a) {
+  if (a.platform === "instagram") {
+    const rows = D.ig.filter((r) => r.account === a.handle);
+    if (!rows.length) return { top: "-", sub: "not on the bot" };
+    const v30 = rows.filter((r) => Date.now() - Date.parse(r.day) < 30 * 864e5).reduce((x, r) => x + (r.views || 0), 0);
+    return { top: fmt(v30), sub: `views 30d · ${fmt(rows[rows.length - 1].followers)} followers` };
+  }
+  const ps = (T?.posts || []).filter((p) => p.creator_id === c.id && p.platform === a.platform && String(p.url).toLowerCase().includes(a.handle.toLowerCase()));
+  return { top: fmt(ps.reduce((x, p) => x + (p.views || 0), 0)), sub: `${ps.length} post${ps.length === 1 ? "" : "s"} · views` };
+}
+function accountsBox(c) {
+  const accs = c.accounts || [];
+  return `<details class="accs"><summary>accounts <span class="chev">⌄</span></summary>
+    ${accs.map((a) => { const st = accStats(c, a); return `<div class="acc-row"><span class="pi"><svg viewBox="0 0 24 24">${PLAT[a.platform] || PLAT.tiktok}</svg></span>
+      <div style="min-width:0"><b>@${esc(a.handle)}</b><small>${a.platform}${a.added_by === "manager" ? " · added by you" : ""}</small></div>
+      <div class="nums"><b>${st.top}</b><small>${st.sub}</small></div>${a.added_by === "manager" ? `<button class="rm" data-rmacc="${a.id}" aria-label="Remove account">×</button>` : ""}</div>`; }).join("")}
+    <button class="acc-add" data-addacc="${c.id}">+ account</button></details>`;
+}
+function addAccount(c) {
+  openSheet(`<h3>add an account for ${esc(c.name)}</h3><form class="cf" id="aa">
+    <select name="platform"><option>tiktok</option><option>instagram</option><option>youtube</option></select>
+    <input name="handle" placeholder="@handle" required autocapitalize="off">
+    <button class="btn3d">add</button></form>`);
+  $("#aa").onsubmit = async (e) => { e.preventDefault(); const v = Object.fromEntries(new FormData(e.target));
+    await cp("admin/account", { creator_id: c.id, ...v }).then(() => { toast("added"); closeSheet(); loadTeam(); }).catch((err) => toast(err.message)); };
 }
 async function shareLink(link) {
   if (navigator.share) { try { await navigator.share({ title: "GoPeak creator invite", url: link }); return; } catch {} }
@@ -740,7 +777,6 @@ $("#inviteBtn").onclick = () => {
 function editCreator(c) {
   openSheet(`<h3>${esc(c.name)}</h3><form class="cf" id="ec">
     <div class="two"><input name="retainer_videos" type="number" min="1" value="${c.retainer_videos}" aria-label="videos per payout"><input name="retainer_pay" type="number" min="0" value="${c.retainer_pay}" aria-label="dollars per payout"></div>
-    <input name="tiktok" placeholder="tiktok" value="${esc(c.tiktok || "")}"><input name="instagram" placeholder="instagram" value="${esc(c.instagram || "")}"><input name="youtube" placeholder="youtube" value="${esc(c.youtube || "")}">
     <select name="status">${["active", "paused", "removed"].map((x) => `<option ${x === c.status ? "selected" : ""}>${x}</option>`).join("")}</select>
     <button class="btn3d">save</button>${c.counted ? `<button type="button" class="btn3d ghost" id="payPart">pay early (${c.counted} videos)</button>` : ""}</form>`);
   $("#ec").onsubmit = async (e) => { e.preventDefault(); await cp("admin/creator", { id: c.id, ...Object.fromEntries(new FormData(e.target)) }).then(() => toast("saved")).catch(() => toast("couldn't save")); closeSheet(); loadTeam(); };

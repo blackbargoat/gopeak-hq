@@ -264,6 +264,20 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .flow .fl svg{display:block;width:100%;height:30px;margin-top:8px}
 .accpause{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;border-top:1px solid var(--line);font-size:14px;font-weight:800}
 .accpause:first-of-type{border-top:0}
+
+.worldmap{width:100%;height:auto;display:block;margin-top:12px}
+.worldmap path{stroke:#0b0b0d;stroke-width:.4}
+.ctry{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ctry span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:var(--card2);font-size:13px;font-weight:800}
+.ctry span i{font-style:normal;color:var(--blue-hi)}
+.sig{display:flex;align-items:center;justify-content:space-between;padding:9px 2px;border-top:1px solid var(--line);font-size:14px;font-weight:700}
+.sig:first-child{border-top:0}
+.sig small{color:var(--dim);font-weight:700;font-size:12px}
+.launch{text-align:center}
+.launch .big{font-size:56px;color:#fff}
+.btnLaunch{width:100%;height:64px;margin-top:16px;border-radius:999px;background:var(--good);color:#04210d;font-size:20px;font-weight:900;box-shadow:0 6px 0 #1e7a37;transition:transform .12s,box-shadow .12s}
+.btnLaunch:active{transform:translateY(5px);box-shadow:0 1px 0 #1e7a37}
+.btnLaunch[disabled]{background:#2a2a30;color:var(--dim);box-shadow:0 6px 0 #050506}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -286,6 +300,8 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .idea .eye{position:absolute;right:10px;bottom:10px;height:24px;padding:0 8px;border-radius:999px;background:var(--good);color:#04210d;font-size:11px;font-weight:900;display:flex;align-items:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3/dist/d3-array.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo@3/dist/d3-geo.min.js"></script>
 </head>
 <body>
 <div id="gate"><div class="in">
@@ -315,6 +331,23 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       </div>
 
 
+    <div class="card launch" id="launchCard">
+      <span class="label" style="justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.1 2.1 0 0 0-2.9-.1zM12 15l-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/></svg>launch email</span>
+      <div class="big" id="lCount" style="margin-top:10px">0</div>
+      <span class="label" style="justify-content:center;margin-top:4px" id="lSub">people on the waitlist</span>
+      <button class="btn3d ghost" style="width:100%;margin-top:16px" id="lTest">send test to me</button>
+      <button class="btnLaunch" id="lGo">launch</button>
+      <p class="label" style="justify-content:center;margin-top:12px" id="lState">not connected to kit yet</p>
+    </div>
+    <div class="card">
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>downloads around the world</span><span class="chip" id="wTotal">0</span></div>
+      <svg class="worldmap" id="worldMap" viewBox="0 0 960 480"></svg>
+      <div class="ctry" id="wList"></div>
+    </div>
+    <div class="card">
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 7l8 6 8-6"/></svg>who signed up</span><span class="chip" id="sgPhones">0 phones</span></div>
+      <div id="sgList" style="margin-top:10px"></div>
+    </div>
     <div class="card" id="salesCard">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>app sales</span><span class="chip" id="salesLive">from apple</span></div>
       <div class="mini3" style="grid-template-columns:repeat(4,1fr)">
@@ -502,7 +535,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadBot(); loadSales();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadBot(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -738,6 +771,49 @@ function renderSales() {
   $("#salesBars").innerHTML = days.map((d, i) => `<div class="h" title="${d}: ${tr[i]} trials, ${pd[i]} paid"><i class="c" style="height:${(100 * tr[i]) / m}%"></i><i class="r" style="height:${(100 * pd[i]) / m}%;background:var(--good)"></i></div>`).join("");
   $("#salesLive").textContent = SALES.length ? "from apple, live" : "waiting for the first sale";
 }
+
+// ---------- world map (Apple daily sales reports via the asc-sales function) ----------
+const GEO = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@v5.1.2/geojson/ne_110m_admin_0_countries.geojson";
+let WORLD = null, GEOJSON = null;
+async function loadWorld() {
+  try { WORLD = await fetch("https://etdbjahwegsmuelcawgf.supabase.co/functions/v1/asc-sales", { method: "POST", headers: { apikey: KEY, "content-type": "application/json" }, body: "{}" }).then((r) => r.json()); } catch { WORLD = null; }
+  if (!GEOJSON) { try { GEOJSON = await fetch(GEO).then((r) => r.json()); } catch {} }
+  renderWorld();
+}
+function renderWorld() {
+  const cs = WORLD?.countries || [], by = Object.fromEntries(cs.map((c) => [c.country, c]));
+  const total = cs.reduce((a, c) => a + Number(c.downloads || 0), 0); $("#wTotal").textContent = fmt(total) + " downloads";
+  const max = Math.max(1, ...cs.map((c) => Number(c.downloads || 0)));
+  if (GEOJSON && window.d3?.geoEqualEarth) {
+    const proj = d3.geoEqualEarth().fitSize([960, 480], GEOJSON), path = d3.geoPath(proj);
+    $("#worldMap").innerHTML = GEOJSON.features.filter((f) => f.properties.ISO_A2 !== "AQ").map((f) => {
+      const iso = f.properties.ISO_A2_EH || f.properties.ISO_A2, c = by[iso], v = Number(c?.downloads || 0);
+      const fill = v ? `rgba(74,173,252,${0.35 + 0.65 * (v / max)})` : "#1c1c20";
+      return `<path d="${path(f)}" fill="${fill}"><title>${esc(f.properties.NAME)}: ${v} downloads${c?.purchases ? ", " + c.purchases + " paid" : ""}</title></path>`;
+    }).join("");
+  }
+  $("#wList").innerHTML = cs.slice(0, 12).map((c) => `<span>${esc(c.country)} <i>${fmt(c.downloads || 0)}</i>${c.purchases ? ` · ${c.purchases} paid` : ""}</span>`).join("") || `<div class="empty">apple's reports land about a day after each day</div>`;
+}
+
+// ---------- who signed up (masked, needs the HQ password) ----------
+async function loadSignups() {
+  if (!PW) return;
+  try { const w = await cp("admin/waitlist"); $("#sgPhones").textContent = `${fmt(w.phones)} phones`; $("#lCount").textContent = fmt(w.total);
+    $("#sgList").innerHTML = w.recent.slice(0, 12).map((r) => `<div class="sig"><span>${esc(r.email)}${r.phone ? ` <small>· ${esc(r.phone)}</small>` : ""}</span><small>${ago(r.at)} ago</small></div>`).join(""); } catch {}
+}
+
+// ---------- launch email (Kit broadcast through the creators function) ----------
+async function loadLaunch() {
+  if (!PW) return;
+  try { const k = await cp("admin/kit-status"); $("#lState").textContent = k.state || "ready"; $("#lGo").disabled = !k.ready || !!k.sent; if (k.sent) $("#lGo").textContent = "launched"; }
+  catch { $("#lState").textContent = "not connected to kit yet"; $("#lGo").disabled = true; }
+}
+$("#lTest").onclick = async () => { try { const r = await cp("admin/launch", { mode: "test" }); toast(r.message || "test sent to you"); } catch (e) { toast(e.message || "kit isn't connected yet"); } };
+$("#lGo").onclick = () => openSheet(`<h3>send the launch email to everyone?</h3>
+  <p style="margin-top:10px;font-weight:600;color:var(--dim);line-height:1.45">goes to the whole waitlist right now. this can't be undone. type <b style="color:#fff">launch</b> to confirm.</p>
+  <form class="cf" id="lc"><input name="w" placeholder="launch" autocapitalize="off" autocomplete="off"><button class="btnLaunch" style="margin-top:4px">send it</button></form>`) || ($("#lc").onsubmit = async (e) => {
+  e.preventDefault(); if (e.target.w.value.trim().toLowerCase() !== "launch") return toast("type launch to confirm");
+  try { const r = await cp("admin/launch", { mode: "live", confirm: "launch" }); closeSheet(); toast(r.message || "launched"); loadLaunch(); } catch (err) { toast(err.message || "couldn't launch"); } });
 // ---------- reply bot panel ----------
 let BOTS = { hourly: {}, bot: null, site: [] };
 async function loadBot() {

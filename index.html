@@ -336,29 +336,29 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
     <div class="card launch" id="launchCard">
       <span class="label" style="justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.1 2.1 0 0 0-2.9-.1zM12 15l-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/></svg>launch email</span>
       <div class="big" id="lCount" style="margin-top:10px">0</div>
-      <span class="label" style="justify-content:center;margin-top:4px" id="lSub">people on the waitlist</span>
+      <span class="label" style="justify-content:center;margin-top:4px" id="lSub">waitlist</span>
       <button class="btn3d ghost" style="width:100%;margin-top:16px" id="lTest">send test to me</button>
       <button class="btnLaunch" id="lGo">launch</button>
       <p class="label" style="justify-content:center;margin-top:12px" id="lState">not connected to kit yet</p>
     </div>
     <div class="card" id="salesCard">
-      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>app sales</span><span class="chip" id="salesLive">from apple</span></div>
-      <div class="mini3" style="grid-template-columns:repeat(4,1fr)">
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>sales</span><span class="chip" id="salesLive">from apple</span></div>
+      <div class="mini3">
         <div class="stat"><b id="sTrials">0</b><span id="sTrialsL">trials</span></div>
         <div class="stat"><b id="sPaid">0</b><span id="sPaidL">paid</span></div>
-        <div class="stat"><b id="sCancel">0</b><span id="sCancelL">cancels</span></div>
+        <div class="stat" hidden><b id="sCancel">0</b><span id="sCancelL">cancels</span></div>
         <div class="stat"><b id="sRev">$0</b><span>revenue</span></div>
       </div>
       <div class="hbars" id="salesBars" style="height:80px"></div>
-      <div class="hkey"><span><i style="background:#fff"></i><em id="sKey1" style="font-style:normal">trials</em></span><span><i style="background:var(--good)"></i>paid</span><span style="margin-left:auto">last 30 days</span></div>
+      <em id="sKey1" hidden></em>
     </div>
     <div class="card">
-      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>downloads around the world</span><span class="chip" id="wTotal">0</span></div>
-      <div class="globe-wrap"><div class="globe" id="globe"></div><div class="globe-hud" id="globeHud"></div></div>
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>world</span><span class="chip" id="wTotal" hidden>0</span></div>
+      <div class="globe-wrap"><div class="globe" id="globe"></div><div class="globe-hud" id="globeHud" hidden></div></div>
       <div class="ctry" id="wList"></div>
     </div>
     <div class="card">
-      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 7l8 6 8-6"/></svg>who signed up</span><span class="chip" id="sgPhones">0 phones</span></div>
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 7l8 6 8-6"/></svg>signups</span><span class="chip" id="sgPhones">0 phones</span></div>
       <div id="sgList" style="margin-top:10px"></div>
     </div>
     <div class="card botcard" hidden>
@@ -771,15 +771,15 @@ function renderSales() {
     $("#sCancel").textContent = fmt(tot("cancels")); $("#sRev").textContent = "$" + fmt(tot("revenue"));
     $("#sTrialsL").textContent = "trials"; $("#sPaidL").textContent = "paid"; $("#sCancelL").textContent = "cancels"; $("#sKey1").textContent = "trials";
     a = days.map((d) => Number(by[d]?.trials || 0)); b = days.map((d) => Number(by[d]?.purchases || 0) + Number(by[d]?.renewals || 0));
-    $("#salesLive").textContent = "from apple, live";
+    $("#salesLive").textContent = "live";
   } else {
     const dl = rep.reduce((x, r) => x + Number(r.downloads || 0), 0), pu = rep.reduce((x, r) => x + Number(r.purchases || 0), 0);
     const pr = (WORLD?.countries || []).reduce((x, c) => x + Number(c.proceeds || 0), 0), today = new Date().toLocaleDateString("en-CA");
     $("#sTrials").textContent = fmt(dl); $("#sPaid").textContent = fmt(pu); $("#sRev").textContent = "$" + fmt(Math.round(pr));
     $("#sCancel").textContent = fmt(Number(by[today]?.downloads || by[rep.at(-1)?.day]?.downloads || 0));
-    $("#sTrialsL").textContent = "downloads"; $("#sPaidL").textContent = "subs + trials"; $("#sCancelL").textContent = "latest day"; $("#sKey1").textContent = "downloads";
+    $("#sTrialsL").textContent = "downloads"; $("#sPaidL").textContent = "paid"; $("#sKey1").textContent = "downloads";
     a = days.map((d) => Number(by[d]?.downloads || 0)); b = days.map((d) => Number(by[d]?.purchases || 0));
-    $("#salesLive").textContent = rep.length ? `apple reports · thru ${shortDay(rep.at(-1).day)}` : "loading apple reports";
+    $("#salesLive").textContent = rep.length ? shortDay(rep.at(-1).day) : "-";
   }
   const m = Math.max(1, ...a, ...b);
   $("#salesBars").innerHTML = days.map((d, i) => `<div class="h" title="${d}: ${a[i]} ${live ? "trials" : "downloads"}, ${b[i]} paid"><i class="c" style="height:${(100 * a[i]) / m}%"></i><i class="r" style="height:${(100 * b[i]) / m}%;background:var(--good)"></i></div>`).join("");
@@ -846,7 +846,7 @@ function renderWorld() {
   $("#wTotal").textContent = fmt(total) + " downloads" + (lastDay ? ` · thru ${shortDay(lastDay)}` : "");
   const max = Math.max(1, ...cs.map((c) => Number(c.downloads || 0)));
   renderGlobe(cs, max);
-  $("#wList").innerHTML = cs.slice(0, 12).map((c) => `<span>${esc(c.country)} <i>${fmt(c.downloads || 0)}</i>${c.purchases ? ` · ${c.purchases} paid` : ""}</span>`).join("") || `<div class="empty">apple's reports land about a day after each day</div>`;
+  $("#wList").innerHTML = cs.slice(0, 8).map((c) => `<span>${esc(c.country)} <i>${fmt(c.downloads || 0)}</i></span>`).join("");
 }
 
 // ---------- who signed up (masked, needs the HQ password) ----------

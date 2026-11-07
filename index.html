@@ -30,6 +30,30 @@ a{color:inherit;text-decoration:none}
 /* depth card: soft blue fade from the top, black drop shadow */
 .card{position:relative;background:linear-gradient(180deg,rgba(19,127,249,.10),rgba(19,127,249,0) 42%),var(--card);border-radius:var(--r);padding:20px;margin-top:14px;box-shadow:0 10px 24px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);overflow:hidden}
 .card.flat{background:var(--card)}
+/* founder board */
+.fb-clock{display:flex;align-items:flex-end;gap:6px;margin-top:14px;font-variant-numeric:tabular-nums}
+.fb-seg{display:flex;flex-direction:column;align-items:center;gap:6px}
+.fb-seg b{display:block;min-width:64px;padding:12px 8px;border-radius:18px;background:var(--card2);box-shadow:0 4px 0 #050506;font-size:40px;font-weight:900;letter-spacing:-1.5px;text-align:center;line-height:1;overflow:hidden}
+.fb-seg b span{display:inline-block}
+.fb-seg b span.tick{animation:fbTick .45s cubic-bezier(.2,.9,.3,1.2)}
+.fb-seg small{font-size:11px;font-weight:800;color:var(--dim);letter-spacing:.6px;text-transform:uppercase}
+.fb-colon{font-size:30px;font-weight:900;color:var(--line);padding-bottom:30px}
+@keyframes fbTick{from{transform:translateY(-70%);opacity:0}to{transform:none;opacity:1}}
+.fb-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.fb-4 .stat b{font-size:22px}
+.fb-split{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:18px}
+.fb-ring circle{fill:none;stroke-width:16;transition:stroke-dasharray 1.4s cubic-bezier(.2,.8,.2,1),stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+.fb-leg div{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+.fb-leg div:last-child{border:0}
+.fb-leg i{width:12px;height:12px;border-radius:4px;flex:none}
+.fb-leg b{margin-left:auto;font-weight:900;font-variant-numeric:tabular-nums}
+.fb-heat{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;align-items:end;height:64px;margin-top:16px}
+.fb-heat i{display:block;border-radius:4px 4px 2px 2px;background:var(--blue);height:0;transition:height .9s cubic-bezier(.2,.8,.2,1)}
+.fb-heat i.top{background:var(--blue-hi)}
+.rise{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+@media (max-width:520px){.fb-seg b{min-width:52px;font-size:30px;padding:10px 6px}.fb-colon{font-size:24px;padding-bottom:26px}.fb-4{grid-template-columns:repeat(2,1fr)}.fb-split{grid-template-columns:120px 1fr}}
+@media (prefers-reduced-motion:reduce){.fb-seg b span.tick,.rise{animation:none}.fb-ring circle,.fb-heat i{transition:none}}
 .label{font-size:13px;font-weight:700;color:var(--dim);letter-spacing:.2px;display:flex;align-items:center;gap:8px}
 .label svg{width:16px;height:16px}
 .big{font-weight:900;letter-spacing:-1.5px;line-height:1}
@@ -319,6 +343,28 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 <main class="wrap">
   <!-- TODAY -->
   <section class="page on" id="p-today">
+    <div class="card" id="founderCard">
+      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l6-11 4 6 3-4 5 9z"/></svg>founder board</span><span class="chip blue" id="fbSince">on the app store</span></div>
+      <div class="fb-clock" id="fbClock">
+        <div class="fb-seg"><b id="fbD"><span>0</span></b><small>days</small></div><span class="fb-colon">:</span>
+        <div class="fb-seg"><b id="fbH"><span>00</span></b><small>hrs</small></div><span class="fb-colon">:</span>
+        <div class="fb-seg"><b id="fbM"><span>00</span></b><small>min</small></div><span class="fb-colon">:</span>
+        <div class="fb-seg"><b id="fbS"><span>00</span></b><small>sec</small></div>
+      </div>
+      <div class="fb-4">
+        <div class="stat"><b id="fbReach">0</b><span>instagram views</span></div>
+        <div class="stat"><b id="fbReplies">0</b><span>bot replies</span></div>
+        <div class="stat"><b id="fbWait">0</b><span>waitlist</span></div>
+        <div class="stat"><b id="fbDl">0</b><span>downloads</span></div>
+      </div>
+      <div class="fb-split">
+        <svg class="fb-ring" viewBox="0 0 120 120" id="fbRing"></svg>
+        <div><span class="label">how tall your comment section is</span><div class="fb-leg" id="fbLeg"></div></div>
+      </div>
+      <div class="between" style="margin-top:18px"><span class="label">when they comment (your time)</span><span class="chip" id="fbPeak">peak</span></div>
+      <div class="fb-heat" id="fbHeat"></div>
+      <div class="hlbl"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
+    </div>
     <div class="grid2">
     <div class="card launch" id="launchCard">
       <span class="label" style="justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.1 2.1 0 0 0-2.9-.1zM12 15l-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/></svg>launch email</span>
@@ -369,7 +415,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
     </div>
     </div>
 
-    <div class="grid2">
+    <div class="grid2" hidden>
       <div class="card">
         <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>signups per day</span><span class="chip">30 days</span></div>
         <svg class="chart" id="trend" viewBox="0 0 320 170" preserveAspectRatio="none"></svg>
@@ -476,7 +522,10 @@ const getJSON = (u) => fetch(u + (u.includes("?") ? "&" : "?") + "t=" + Date.now
 // ---------- gate ----------
 let PW = null;
 async function sha(t) { return sha256(t.trim().toLowerCase()); }
-function unlock() { $("#gate").remove(); load(); setInterval(load, 60e3); }
+function unlock() {
+  $("#gate").remove(); load(); setInterval(load, 60e3);
+  document.querySelectorAll("#p-today > .card, #p-today .grid2 > .card").forEach((c, i) => { c.classList.add("rise"); c.style.animationDelay = i * 70 + "ms"; });
+}
 $("#lockRow").addEventListener("submit", async (e) => {
   e.preventDefault();
   const pw = $("#pw").value;
@@ -513,7 +562,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
+  model(); renderFounder(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -769,13 +818,58 @@ function renderSales() {
   $("#salesBars").innerHTML = days.map((d, i) => `<div class="h" title="${d}: ${a[i]} ${live ? "trials" : "downloads"}, ${b[i]} paid"><i class="c" style="height:${(100 * a[i]) / m}%"></i><i class="r" style="height:${(100 * b[i]) / m}%;background:var(--good)"></i></div>`).join("");
 }
 
+// ---------- founder board ----------
+// Numbers count up when they change; the clock ticks from the first App Store download in Apple's reports.
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function countUp(el, to, f = fmt) {
+  if (!el) return; const from = Number(el.dataset.v || 0); el.dataset.v = to;
+  if (REDUCED || from === to) { el.textContent = f(to); return; }
+  const t0 = performance.now(), dur = from ? 700 : 1600;
+  const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(2, -10 * k); el.textContent = f(Math.round(from + (to - from) * (k === 1 ? 1 : e))); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+let REPLIES = null, repliesAt = 0, LAUNCH = null;
+async function renderFounder() {
+  if (!REPLIES || Date.now() - repliesAt > 10 * 60e3) { try { REPLIES = await getJSON(BOT + "replies.json"); repliesAt = Date.now(); } catch {} }
+  const views = (D.ig || []).reduce((a, r) => a + Number(r.views || 0), 0);
+  countUp($("#fbReach"), views); countUp($("#fbReplies"), REPLIES?.length || 0); countUp($("#fbWait"), D.count ?? 0);
+  // audience split from every reply the bot made
+  const R = REPLIES || [], c = { "🟢": 0, "🔵": 0, "🔴": 0 }; R.forEach((r) => { if (r.emoji in c) c[r.emoji]++; });
+  const n = Math.max(1, c["🟢"] + c["🔵"] + c["🔴"]), parts = [["🟢", "6ft or taller", "var(--good)"], ["🔵", "still has potential", "var(--blue)"], ["🔴", "cooked", "var(--bad)"]];
+  const C = 2 * Math.PI * 46; let off = 0;
+  if (!$("#fbRing").children.length) $("#fbRing").innerHTML = `<circle cx="60" cy="60" r="46" stroke="var(--card2)"/>` + parts.map(() => `<circle cx="60" cy="60" r="46" stroke-linecap="butt" transform="rotate(-90 60 60)" stroke-dasharray="0 ${C}"/>`).join("") +
+    `<text x="60" y="58" text-anchor="middle" fill="#fff" font-size="20" font-weight="900" id="fbRingN">0</text><text x="60" y="76" text-anchor="middle" fill="var(--dim)" font-size="10" font-weight="700">comments sized</text>`;
+  const arcs = [...$("#fbRing").querySelectorAll("circle")].slice(1);
+  requestAnimationFrame(() => parts.forEach(([k, , col], i) => { const len = (C * c[k]) / n; arcs[i].style.stroke = col; arcs[i].style.strokeDasharray = `${Math.max(0, len - 2)} ${C}`; arcs[i].style.strokeDashoffset = -off; off += len; }));
+  countUp($("#fbRingN"), n === 1 && !R.length ? 0 : n);
+  $("#fbLeg").innerHTML = parts.map(([k, name, col]) => `<div><i style="background:${col}"></i>${name}<b>${Math.round((100 * c[k]) / n)}%</b></div>`).join("");
+  // when the comment section is busiest, in the viewer's local time
+  const hrs = Array(24).fill(0); R.forEach((r) => { const h = new Date(r.at).getHours(); if (!isNaN(h)) hrs[h]++; });
+  const mx = Math.max(1, ...hrs), peak = hrs.indexOf(mx), hl = (h) => `${h % 12 || 12}${h < 12 ? "am" : "pm"}`;
+  if (!$("#fbHeat").children.length) $("#fbHeat").innerHTML = hrs.map(() => "<i></i>").join("");
+  [...$("#fbHeat").children].forEach((b, i) => { b.title = `${hl(i)}: ${fmt(hrs[i])} replies`; b.classList.toggle("top", i === peak); setTimeout(() => (b.style.height = Math.max(4, (100 * hrs[i]) / mx) + "%"), REDUCED ? 0 : i * 25); });
+  $("#fbPeak").textContent = R.length ? `peak ${hl(peak)} to ${hl((peak + 1) % 24)}` : "loading";
+}
+function tickClock() {
+  const first = WORLD?.days?.[0]?.day; if (!first) return;
+  if (!LAUNCH) { LAUNCH = new Date(first + "T00:00:00-07:00"); $("#fbSince").textContent = "live since " + shortDay(first); } // Apple report days are Pacific
+  let t = Math.max(0, Math.floor((Date.now() - LAUNCH) / 1000));
+  const v = { fbD: Math.floor(t / 86400), fbH: Math.floor(t / 3600) % 24, fbM: Math.floor(t / 60) % 60, fbS: t % 60 };
+  for (const [id, n] of Object.entries(v)) {
+    const txt = id === "fbD" ? String(n) : String(n).padStart(2, "0"), b = $("#" + id);
+    if (b.textContent !== txt) { b.innerHTML = `<span class="tick">${txt}</span>`; }
+  }
+}
+setInterval(tickClock, 1000);
+
 // ---------- world map (Apple daily sales reports via the asc-sales function) ----------
 const GEO = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@v5.1.2/geojson/ne_110m_admin_0_countries.geojson";
 let WORLD = null, GEOJSON = null;
 async function loadWorld() {
   try { WORLD = await fetch("https://etdbjahwegsmuelcawgf.supabase.co/functions/v1/asc-sales", { method: "POST", headers: { apikey: KEY, "content-type": "application/json" }, body: "{}" }).then((r) => r.json()); } catch { WORLD = null; }
   if (!GEOJSON) { try { GEOJSON = await fetch(GEO).then((r) => r.json()); } catch {} }
-  renderWorld(); renderSales();
+  renderWorld(); renderSales(); tickClock();
+  countUp($("#fbDl"), (WORLD?.countries || []).reduce((a, c) => a + Number(c.downloads || 0), 0));
 }
 function renderWorld() {
   const cs = WORLD?.countries || [], by = Object.fromEntries(cs.map((c) => [c.country, c]));

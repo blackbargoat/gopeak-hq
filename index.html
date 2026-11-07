@@ -331,13 +331,13 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
     <div class="card" id="salesCard">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>app sales</span><span class="chip" id="salesLive">from apple</span></div>
       <div class="mini3" style="grid-template-columns:repeat(4,1fr)">
-        <div class="stat"><b id="sTrials">0</b><span>trials</span></div>
-        <div class="stat"><b id="sPaid">0</b><span>paid</span></div>
-        <div class="stat"><b id="sCancel">0</b><span>cancels</span></div>
+        <div class="stat"><b id="sTrials">0</b><span id="sTrialsL">trials</span></div>
+        <div class="stat"><b id="sPaid">0</b><span id="sPaidL">paid</span></div>
+        <div class="stat"><b id="sCancel">0</b><span id="sCancelL">cancels</span></div>
         <div class="stat"><b id="sRev">$0</b><span>revenue</span></div>
       </div>
       <div class="hbars" id="salesBars" style="height:80px"></div>
-      <div class="hkey"><span><i style="background:#fff"></i>trials</span><span><i style="background:var(--good)"></i>paid</span><span style="margin-left:auto">last 30 days</span></div>
+      <div class="hkey"><span><i style="background:#fff"></i><em id="sKey1" style="font-style:normal">trials</em></span><span><i style="background:var(--good)"></i>paid</span><span style="margin-left:auto">last 30 days</span></div>
     </div>
     <div class="card">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>downloads around the world</span><span class="chip" id="wTotal">0</span></div>
@@ -348,7 +348,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 7l8 6 8-6"/></svg>who signed up</span><span class="chip" id="sgPhones">0 phones</span></div>
       <div id="sgList" style="margin-top:10px"></div>
     </div>
-    <div class="card botcard">
+    <div class="card botcard" hidden>
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="4"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg>reply bot</span><span class="chip" id="botLive">-</span></div>
       <div class="seg4" id="botMode" role="group" aria-label="Bot mode">
         <button data-m="auto">auto</button><button data-m="max">max</button><button data-m="normal">normal</button><button data-m="paused">pause</button></div>
@@ -513,7 +513,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadBot(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -593,7 +593,7 @@ function renderForecast() {
   $("#rate1k").textContent = M.rate.toFixed(1);
   $("#perSignup").textContent = "$" + (W ? money[1] / W : 0).toFixed(2);
 }
-$("#revHow").onclick = () => openSheet(`<h3>how this is worked out</h3>
+($("#revHow") || {}).onclick = () => openSheet(`<h3>how this is worked out</h3>
   <div class="src">
     <div><b>waitlist to download ${Math.round(REV.install[1] * 100)}%</b> (${REV.install[0] * 100} to ${REV.install[2] * 100}%). most email signups never open the launch email. waitlist tools report 25 to 85% of invited people activate, we assume far less for a teen email list.</div>
     <div><b>download to trial ${REV.trial[1] * 100}%</b> (${REV.trial[0] * 100} to ${REV.trial[2] * 100}%). revenuecat: health and fitness apps start trials for about 5 to 7% of installs. gopeak lets people skip to free mode.</div>
@@ -741,15 +741,32 @@ function openIdea(o) {
 // ---------- app sales (App Store Server Notifications via the "asn" function) ----------
 let SALES = [];
 async function loadSales() { try { SALES = await rpc("hq_sales"); } catch { SALES = []; } renderSales(); }
+// Live App Store Server Notifications when Apple has sent any; until then, Apple's daily sales reports
+// (same data as the world map, about a day behind).
+const shortDay = (d) => new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
 function renderSales() {
   const days = [...Array(30)].map((_, i) => new Date(Date.now() - (29 - i) * 864e5).toLocaleDateString("en-CA"));
-  const by = Object.fromEntries(SALES.map((r) => [r.day, r]));
-  const tot = (f) => SALES.reduce((a, r) => a + Number(r[f] || 0), 0);
-  $("#sTrials").textContent = fmt(tot("trials")); $("#sPaid").textContent = fmt(tot("purchases") + tot("renewals"));
-  $("#sCancel").textContent = fmt(tot("cancels")); $("#sRev").textContent = "$" + fmt(tot("revenue"));
-  const tr = days.map((d) => Number(by[d]?.trials || 0)), pd = days.map((d) => Number(by[d]?.purchases || 0) + Number(by[d]?.renewals || 0)), m = Math.max(1, ...tr, ...pd);
-  $("#salesBars").innerHTML = days.map((d, i) => `<div class="h" title="${d}: ${tr[i]} trials, ${pd[i]} paid"><i class="c" style="height:${(100 * tr[i]) / m}%"></i><i class="r" style="height:${(100 * pd[i]) / m}%;background:var(--good)"></i></div>`).join("");
-  $("#salesLive").textContent = SALES.length ? "from apple, live" : "waiting for the first sale";
+  const live = SALES.length > 0, rep = WORLD?.days || [];
+  const by = Object.fromEntries((live ? SALES : rep).map((r) => [r.day, r]));
+  let a, b, top;
+  if (live) {
+    const tot = (f) => SALES.reduce((x, r) => x + Number(r[f] || 0), 0);
+    $("#sTrials").textContent = fmt(tot("trials")); $("#sPaid").textContent = fmt(tot("purchases") + tot("renewals"));
+    $("#sCancel").textContent = fmt(tot("cancels")); $("#sRev").textContent = "$" + fmt(tot("revenue"));
+    $("#sTrialsL").textContent = "trials"; $("#sPaidL").textContent = "paid"; $("#sCancelL").textContent = "cancels"; $("#sKey1").textContent = "trials";
+    a = days.map((d) => Number(by[d]?.trials || 0)); b = days.map((d) => Number(by[d]?.purchases || 0) + Number(by[d]?.renewals || 0));
+    $("#salesLive").textContent = "from apple, live";
+  } else {
+    const dl = rep.reduce((x, r) => x + Number(r.downloads || 0), 0), pu = rep.reduce((x, r) => x + Number(r.purchases || 0), 0);
+    const pr = (WORLD?.countries || []).reduce((x, c) => x + Number(c.proceeds || 0), 0), today = new Date().toLocaleDateString("en-CA");
+    $("#sTrials").textContent = fmt(dl); $("#sPaid").textContent = fmt(pu); $("#sRev").textContent = "$" + fmt(Math.round(pr));
+    $("#sCancel").textContent = fmt(Number(by[today]?.downloads || by[rep.at(-1)?.day]?.downloads || 0));
+    $("#sTrialsL").textContent = "downloads"; $("#sPaidL").textContent = "subs + trials"; $("#sCancelL").textContent = "latest day"; $("#sKey1").textContent = "downloads";
+    a = days.map((d) => Number(by[d]?.downloads || 0)); b = days.map((d) => Number(by[d]?.purchases || 0));
+    $("#salesLive").textContent = rep.length ? `apple reports · thru ${shortDay(rep.at(-1).day)}` : "loading apple reports";
+  }
+  const m = Math.max(1, ...a, ...b);
+  $("#salesBars").innerHTML = days.map((d, i) => `<div class="h" title="${d}: ${a[i]} ${live ? "trials" : "downloads"}, ${b[i]} paid"><i class="c" style="height:${(100 * a[i]) / m}%"></i><i class="r" style="height:${(100 * b[i]) / m}%;background:var(--good)"></i></div>`).join("");
 }
 
 // ---------- world map (Apple daily sales reports via the asc-sales function) ----------
@@ -758,11 +775,12 @@ let WORLD = null, GEOJSON = null;
 async function loadWorld() {
   try { WORLD = await fetch("https://etdbjahwegsmuelcawgf.supabase.co/functions/v1/asc-sales", { method: "POST", headers: { apikey: KEY, "content-type": "application/json" }, body: "{}" }).then((r) => r.json()); } catch { WORLD = null; }
   if (!GEOJSON) { try { GEOJSON = await fetch(GEO).then((r) => r.json()); } catch {} }
-  renderWorld();
+  renderWorld(); renderSales();
 }
 function renderWorld() {
   const cs = WORLD?.countries || [], by = Object.fromEntries(cs.map((c) => [c.country, c]));
-  const total = cs.reduce((a, c) => a + Number(c.downloads || 0), 0); $("#wTotal").textContent = fmt(total) + " downloads";
+  const total = cs.reduce((a, c) => a + Number(c.downloads || 0), 0), lastDay = WORLD?.days?.at(-1)?.day;
+  $("#wTotal").textContent = fmt(total) + " downloads" + (lastDay ? ` · thru ${shortDay(lastDay)}` : "");
   const max = Math.max(1, ...cs.map((c) => Number(c.downloads || 0)));
   if (GEOJSON && window.d3?.geoEqualEarth) {
     const proj = d3.geoEqualEarth().fitSize([960, 480], GEOJSON), path = d3.geoPath(proj);

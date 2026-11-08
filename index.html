@@ -870,7 +870,7 @@ async function loadLaunch() {
   // Chrome may block HQ from reading the Mac directly; the button still works by handing off to the launcher tab.
   if (!LST) { go.disabled = false; go.textContent = "launch"; st.textContent = "50 tonight, then more each day · runs on the mac"; return; }
   $("#lCount").textContent = fmt(LST.left); $("#lSub").textContent = `left to email · ${fmt(LST.sent)} sent`;
-  if (LST.error) { go.disabled = false; go.textContent = "resume"; st.textContent = LST.error; }
+  if (LST.error) { go.disabled = false; go.textContent = "resume"; st.innerHTML = `<b style="color:var(--bad)">${esc(LST.note || LST.error)}</b>`; }
   else if (LST.running && LST.next_at) { go.disabled = true; go.textContent = "sending daily"; st.textContent = `today's done. next batch ${new Date(LST.next_at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`; }
   else if (LST.running) { go.disabled = true; go.textContent = `sending ${LST.done_in_batch}/${LST.batch}`; st.textContent = LST.last ? `last: ${LST.last}` : "first one going out..."; }
   else if (!LST.left) { go.disabled = true; go.textContent = "everyone emailed"; st.textContent = "done"; }

@@ -289,6 +289,10 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .launch .big{font-size:56px;color:#fff}
 .btnLaunch{width:100%;height:64px;margin-top:16px;border-radius:999px;background:var(--good);color:#04210d;font-size:20px;font-weight:900;box-shadow:0 6px 0 #1e7a37;transition:transform .12s,box-shadow .12s}
 .btnLaunch:active{transform:translateY(5px);box-shadow:0 1px 0 #1e7a37}
+.cd{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.92);display:grid;place-items:center;cursor:pointer}
+.cd b{font-size:min(220px,50vw);font-weight:900;color:#fff;animation:cdpop .9s cubic-bezier(.2,.9,.3,1.3) both}
+.cd small{position:absolute;bottom:12vh;left:0;right:0;text-align:center;color:var(--dim);font-weight:800;font-size:14px}
+@keyframes cdpop{0%{transform:scale(2.2);opacity:0}35%{transform:scale(1);opacity:1}100%{transform:scale(.6);opacity:0}}
 .btnLaunch[disabled]{background:#2a2a30;color:var(--dim);box-shadow:0 6px 0 #050506}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
@@ -337,9 +341,9 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <span class="label" style="justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.1 2.1 0 0 0-2.9-.1zM12 15l-3-3a22 22 0 0 1 2-4A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/></svg>launch email</span>
       <div class="big" id="lCount" style="margin-top:10px">0</div>
       <span class="label" style="justify-content:center;margin-top:4px" id="lSub">waitlist</span>
-      <button class="btn3d ghost" style="width:100%;margin-top:16px" id="lTest">send test to me</button>
+      
       <button class="btnLaunch" id="lGo">launch</button>
-      <p class="label" style="justify-content:center;margin-top:12px" id="lState">not connected to kit yet</p>
+      <p class="label" style="justify-content:center;margin-top:12px" id="lState">checking the mac...</p>
     </div>
     <div class="card" id="salesCard">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>sales</span><span class="chip" id="salesLive">from apple</span></div>
@@ -856,18 +860,32 @@ async function loadSignups() {
     $("#sgList").innerHTML = w.recent.slice(0, 12).map((r) => `<div class="sig"><span>${esc(r.email)}${r.phone ? ` <small>· ${esc(r.phone)}</small>` : ""}</span><small>${ago(r.at)} ago</small></div>`).join(""); } catch {}
 }
 
-// ---------- launch email (Kit broadcast through the creators function) ----------
+// ---------- launch email: drives the Gmail sender running on Maverick's Mac (localhost:8799) ----------
+// Sends from maverickgopeak@gmail.com, newest signups first, auto paced (50, 100, 150, then 250 a day at 3:30pm).
+const LOCAL = "http://localhost:8799";
+let LST = null, lTimer = null;
 async function loadLaunch() {
-  if (!PW) return;
-  try { const k = await cp("admin/kit-status"); $("#lState").textContent = k.state || "ready"; $("#lGo").disabled = !k.ready || !!k.sent; if (k.sent) $("#lGo").textContent = "launched"; }
-  catch { $("#lState").textContent = "not connected to kit yet"; $("#lGo").disabled = true; }
+  try { LST = await fetch(LOCAL + "/status").then((r) => r.json()); } catch { LST = null; }
+  const go = $("#lGo"), st = $("#lState");
+  if (!LST) { go.disabled = true; go.textContent = "launch"; st.textContent = "open on the mac with the sender running"; return; }
+  $("#lCount").textContent = fmt(LST.left); $("#lSub").textContent = `left to email · ${fmt(LST.sent)} sent`;
+  if (LST.error) { go.disabled = false; go.textContent = "resume"; st.textContent = LST.error; }
+  else if (LST.running && LST.next_at) { go.disabled = true; go.textContent = "sending daily"; st.textContent = `today's done. next batch ${new Date(LST.next_at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`; }
+  else if (LST.running) { go.disabled = true; go.textContent = `sending ${LST.done_in_batch}/${LST.batch}`; st.textContent = LST.last ? `last: ${LST.last}` : "first one going out..."; }
+  else if (!LST.left) { go.disabled = true; go.textContent = "everyone emailed"; st.textContent = "done"; }
+  else { go.disabled = false; go.textContent = "launch"; st.textContent = `ready · ${LST.today_cap} today, then more each day`; }
+  clearTimeout(lTimer); lTimer = setTimeout(loadLaunch, LST.running ? 3000 : 15000);
 }
-$("#lTest").onclick = async () => { try { const r = await cp("admin/launch", { mode: "test" }); toast(r.message || "test sent to you"); } catch (e) { toast(e.message || "kit isn't connected yet"); } };
-$("#lGo").onclick = () => openSheet(`<h3>send the launch email to everyone?</h3>
-  <p style="margin-top:10px;font-weight:600;color:var(--dim);line-height:1.45">goes to the whole waitlist right now. this can't be undone. type <b style="color:#fff">launch</b> to confirm.</p>
-  <form class="cf" id="lc"><input name="w" placeholder="launch" autocapitalize="off" autocomplete="off"><button class="btnLaunch" style="margin-top:4px">send it</button></form>`) || ($("#lc").onsubmit = async (e) => {
-  e.preventDefault(); if (e.target.w.value.trim().toLowerCase() !== "launch") return toast("type launch to confirm");
-  try { const r = await cp("admin/launch", { mode: "live", confirm: "launch" }); closeSheet(); toast(r.message || "launched"); loadLaunch(); } catch (err) { toast(err.message || "couldn't launch"); } });
+$("#lGo").onclick = async () => {
+  if ($("#lGo").disabled) return;
+  const ov = document.createElement("div"); ov.className = "cd"; document.body.append(ov);
+  let cancelled = false; ov.onclick = () => { cancelled = true; ov.remove(); toast("cancelled, nothing sent"); };
+  for (const n of [3, 2, 1]) { if (cancelled) return; ov.innerHTML = `<b>${n}</b><small>tap anywhere to cancel</small>`; await new Promise((r) => setTimeout(r, 950)); }
+  if (cancelled) return; ov.remove();
+  try { const r = await fetch(LOCAL + "/launch", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" }).then((r) => r.json()); toast(r.ok ? "launched" : r.msg || "couldn't start"); }
+  catch { toast("can't reach the sender on the mac"); }
+  loadLaunch();
+};
 // ---------- reply bot panel ----------
 let BOTS = { hourly: {}, bot: null, site: [] };
 async function loadBot() {

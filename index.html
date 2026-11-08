@@ -353,6 +353,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
         <div class="stat" hidden><b id="sCancel">0</b><span id="sCancelL">cancels</span></div>
         <div class="stat"><b id="sRev">$0</b><span>revenue</span></div>
       </div>
+      <div class="mini3" style="margin-top:10px"><div class="stat"><b id="lvTaps">0</b><span>app store taps today</span></div><div class="stat"><b id="lvVisits">0</b><span>link visits today</span></div><div class="stat"><b id="lvHour">0</b><span>taps last hour</span></div></div>
       <div class="hbars" id="salesBars" style="height:80px"></div>
       <em id="sKey1" hidden></em>
     </div>
@@ -760,7 +761,15 @@ function openIdea(o) {
 
 // ---------- app sales (App Store Server Notifications via the "asn" function) ----------
 let SALES = [];
-async function loadSales() { try { SALES = await rpc("hq_sales"); } catch { SALES = []; } renderSales(); }
+async function loadSales() { try { SALES = await rpc("hq_sales"); } catch { SALES = []; } renderSales(); loadLiveTaps(); }
+// live: App Store taps and link visits from getgopeak.com (bio /download, /deal from email and texts), recorded the moment they happen
+async function loadLiveTaps() {
+  let H = []; try { H = await rpc("hq_hourly"); } catch {}
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  const t = H.filter((r) => String(r.hour).slice(0, 10) === today), sum = (k) => t.reduce((a, r) => a + Number(r[k] || 0), 0);
+  $("#lvTaps").textContent = fmt(sum("opens")); $("#lvVisits").textContent = fmt(sum("visits"));
+  $("#lvHour").textContent = fmt(Number(H.at(-1)?.opens || 0));
+}
 // Live App Store Server Notifications when Apple has sent any; until then, Apple's daily sales reports
 // (same data as the world map, about a day behind).
 const shortDay = (d) => new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });

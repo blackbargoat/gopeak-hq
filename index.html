@@ -865,9 +865,10 @@ async function loadSignups() {
 const LOCAL = "http://localhost:8799";
 let LST = null, lTimer = null;
 async function loadLaunch() {
-  try { LST = await fetch(LOCAL + "/status").then((r) => r.json()); } catch { LST = null; }
+  try { LST = await fetch(LOCAL + "/status", { signal: AbortSignal.timeout(2500) }).then((r) => r.json()); } catch { LST = null; }
   const go = $("#lGo"), st = $("#lState");
-  if (!LST) { go.disabled = true; go.textContent = "launch"; st.textContent = "open on the mac with the sender running"; return; }
+  // Chrome may block HQ from reading the Mac directly; the button still works by handing off to the launcher tab.
+  if (!LST) { go.disabled = false; go.textContent = "launch"; st.textContent = "50 tonight, then more each day · runs on the mac"; return; }
   $("#lCount").textContent = fmt(LST.left); $("#lSub").textContent = `left to email · ${fmt(LST.sent)} sent`;
   if (LST.error) { go.disabled = false; go.textContent = "resume"; st.textContent = LST.error; }
   else if (LST.running && LST.next_at) { go.disabled = true; go.textContent = "sending daily"; st.textContent = `today's done. next batch ${new Date(LST.next_at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`; }
@@ -881,10 +882,9 @@ $("#lGo").onclick = async () => {
   const ov = document.createElement("div"); ov.className = "cd"; document.body.append(ov);
   let cancelled = false; ov.onclick = () => { cancelled = true; ov.remove(); toast("cancelled, nothing sent"); };
   for (const n of [3, 2, 1]) { if (cancelled) return; ov.innerHTML = `<b>${n}</b><small>tap anywhere to cancel</small>`; await new Promise((r) => setTimeout(r, 950)); }
-  if (cancelled) return; ov.remove();
-  try { const r = await fetch(LOCAL + "/launch", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" }).then((r) => r.json()); toast(r.ok ? "launched" : r.msg || "couldn't start"); }
-  catch { toast("can't reach the sender on the mac"); }
-  loadLaunch();
+  if (cancelled) return;
+  ov.innerHTML = `<small style="position:static;font-size:18px;color:#fff">launching...</small>`;
+  location.href = LOCAL + "/?autolaunch=1"; // the launcher on the Mac starts the send and shows live progress
 };
 // ---------- reply bot panel ----------
 let BOTS = { hourly: {}, bot: null, site: [] };

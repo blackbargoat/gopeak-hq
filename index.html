@@ -276,24 +276,30 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .globe canvas{display:block}
 .globe .gl-tip{background:var(--card2);padding:8px 12px;border-radius:12px;font:700 13px var(--font);box-shadow:0 6px 14px rgba(0,0,0,.6)}
 .globe-hud{position:absolute;left:20px;bottom:14px;pointer-events:none;font-size:11px;font-weight:800;letter-spacing:.8px;color:var(--dim);text-transform:uppercase;font-variant-numeric:tabular-nums}
-.globe-hud b{color:var(--blue-hi)}
+.globe-hud b{color:#fff}
 @media (max-width:520px){.globe{height:320px}}
 .worldmap path{stroke:#0b0b0d;stroke-width:.4}
 .ctry{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .ctry span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:var(--card2);font-size:13px;font-weight:800}
-.ctry span i{font-style:normal;color:var(--blue-hi)}
+.ctry span i{font-style:normal;color:#c9cfd9}
 .sig{display:flex;align-items:center;justify-content:space-between;padding:9px 2px;border-top:1px solid var(--line);font-size:14px;font-weight:700}
 .sig:first-child{border-top:0}
 .sig small{color:var(--dim);font-weight:700;font-size:12px}
 .launch{text-align:center}
 .launch .big{font-size:56px;color:#fff}
-.btnLaunch{width:100%;height:64px;margin-top:16px;border-radius:999px;background:var(--good);color:#04210d;font-size:20px;font-weight:900;box-shadow:0 6px 0 #1e7a37;transition:transform .12s,box-shadow .12s}
-.btnLaunch:active{transform:translateY(5px);box-shadow:0 1px 0 #1e7a37}
+.launch{background:radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.10),rgba(255,255,255,0) 60%),linear-gradient(180deg,#17171b,#0c0c0e)!important}
+.btnLaunch{position:relative;overflow:hidden;width:100%;height:64px;margin-top:18px;border-radius:999px;color:#0b0b0d;font-size:19px;font-weight:900;letter-spacing:.3px;
+  background:linear-gradient(180deg,#ffffff 0%,#f4f2ee 45%,#d9d6cf 100%);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -2px 6px rgba(0,0,0,.12) inset,0 6px 0 #9c9890,0 18px 34px rgba(255,255,255,.10),0 14px 26px rgba(0,0,0,.6);transition:transform .12s,box-shadow .12s}
+.btnLaunch::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.85),rgba(255,255,255,0));transform:skewX(-20deg);animation:sheen 3.6s ease-in-out infinite}
+@keyframes sheen{0%,55%{left:-60%}100%{left:130%}}
+.btnLaunch:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 1px 0 #9c9890,0 6px 14px rgba(0,0,0,.6)}
 .cd{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.92);display:grid;place-items:center;cursor:pointer}
 .cd b{font-size:min(220px,50vw);font-weight:900;color:#fff;animation:cdpop .9s cubic-bezier(.2,.9,.3,1.3) both}
 .cd small{position:absolute;bottom:12vh;left:0;right:0;text-align:center;color:var(--dim);font-weight:800;font-size:14px}
 @keyframes cdpop{0%{transform:scale(2.2);opacity:0}35%{transform:scale(1);opacity:1}100%{transform:scale(.6);opacity:0}}
-.btnLaunch[disabled]{background:#2a2a30;color:var(--dim);box-shadow:0 6px 0 #050506}
+.btnLaunch[disabled]{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 6px 0 #050506}.btnLaunch[disabled]::after{opacity:.25}
+@media (prefers-reduced-motion:reduce){.btnLaunch::after{animation:none;display:none}}
 /* team (boss) */
 .boss{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:14px}.boss::-webkit-scrollbar{display:none}
 .boss button{flex:none}
@@ -343,7 +349,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <span class="label" style="justify-content:center;margin-top:4px" id="lSub">waitlist</span>
       
       <button class="btnLaunch" id="lGo">launch</button>
-      <p class="label" style="justify-content:center;margin-top:12px" id="lState">checking the mac...</p>
+      <p class="label" style="justify-content:center;margin-top:12px" id="lState" hidden></p>
     </div>
     <div class="card" id="salesCard">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 14h-13z"/></svg>sales</span><span class="chip" id="salesLive">from apple</span></div>
@@ -822,14 +828,14 @@ function renderGlobe(cs, max) {
   if (!GLOBE) {
     try {
       GLOBE = Globe({ animateIn: !REDUCED })(el)
-        .backgroundColor("rgba(0,0,0,0)").showAtmosphere(false).showGraticules(true)
+        .backgroundColor("rgba(0,0,0,0)").showAtmosphere(true).atmosphereColor("#c9d8ff").atmosphereAltitude(0.16).showGraticules(true)
         .width(el.clientWidth).height(el.clientHeight)
         .hexPolygonResolution(3).hexPolygonMargin(0.35).hexPolygonUseDots(true)
         .hexPolygonLabel((f) => { const c = by[iso(f)]; return `<div class="gl-tip">${esc(f.properties.NAME)}: ${c ? fmt(c.downloads || 0) + " downloads" + (c.purchases ? ", " + c.purchases + " paid" : "") : "none yet"}</div>`; })
-        .arcColor(() => ["rgba(74,173,252,.15)", "#4aadfc"]).arcStroke(0.55).arcAltitudeAutoScale(0.45)
+        .arcColor(() => ["rgba(255,255,255,.08)", "rgba(214,228,255,.95)"]).arcStroke(0.55).arcAltitudeAutoScale(0.45)
         .arcDashLength(0.45).arcDashGap(1.2).arcDashInitialGap(() => Math.random() * 2).arcDashAnimateTime(REDUCED ? 0 : 2600)
-        .ringColor(() => (t) => `rgba(74,173,252,${1 - t})`).ringMaxRadius((d) => 2.5 + Math.sqrt(d.n) * 1.6).ringPropagationSpeed(2.2).ringRepeatPeriod(REDUCED ? 0 : 1400)
-        .pointColor((d) => (d.hq ? "#fff" : d.paid ? "#34c759" : "#4aadfc")).pointAltitude((d) => (d.hq ? 0.02 : 0.015 + 0.02 * Math.sqrt(d.n))).pointRadius((d) => (d.hq ? 0.6 : 0.45))
+        .ringColor(() => (t) => `rgba(235,242,255,${0.9 * (1 - t)})`).ringMaxRadius((d) => 2.5 + Math.sqrt(d.n) * 1.6).ringPropagationSpeed(2.2).ringRepeatPeriod(REDUCED ? 0 : 1400)
+        .pointColor((d) => (d.hq ? "#fff" : d.paid ? "#e9d5a6" : "#dfe9ff")).pointAltitude((d) => (d.hq ? 0.02 : 0.015 + 0.02 * Math.sqrt(d.n))).pointRadius((d) => (d.hq ? 0.6 : 0.45))
         .pointLabel((d) => `<div class="gl-tip">${d.hq ? "gopeak hq" : `${esc(d.name)}: ${d.n} downloads${d.paid ? ", " + d.paid + " paid" : ""}`}</div>`);
       const mat = GLOBE.globeMaterial(); mat.color.set("#05070d"); mat.emissive?.set?.("#05070d");
       const ctl = GLOBE.controls(); ctl.autoRotate = !REDUCED; ctl.autoRotateSpeed = 0.55; ctl.enableZoom = false;
@@ -839,7 +845,7 @@ function renderGlobe(cs, max) {
   }
   if (key === GLOBE_KEY) return; GLOBE_KEY = key;
   GLOBE.hexPolygonsData(feats).hexPolygonColor((f) => { const c = by[iso(f)], v = Number(c?.downloads || 0);
-    return c?.purchases ? "#34c759" : v ? `rgba(74,173,252,${0.55 + 0.45 * (v / max)})` : "rgba(255,255,255,.13)"; });
+    return c?.purchases ? "#e9d5a6" : v ? `rgba(225,236,255,${0.6 + 0.4 * (v / max)})` : "rgba(255,255,255,.09)"; });
   GLOBE.arcsData(spots.map((s) => ({ startLat: HQ_AT.lat, startLng: HQ_AT.lng, endLat: s.lat, endLng: s.lng })));
   GLOBE.ringsData(spots).pointsData([{ ...HQ_AT, hq: true, n: 0 }, ...spots]);
 }
@@ -875,11 +881,11 @@ const LOCAL = "http://localhost:8799";
 let LST = null, lTimer = null;
 async function loadLaunch() {
   try { LST = await fetch(LOCAL + "/status", { signal: AbortSignal.timeout(2500) }).then((r) => r.json()); } catch { LST = null; }
-  const go = $("#lGo"), st = $("#lState");
+  const go = $("#lGo"), st = $("#lState"); st.hidden = true;
   // Chrome may block HQ from reading the Mac directly; the button still works by handing off to the launcher tab.
   if (!LST) { go.disabled = false; go.textContent = "launch"; st.textContent = "50 tonight, then more each day · runs on the mac"; return; }
   $("#lCount").textContent = fmt(LST.left); $("#lSub").textContent = `left to email · ${fmt(LST.sent)} sent`;
-  if (LST.error) { go.disabled = false; go.textContent = "resume"; st.innerHTML = `<b style="color:var(--bad)">${esc(LST.note || LST.error)}</b>`; }
+  if (LST.error) { go.disabled = false; go.textContent = "resume"; st.hidden = false; st.innerHTML = `<b style="color:var(--bad)">${esc(LST.note || LST.error)}</b>`; }
   else if (LST.running && LST.next_at) { go.disabled = true; go.textContent = "sending daily"; st.textContent = `today's done. next batch ${new Date(LST.next_at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" })}`; }
   else if (LST.running) { go.disabled = true; go.textContent = `sending ${LST.done_in_batch}/${LST.batch}`; st.textContent = LST.last ? `last: ${LST.last}` : "first one going out..."; }
   else if (!LST.left) { go.disabled = true; go.textContent = "everyone emailed"; st.textContent = "done"; }

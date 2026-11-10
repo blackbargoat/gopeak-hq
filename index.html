@@ -270,7 +270,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 .accpause:first-of-type{border-top:0}
 
 .worldmap{width:100%;height:auto;display:block;margin-top:12px}
-.globe-wrap{position:relative;margin:12px -20px 0}
+.globe-wrap{position:relative;margin:-8px -20px -8px}
 .globe{position:relative;height:420px;overflow:hidden;cursor:grab}
 .globe:active{cursor:grabbing}
 .globe canvas{display:block}
@@ -364,9 +364,9 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <em id="sKey1" hidden></em>
     </div>
     <div class="card">
-      <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>world</span><span class="chip" id="wTotal" hidden>0</span></div>
+      <div class="between" hidden><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>world</span><span class="chip" id="wTotal" hidden>0</span></div>
       <div class="globe-wrap"><div class="globe" id="globe"></div><div class="globe-hud" id="globeHud" hidden></div></div>
-      <div class="ctry" id="wList"></div>
+      <div class="ctry" id="wList" hidden></div>
     </div>
     <div class="card">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 7l8 6 8-6"/></svg>signups</span><span class="chip" id="sgPhones">0 phones</span></div>

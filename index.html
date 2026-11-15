@@ -103,6 +103,22 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .farrow{font-size:12px;font-weight:800;color:var(--blue-hi);display:flex;flex-direction:column;align-items:center;gap:2px}
 .farrow svg{width:18px;height:18px;opacity:.7}
 
+/* app tab: onboarding drop-off */
+.fl{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.fl-row{display:grid;grid-template-columns:96px minmax(0,1fr) 40px;align-items:center;gap:10px;font-size:13px;font-weight:700}
+.fl-row .nm{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl-row .bar{height:16px;border-radius:999px;background:var(--card2);position:relative;overflow:hidden}
+.fl-row .bar i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:var(--blue);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.fl-row .pc{text-align:right;font-weight:800}
+.fl-row.worst .nm{color:#fff}.fl-row.worst .bar i{background:var(--warn)}.fl-row.worst .pc{color:var(--warn)}
+.fl-gap{font-size:11px;font-weight:800;color:var(--warn);padding-left:106px;margin:-2px 0}
+.ret{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px;align-items:end}
+.ret div{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ret .col{width:100%;height:120px;border-radius:14px;background:var(--card2);position:relative;overflow:hidden}
+.ret .col i{position:absolute;left:0;right:0;bottom:0;background:var(--blue);border-radius:14px 14px 0 0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.ret b{font-size:18px;font-weight:900}.ret span{font-size:12px;font-weight:700;color:var(--dim)}
+@media (max-width:420px){nav.tabs button{width:66px}}
+
 /* accounts + post grid */
 .acc{display:flex;align-items:center;gap:12px}
 .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;background:var(--blue);box-shadow:0 3px 0 var(--blue-lo);flex:none}
@@ -406,6 +422,22 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
   </section>
 
   <!-- VIDEOS -->
+  <section class="page" id="p-app">
+    <div class="card rise">
+      <div class="label">new installs</div>
+      <div class="big" style="font-size:64px;margin-top:8px" id="aInstalls">0</div>
+      <div class="mini3"><div class="stat"><b id="aDone">0%</b><span>finish setup</span></div><div class="stat"><b id="aPay">0%</b><span>see paywall</span></div><div class="stat"><b id="aSub">0%</b><span>subscribe</span></div></div>
+    </div>
+    <div class="card">
+      <div class="label">where they quit</div>
+      <div class="chip warn" id="aWorst" style="margin-top:10px" hidden></div>
+      <div class="fl" id="aFunnel"></div>
+    </div>
+    <div class="card">
+      <div class="label">come back</div>
+      <div class="ret" id="aRet"></div>
+    </div>
+  </section>
   <section class="page" id="p-videos">
     <div class="card" id="bioCard">
       <div class="between"><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>bio link</span><span class="chip">getgopeak.com/download</span></div>
@@ -441,6 +473,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 
 <nav class="tabs" role="tablist">
   <button role="tab" aria-selected="true" data-p="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>today</button>
+  <button role="tab" aria-selected="false" data-p="app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 6h4"/><path d="M9.5 16.5v-3M12 16.5v-6M14.5 16.5v-4"/></svg>app</button>
   <button role="tab" aria-selected="false" data-p="videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>videos</button>
   <button role="tab" aria-selected="false" data-p="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>ideas</button>
   <button role="tab" aria-selected="false" data-p="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l4 4 5-7 5 7 4-4-2 12H5z"/></svg>team</button>
@@ -530,6 +563,45 @@ $("#sheet").addEventListener("touchend", (e) => { if (sy != null && e.changedTou
 
 // ---------- data ----------
 const D = { site: [], refs: [], ig: [], posts: {}, outliers: null, creators: null, count: null, creatorsReady: true };
+// ---------- app: onboarding drop-off + retention (App/Analytics.swift -> rpc hq_app_stats) ----------
+const STEPS = [["welcome","welcome"],["role","who are you"],["born","birthday"],["sex","sex"],["health","apple health"],["height","height"],["weight","weight"],["shoe","shoe size"],["reasons","reasons"],["sports","sports"],["exercise","exercise"],["sleep","sleep"],["parents","parents"],["relatives","relatives"],["spurtInfo","growth spurt"],["grewLastYear","grew last year"],["puberty(0)","puberty 1"],["puberty(1)","puberty 2"],["puberty(2)","puberty 3"],["puberty(3)","puberty 4"],["puberty(4)","puberty 5"],["model","how it works"],["accuracy","accuracy"],["habits","habits"],["growTaller","grow taller"],["optimize","optimize"],["helps","gopeak helps"],["food","food"],["sleepTrack","sleep tips"],["exercises","exercises"],["weekly","weekly"],["notifications","notifications"],["siri","siri"],["cost","cost of short"],["experts","experts"],["dream","dream height"],["account","account"],["loading","building plan"],["resultsIn","results in"],["results","results"]];
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+async function loadApp() {
+  let A; try { A = await rpc("hq_app_stats"); } catch { return; }
+  if (new URLSearchParams(location.search).has("appdemo")) A = appDemo();
+  const base = A.started || A.installs;
+  $("#aInstalls").textContent = fmt(A.installs);
+  $("#aDone").textContent = pct(A.completed, base) + "%";
+  $("#aPay").textContent = pct(A.paywall, base) + "%";
+  $("#aSub").textContent = pct(A.subscribed, base) + "%";
+  const by = Object.fromEntries((A.funnel || []).map((f) => [f.step, f.users]));
+  const rows = STEPS.filter(([k]) => by[k]).map(([k, n]) => ({ k, n, u: by[k] }));
+  for (const f of A.funnel || []) if (!STEPS.some(([k]) => k === f.step)) rows.push({ k: f.step, n: f.step, u: f.users });
+  if (!rows.length) { $("#aFunnel").innerHTML = '<div class="empty">waiting for the first installs</div>'; $("#aWorst").hidden = true; }
+  else {
+    const top = rows[0].u;
+    let worst = -1, worstLoss = 0;
+    rows.forEach((r, i) => { if (i) { const loss = rows[i - 1].u - r.u; if (loss > worstLoss) { worstLoss = loss; worst = i - 1; } } });
+    $("#aFunnel").innerHTML = rows.map((r, i) => {
+      const lost = i < rows.length - 1 ? r.u - rows[i + 1].u : 0;
+      return `<div class="fl-row${i === worst ? " worst" : ""}" title="${r.u} people"><span class="nm">${esc(r.n)}</span><span class="bar"><i style="width:${Math.max(2, pct(r.u, top))}%"></i></span><span class="pc">${pct(r.u, top)}%</span></div>`
+        + (lost > 0 && pct(lost, r.u) >= 5 ? `<div class="fl-gap">-${pct(lost, r.u)}%</div>` : "");
+    }).join("");
+    const w = $("#aWorst"); w.hidden = worst < 0;
+    if (worst >= 0) w.textContent = `most quit on ${rows[worst].n}`;
+  }
+  $("#aRet").innerHTML = (A.retention || []).map((r) => {
+    const p = pct(r.users, r.eligible);
+    return `<div><b>${r.eligible ? p + "%" : "-"}</b><span class="col"><i style="height:${r.eligible ? Math.max(3, p) : 0}%"></i></span><span>day ${r.d}</span></div>`;
+  }).join("");
+}
+function appDemo() {
+  const steps = STEPS.map(([k]) => k).filter((k) => !k.startsWith("puberty") && k !== "account");
+  let u = 1000; const funnel = steps.map((k, i) => { u = Math.round(u * (k === "spurtInfo" ? 0.78 : k === "height" ? 0.9 : 0.985)); return { step: k, users: u }; });
+  return { installs: 1000, started: 1000, completed: u, paywall: u, skipped: Math.round(u * .7), subscribed: Math.round(u * .08), funnel,
+    retention: [{ d: 1, eligible: 900, users: 380 }, { d: 3, eligible: 700, users: 190 }, { d: 7, eligible: 500, users: 90 }, { d: 14, eligible: 0, users: 0 }, { d: 30, eligible: 0, users: 0 }] };
+}
+
 async function load() {
   const [site, refs, ig, posts, out, count] = await Promise.allSettled([
     rpc("site_daily"), rpc("site_ref_daily"), getJSON(BOT + "daily.json"), getJSON(BOT + "posts.json"), getJSON("data/outliers.json"), rpc("waitlist_count"),
@@ -540,7 +612,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 

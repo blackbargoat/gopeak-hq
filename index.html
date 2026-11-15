@@ -119,11 +119,16 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .fl-row.worst .nm{color:#fff}.fl-row.worst .bar i{background:var(--warn)}
 .fl-gap{font-size:11px;font-weight:800;color:var(--dim);padding-left:114px;margin:-2px 0}
 .fl-gap.worst{color:var(--warn)}
-.steps4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px;align-items:end}
+.steps4{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;margin-top:16px;align-items:end}
 .steps4 div{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .steps4 .col{width:100%;height:110px;border-radius:12px;background:var(--card2);position:relative;overflow:hidden}
 .steps4 .col i{position:absolute;left:0;right:0;bottom:0;background:var(--blue);border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
 .steps4 b{font-size:18px;font-weight:900}.steps4 span{font-size:12px;font-weight:700;color:var(--dim);line-height:1.2}
+.dbars{display:flex;align-items:flex-end;gap:3px;height:90px;margin-top:16px}
+.dbars div{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;border-radius:4px}
+.dbars div:hover i,.dbars div:focus i{background:var(--blue-hi)}
+.dbars i{display:block;width:100%;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.dbars-x{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--dim);margin-top:6px}
 .rchart{position:relative;margin-top:12px}
 .rchart svg{width:100%;height:190px;display:block;overflow:visible}
 .rchart text{fill:var(--dim);font-size:11px;font-weight:700;font-family:var(--font)}
@@ -444,11 +449,17 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">everyone</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
     </div>
     <div class="card rise">
-      <div class="label">biggest leak</div>
-      <div class="leak"><div><div class="big" id="aLeak">no data yet</div><small id="aLeakSub">waiting for the first installs</small></div><div class="loss" id="aLeakPct"></div></div>
+      <div class="between"><div class="label">app store</div><span class="chip" id="asThru"></span></div>
+      <div class="row" style="align-items:flex-end;gap:10px;margin-top:8px"><div class="big" style="font-size:64px" id="asDl">0</div><div style="font-weight:800;color:var(--dim);padding-bottom:8px">downloads</div></div>
+      <div class="mini3"><div class="stat"><b id="asTr">0</b><span>free trials</span></div><div class="stat"><b id="asPd">0</b><span>paid</span></div><div class="stat"><b id="asRev">$0</b><span>revenue</span></div></div>
+      <div class="dbars" id="asBars"></div>
     </div>
     <div class="card">
-      <div class="label">install to paid</div>
+      <div class="label">biggest leak</div>
+      <div class="leak"><div><div class="big" id="aLeak">no data yet</div><small id="aLeakSub">fills in once 1.2 is live</small></div><div class="loss" id="aLeakPct"></div></div>
+    </div>
+    <div class="card">
+      <div class="between"><div class="label">install to paid</div><span class="chip" id="aSrc"></span></div>
       <div class="steps4" id="aSteps"></div>
     </div>
     <div class="card">
@@ -606,9 +617,23 @@ async function loadApp() {
   document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = .6);
   try { A = await rpc("hq_app_stats", body); } catch { return; } finally { document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = ""); }
   if (new URLSearchParams(location.search).has("appdemo")) A = appDemo();
-  const base = A.installs || A.started;
+  // App Store (Apple sales reports + subscription notifications), real numbers
+  const [w, sl] = await Promise.allSettled([rpc("hq_world"), rpc("hq_sales")]);
+  const since = AF.days ? new Date(Date.now() - AF.days * 864e5).toLocaleDateString("en-CA") : "0000";
+  const dl = (w.value?.days || []).filter((d) => d.day >= since), sa = (sl.value || []).filter((d) => d.day >= since);
+  const sum = (a, k) => a.reduce((t, d) => t + (+d[k] || 0), 0);
+  const S = { dl: sum(dl, "downloads"), tr: sum(sa, "trials"), pd: sum(sa, "purchases"), rev: sum(sa, "revenue") };
+  $("#asDl").textContent = fmt(S.dl); $("#asTr").textContent = fmt(S.tr); $("#asPd").textContent = fmt(S.pd);
+  $("#asRev").textContent = "$" + (S.rev >= 1000 ? fmt(S.rev) : Math.round(S.rev));
+  const last = (w.value?.days || []).slice(-1)[0]?.day;
+  $("#asThru").textContent = last ? "through " + new Date(last + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+  renderDlBars(dl, since, last);
+  const useStore = !A.installs;
+  $("#aSrc").textContent = useStore ? "app store" : "in app";
+  const base = useStore ? S.dl : (A.installs || A.started);
   // install to paid
-  const s4 = [["installed", A.installs], ["finished setup", A.completed], ["saw paywall", A.paywall], ["subscribed", A.subscribed]];
+  const s4 = useStore ? [["downloaded", S.dl], ["started trial", S.tr], ["paid", S.pd]]
+    : [["installed", A.installs], ["finished setup", A.completed], ["saw paywall", A.paywall], ["subscribed", A.subscribed]];
   $("#aSteps").innerHTML = s4.map(([n, v]) => `<div tabindex="0" data-tip="<b>${fmt(v)}</b>${n}"><b>${base ? pct(v, base) + "%" : "-"}</b><span class="col"><i style="height:${base ? Math.max(3, pct(v, base)) : 0}%"></i></span><span>${n}</span></div>`).join("");
   // every screen
   const by = Object.fromEntries((A.funnel || []).map((f) => [f.step, f.users]));
@@ -617,8 +642,8 @@ async function loadApp() {
   let worst = -1, worstLoss = 0;
   rows.forEach((r, i) => { if (i < rows.length - 1) { const loss = r.u - rows[i + 1].u; if (loss > worstLoss) { worstLoss = loss; worst = i; } } });
   if (!rows.length) {
-    $("#aFunnel").innerHTML = '<div class="empty">waiting for the first installs</div>';
-    $("#aLeak").textContent = "no data yet"; $("#aLeakSub").textContent = "waiting for the first installs"; $("#aLeakPct").textContent = "";
+    $("#aFunnel").innerHTML = '<div class="empty">fills in once 1.2 is live</div>';
+    $("#aLeak").textContent = "no data yet"; $("#aLeakSub").textContent = "fills in once 1.2 is live"; $("#aLeakPct").textContent = "";
   } else {
     const top = rows[0].u;
     $("#aFunnel").innerHTML = rows.map((r, i) => {
@@ -634,6 +659,16 @@ async function loadApp() {
   }
   renderRetention(A.retention || []);
   wireTips($("#p-app"));
+}
+function renderDlBars(dl, since, lastDay) {
+  const first = since > "2026-10-24" ? since : "2026-10-24", today = lastDay || new Date().toLocaleDateString("en-CA");
+  const by = Object.fromEntries(dl.map((d) => [d.day, +d.downloads || 0])), days = [];
+  for (let t = new Date(first + "T12:00"); t.toLocaleDateString("en-CA") <= today; t.setDate(t.getDate() + 1)) days.push(t.toLocaleDateString("en-CA"));
+  const max = Math.max(1, ...days.map((d) => by[d] || 0)), lab = (d) => new Date(d + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  $("#asBars").innerHTML = days.map((d) => `<div tabindex="0" data-tip="<b>${by[d] || 0}</b>${lab(d)}"><i style="height:${Math.max(2, 100 * (by[d] || 0) / max)}%"></i></div>`).join("");
+  $("#asBars").insertAdjacentHTML("afterend", "");
+  const x = $("#asBars").nextElementSibling; if (x && x.classList.contains("dbars-x")) x.remove();
+  if (days.length) $("#asBars").insertAdjacentHTML("afterend", `<div class="dbars-x"><span>${lab(days[0])}</span><span>${lab(days[days.length - 1])}</span></div>`);
 }
 function renderRetention(R) {
   const days = [0, 1, 3, 7, 14, 30], W = 320, H = 170, L = 30, T = 10, B = 22;

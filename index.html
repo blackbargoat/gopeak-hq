@@ -104,19 +104,35 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .farrow svg{width:18px;height:18px;opacity:.7}
 
 /* app tab: onboarding drop-off */
-.fl{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.fl-row{display:grid;grid-template-columns:96px minmax(0,1fr) 40px;align-items:center;gap:10px;font-size:13px;font-weight:700}
-.fl-row .nm{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fl-row .bar{height:16px;border-radius:999px;background:var(--card2);position:relative;overflow:hidden}
-.fl-row .bar i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:var(--blue);transition:width .6s cubic-bezier(.2,.8,.2,1)}
-.fl-row .pc{text-align:right;font-weight:800}
-.fl-row.worst .nm{color:#fff}.fl-row.worst .bar i{background:var(--warn)}.fl-row.worst .pc{color:var(--warn)}
-.fl-gap{font-size:11px;font-weight:800;color:var(--warn);padding-left:106px;margin:-2px 0}
-.ret{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px;align-items:end}
-.ret div{display:flex;flex-direction:column;align-items:center;gap:8px}
-.ret .col{width:100%;height:120px;border-radius:14px;background:var(--card2);position:relative;overflow:hidden}
-.ret .col i{position:absolute;left:0;right:0;bottom:0;background:var(--blue);border-radius:14px 14px 0 0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
-.ret b{font-size:18px;font-weight:900}.ret span{font-size:12px;font-weight:700;color:var(--dim)}
+.afilters{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.leak{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:10px}
+.leak .big{font-size:40px;letter-spacing:-1.2px}
+.leak .loss{font-size:40px;font-weight:900;color:var(--warn);letter-spacing:-1px;white-space:nowrap}
+.leak small{display:block;font-size:13px;font-weight:700;color:var(--dim);margin-top:6px}
+.fl{display:flex;flex-direction:column;gap:4px;margin-top:14px}
+.fl-row{display:grid;grid-template-columns:100px minmax(0,1fr) 40px;align-items:center;gap:10px;font-size:13px;font-weight:700;padding:3px 0;border-radius:10px;cursor:default}
+.fl-row:hover,.fl-row:focus{background:var(--card2);outline:none}
+.fl-row .nm{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
+.fl-row .bar{height:14px;border-radius:4px;background:var(--card2);position:relative;overflow:hidden}
+.fl-row .bar i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--blue);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.fl-row .pc{text-align:right;font-weight:800;padding-right:4px}
+.fl-row.worst .nm{color:#fff}.fl-row.worst .bar i{background:var(--warn)}
+.fl-gap{font-size:11px;font-weight:800;color:var(--dim);padding-left:114px;margin:-2px 0}
+.fl-gap.worst{color:var(--warn)}
+.steps4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px;align-items:end}
+.steps4 div{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.steps4 .col{width:100%;height:110px;border-radius:12px;background:var(--card2);position:relative;overflow:hidden}
+.steps4 .col i{position:absolute;left:0;right:0;bottom:0;background:var(--blue);border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.steps4 b{font-size:18px;font-weight:900}.steps4 span{font-size:12px;font-weight:700;color:var(--dim);line-height:1.2}
+.rchart{position:relative;margin-top:12px}
+.rchart svg{width:100%;height:190px;display:block;overflow:visible}
+.rchart text{fill:var(--dim);font-size:11px;font-weight:700;font-family:var(--font)}
+.rkey{display:flex;gap:16px;margin-top:10px;font-size:12px;font-weight:700;color:var(--dim)}
+.rkey i{display:inline-block;width:16px;height:0;border-top:2px solid var(--blue);vertical-align:middle;margin-right:6px}
+.rkey i.bench{border-top:2px dashed #55555e}
+.atip{position:fixed;z-index:50;pointer-events:none;background:#fff;color:#000;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:0;transition:opacity .12s;white-space:nowrap}
+.atip b{display:block;font-size:16px;font-weight:900}
+.atip.on{opacity:1}
 @media (max-width:420px){nav.tabs button{width:66px}}
 
 /* accounts + post grid */
@@ -423,19 +439,26 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 
   <!-- VIDEOS -->
   <section class="page" id="p-app">
+    <div class="afilters">
+      <div class="toggle" id="aRange"><button data-v="7">7 days</button><button data-v="30">30 days</button><button data-v="" aria-pressed="true">all</button></div>
+      <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">everyone</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
+    </div>
     <div class="card rise">
-      <div class="label">new installs</div>
-      <div class="big" style="font-size:64px;margin-top:8px" id="aInstalls">0</div>
-      <div class="mini3"><div class="stat"><b id="aDone">0%</b><span>finish setup</span></div><div class="stat"><b id="aPay">0%</b><span>see paywall</span></div><div class="stat"><b id="aSub">0%</b><span>subscribe</span></div></div>
+      <div class="label">biggest leak</div>
+      <div class="leak"><div><div class="big" id="aLeak">no data yet</div><small id="aLeakSub">waiting for the first installs</small></div><div class="loss" id="aLeakPct"></div></div>
     </div>
     <div class="card">
-      <div class="label">where they quit</div>
-      <div class="chip warn" id="aWorst" style="margin-top:10px" hidden></div>
+      <div class="label">install to paid</div>
+      <div class="steps4" id="aSteps"></div>
+    </div>
+    <div class="card">
+      <div class="label">every onboarding screen</div>
       <div class="fl" id="aFunnel"></div>
     </div>
     <div class="card">
-      <div class="label">come back</div>
-      <div class="ret" id="aRet"></div>
+      <div class="label">still opening the app</div>
+      <div class="rchart" id="aRet"></div>
+      <div class="rkey"><span><i></i>gopeak</span><span><i class="bench"></i>typical app</span></div>
     </div>
   </section>
   <section class="page" id="p-videos">
@@ -482,6 +505,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetBody"></div></div>
 <div class="toast" id="toast"></div>
+<div class="atip" id="atip"></div>
 
 <script>
 // SHA-256 in plain JS, so the password check also works on http (browsers only allow crypto.subtle on https).
@@ -565,39 +589,66 @@ $("#sheet").addEventListener("touchend", (e) => { if (sy != null && e.changedTou
 const D = { site: [], refs: [], ig: [], posts: {}, outliers: null, creators: null, count: null, creatorsReady: true };
 // ---------- app: onboarding drop-off + retention (App/Analytics.swift -> rpc hq_app_stats) ----------
 const STEPS = [["welcome","welcome"],["role","who are you"],["born","birthday"],["sex","sex"],["health","apple health"],["height","height"],["weight","weight"],["shoe","shoe size"],["reasons","reasons"],["sports","sports"],["exercise","exercise"],["sleep","sleep"],["parents","parents"],["relatives","relatives"],["spurtInfo","growth spurt"],["grewLastYear","grew last year"],["puberty(0)","puberty 1"],["puberty(1)","puberty 2"],["puberty(2)","puberty 3"],["puberty(3)","puberty 4"],["puberty(4)","puberty 5"],["model","how it works"],["accuracy","accuracy"],["habits","habits"],["growTaller","grow taller"],["optimize","optimize"],["helps","gopeak helps"],["food","food"],["sleepTrack","sleep tips"],["exercises","exercises"],["weekly","weekly"],["notifications","notifications"],["siri","siri"],["cost","cost of short"],["experts","experts"],["dream","dream height"],["account","account"],["loading","building plan"],["resultsIn","results in"],["results","results"]];
+// Typical consumer app N-day retention (rough industry medians: D1 ~27%, D30 ~4%)
+const BENCH = { 0: 100, 1: 27, 3: 17, 7: 12, 14: 8, 30: 4 };
+const AF = { days: "", role: "" };
 const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+function tipAt(e, html) { const t = $("#atip"); t.innerHTML = html; t.classList.add("on");
+  const x = Math.min(innerWidth - t.offsetWidth - 8, Math.max(8, e.clientX - t.offsetWidth / 2)); t.style.left = x + "px"; t.style.top = (e.clientY - t.offsetHeight - 14) + "px"; }
+const tipOff = () => $("#atip").classList.remove("on");
+function wireTips(root) { root.querySelectorAll("[data-tip]").forEach((el) => {
+  const show = (e) => { const r = el.getBoundingClientRect(); tipAt(e.clientX != null ? e : { clientX: r.left + r.width / 2, clientY: r.top }, el.dataset.tip); };
+  el.onpointermove = show; el.onpointerdown = show; el.onfocus = show; el.onpointerleave = tipOff; el.onblur = tipOff; }); }
+for (const [id, k] of [["#aRange", "days"], ["#aRole", "role"]]) $(id).querySelectorAll("button").forEach((b) => b.onclick = () => {
+  $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); AF[k] = b.dataset.v; loadApp(); });
 async function loadApp() {
-  let A; try { A = await rpc("hq_app_stats"); } catch { return; }
+  let A; const body = {}; if (AF.days) body.p_days = +AF.days; if (AF.role) body.p_role = AF.role;
+  document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = .6);
+  try { A = await rpc("hq_app_stats", body); } catch { return; } finally { document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = ""); }
   if (new URLSearchParams(location.search).has("appdemo")) A = appDemo();
-  const base = A.started || A.installs;
-  $("#aInstalls").textContent = fmt(A.installs);
-  $("#aDone").textContent = pct(A.completed, base) + "%";
-  $("#aPay").textContent = pct(A.paywall, base) + "%";
-  $("#aSub").textContent = pct(A.subscribed, base) + "%";
+  const base = A.installs || A.started;
+  // install to paid
+  const s4 = [["installed", A.installs], ["finished setup", A.completed], ["saw paywall", A.paywall], ["subscribed", A.subscribed]];
+  $("#aSteps").innerHTML = s4.map(([n, v]) => `<div tabindex="0" data-tip="<b>${fmt(v)}</b>${n}"><b>${base ? pct(v, base) + "%" : "-"}</b><span class="col"><i style="height:${base ? Math.max(3, pct(v, base)) : 0}%"></i></span><span>${n}</span></div>`).join("");
+  // every screen
   const by = Object.fromEntries((A.funnel || []).map((f) => [f.step, f.users]));
   const rows = STEPS.filter(([k]) => by[k]).map(([k, n]) => ({ k, n, u: by[k] }));
   for (const f of A.funnel || []) if (!STEPS.some(([k]) => k === f.step)) rows.push({ k: f.step, n: f.step, u: f.users });
-  if (!rows.length) { $("#aFunnel").innerHTML = '<div class="empty">waiting for the first installs</div>'; $("#aWorst").hidden = true; }
-  else {
+  let worst = -1, worstLoss = 0;
+  rows.forEach((r, i) => { if (i < rows.length - 1) { const loss = r.u - rows[i + 1].u; if (loss > worstLoss) { worstLoss = loss; worst = i; } } });
+  if (!rows.length) {
+    $("#aFunnel").innerHTML = '<div class="empty">waiting for the first installs</div>';
+    $("#aLeak").textContent = "no data yet"; $("#aLeakSub").textContent = "waiting for the first installs"; $("#aLeakPct").textContent = "";
+  } else {
     const top = rows[0].u;
-    let worst = -1, worstLoss = 0;
-    rows.forEach((r, i) => { if (i) { const loss = rows[i - 1].u - r.u; if (loss > worstLoss) { worstLoss = loss; worst = i - 1; } } });
     $("#aFunnel").innerHTML = rows.map((r, i) => {
-      const lost = i < rows.length - 1 ? r.u - rows[i + 1].u : 0;
-      return `<div class="fl-row${i === worst ? " worst" : ""}" title="${r.u} people"><span class="nm">${esc(r.n)}</span><span class="bar"><i style="width:${Math.max(2, pct(r.u, top))}%"></i></span><span class="pc">${pct(r.u, top)}%</span></div>`
-        + (lost > 0 && pct(lost, r.u) >= 5 ? `<div class="fl-gap">-${pct(lost, r.u)}%</div>` : "");
+      const lost = i < rows.length - 1 ? r.u - rows[i + 1].u : 0, lp = pct(lost, r.u);
+      const tip = `<b>${fmt(r.u)} people</b>${esc(r.n)}${lost > 0 ? ` · ${fmt(lost)} quit here (${lp}%)` : ""}`;
+      return `<div class="fl-row${i === worst ? " worst" : ""}" tabindex="0" data-tip="${esc(tip)}"><span class="nm">${esc(r.n)}</span><span class="bar"><i style="width:${Math.max(2, pct(r.u, top))}%"></i></span><span class="pc">${pct(r.u, top)}%</span></div>`
+        + (lost > 0 && lp >= 5 ? `<div class="fl-gap${i === worst ? " worst" : ""}">-${lp}%</div>` : "");
     }).join("");
-    const w = $("#aWorst"); w.hidden = worst < 0;
-    if (worst >= 0) w.textContent = `most quit on ${rows[worst].n}`;
+    if (worst >= 0) {
+      const w = rows[worst];
+      $("#aLeak").textContent = w.n; $("#aLeakSub").textContent = `${fmt(worstLoss)} of ${fmt(w.u)} people quit on this screen`; $("#aLeakPct").textContent = "-" + pct(worstLoss, w.u) + "%";
+    } else { $("#aLeak").textContent = "no leaks yet"; $("#aLeakSub").textContent = "everyone made it through"; $("#aLeakPct").textContent = ""; }
   }
-  $("#aRet").innerHTML = (A.retention || []).map((r) => {
-    const p = pct(r.users, r.eligible);
-    return `<div><b>${r.eligible ? p + "%" : "-"}</b><span class="col"><i style="height:${r.eligible ? Math.max(3, p) : 0}%"></i></span><span>day ${r.d}</span></div>`;
-  }).join("");
+  renderRetention(A.retention || []);
+  wireTips($("#p-app"));
+}
+function renderRetention(R) {
+  const days = [0, 1, 3, 7, 14, 30], W = 320, H = 170, L = 30, T = 10, B = 22;
+  const x = (d) => L + (W - L - 8) * Math.sqrt(d / 30), y = (v) => T + (H - T - B) * (1 - v / 100);
+  const pts = [{ d: 0, v: 100, n: null }].concat(R.filter((r) => r.eligible > 0).map((r) => ({ d: r.d, v: pct(r.users, r.eligible), n: r.users, of: r.eligible })));
+  const grid = [0, 25, 50, 75, 100].map((v) => `<line x1="${L}" x2="${W - 8}" y1="${y(v)}" y2="${y(v)}" stroke="#26262c" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}%</text>`).join("");
+  const xl = days.map((d) => `<text x="${x(d)}" y="${H - 4}" text-anchor="middle">${d ? "day " + d : "install"}</text>`).join("");
+  const bench = `<polyline fill="none" stroke="#55555e" stroke-width="2" stroke-dasharray="4 4" points="${days.map((d) => x(d) + "," + y(BENCH[d])).join(" ")}"/>`;
+  const line = pts.length > 1 ? `<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" points="${pts.map((p) => x(p.d) + "," + y(p.v)).join(" ")}"/>` : "";
+  const dots = pts.slice(1).map((p) => `<g tabindex="0" data-tip="<b>${p.v}%</b>day ${p.d} · ${fmt(p.n)} of ${fmt(p.of)} came back · typical ${BENCH[p.d]}%"><circle cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent"/><circle cx="${x(p.d)}" cy="${y(p.v)}" r="5" fill="var(--blue)" stroke="var(--card)" stroke-width="2"/><text x="${x(p.d)}" y="${y(p.v) - 12}" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:800">${p.v}%</text></g>`).join("");
+  $("#aRet").innerHTML = `<svg viewBox="0 0 ${W} ${H}">${grid}${xl}${bench}${line}${dots}</svg>` + (pts.length < 2 ? '<div class="empty" style="padding:6px 0 0">fills in once installs are a day old</div>' : "");
 }
 function appDemo() {
   const steps = STEPS.map(([k]) => k).filter((k) => !k.startsWith("puberty") && k !== "account");
-  let u = 1000; const funnel = steps.map((k, i) => { u = Math.round(u * (k === "spurtInfo" ? 0.78 : k === "height" ? 0.9 : 0.985)); return { step: k, users: u }; });
+  let u = 1000; const funnel = steps.map((k) => { u = Math.round(u * (k === "spurtInfo" ? 0.78 : k === "height" ? 0.9 : 0.985)); return { step: k, users: u }; });
   return { installs: 1000, started: 1000, completed: u, paywall: u, skipped: Math.round(u * .7), subscribed: Math.round(u * .08), funnel,
     retention: [{ d: 1, eligible: 900, users: 380 }, { d: 3, eligible: 700, users: 190 }, { d: 7, eligible: 500, users: 90 }, { d: 14, eligible: 0, users: 0 }, { d: 30, eligible: 0, users: 0 }] };
 }

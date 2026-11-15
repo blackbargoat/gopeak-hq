@@ -103,38 +103,30 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .farrow{font-size:12px;font-weight:800;color:var(--blue-hi);display:flex;flex-direction:column;align-items:center;gap:2px}
 .farrow svg{width:18px;height:18px;opacity:.7}
 
-/* app tab: onboarding drop-off */
+/* app tab. Patterns from Tremor (BarList, Apache-2.0) and PostHog (bar funnel, MIT), rebuilt in plain CSS */
 .afilters{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.leak{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:10px}
-.leak .big{font-size:40px;letter-spacing:-1.2px}
-.leak .loss{font-size:40px;font-weight:900;color:var(--warn);letter-spacing:-1px;white-space:nowrap}
-.leak small{display:block;font-size:13px;font-weight:700;color:var(--dim);margin-top:6px}
-.fl{display:flex;flex-direction:column;gap:4px;margin-top:14px}
-.fl-row{display:grid;grid-template-columns:100px minmax(0,1fr) 40px;align-items:center;gap:10px;font-size:13px;font-weight:700;padding:3px 0;border-radius:10px;cursor:default}
-.fl-row:hover,.fl-row:focus{background:var(--card2);outline:none}
-.fl-row .nm{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
-.fl-row .bar{height:14px;border-radius:4px;background:var(--card2);position:relative;overflow:hidden}
-.fl-row .bar i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--blue);transition:width .6s cubic-bezier(.2,.8,.2,1)}
-.fl-row .pc{text-align:right;font-weight:800;padding-right:4px}
-.fl-row.worst .nm{color:#fff}.fl-row.worst .bar i{background:var(--warn)}
-.fl-gap{font-size:11px;font-weight:800;color:var(--dim);padding-left:114px;margin:-2px 0}
-.fl-gap.worst{color:var(--warn)}
-.steps4{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;margin-top:16px;align-items:end}
-.steps4 div{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
-.steps4 .col{width:100%;height:110px;border-radius:12px;background:var(--card2);position:relative;overflow:hidden}
-.steps4 .col i{position:absolute;left:0;right:0;bottom:0;background:var(--blue);border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
-.steps4 b{font-size:18px;font-weight:900}.steps4 span{font-size:12px;font-weight:700;color:var(--dim);line-height:1.2}
-.dbars{display:flex;align-items:flex-end;gap:3px;height:90px;margin-top:16px}
-.dbars div{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;border-radius:4px}
-.dbars div:hover i,.dbars div:focus i{background:var(--blue-hi)}
-.dbars i{display:block;width:100%;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px;transition:height .6s cubic-bezier(.2,.8,.2,1)}
-.dbars-x{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--dim);margin-top:6px}
-.rchart{position:relative;margin-top:12px}
-.rchart svg{width:100%;height:190px;display:block;overflow:visible}
+.tiny{font-size:12px;font-weight:700;color:var(--dim)}
+.dbars{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:14px}
+.dbars div{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end}
+.dbars i{display:block;width:100%;background:var(--blue);border-radius:3px 3px 0 0;min-height:2px;opacity:.9}
+.dbars div:hover i,.dbars div:focus i{opacity:1;background:var(--blue-hi)}
+.blist{display:flex;flex-direction:column;gap:6px;margin-top:18px}
+.blist div{position:relative;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;font-weight:700}
+.blist div i{position:absolute;inset:0 auto 0 0;border-radius:10px;background:rgba(19,127,249,.28);min-width:6px}
+.blist div span,.blist div b{position:relative}
+.blist div b{font-weight:900}
+.blist div em{font-style:normal;color:var(--dim);font-weight:700;margin-right:8px;font-size:12px}
+.fbars{display:flex;align-items:flex-end;gap:2px;height:150px;margin-top:16px}
+.fbars div{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;cursor:default}
+.fbars i{display:block;width:100%;background:var(--blue);border-radius:3px 3px 0 0;min-height:2px;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.fbars div.worst i{background:var(--warn)}
+.fbars div:hover i,.fbars div:focus i{background:var(--blue-hi)}.fbars div.worst:hover i{background:#ffc455}
+.fempty{flex:1;align-self:stretch;display:grid;place-items:center;text-align:center;color:var(--dim);font-weight:700;font-size:13px}
+.rchart{position:relative;margin-top:8px}
+.rchart svg{width:100%;height:180px;display:block;overflow:visible}
 .rchart text{fill:var(--dim);font-size:11px;font-weight:700;font-family:var(--font)}
-.rkey{display:flex;gap:16px;margin-top:10px;font-size:12px;font-weight:700;color:var(--dim)}
-.rkey i{display:inline-block;width:16px;height:0;border-top:2px solid var(--blue);vertical-align:middle;margin-right:6px}
-.rkey i.bench{border-top:2px dashed #55555e}
+.kline{display:inline-block;width:14px;height:0;border-top:2px solid var(--blue);vertical-align:middle;margin:0 5px 0 8px}
+.kline.bench{border-top:2px dashed #55555e}
 .atip{position:fixed;z-index:50;pointer-events:none;background:#fff;color:#000;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:0;transition:opacity .12s;white-space:nowrap}
 .atip b{display:block;font-size:16px;font-weight:900}
 .atip.on{opacity:1}
@@ -445,31 +437,23 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
   <!-- VIDEOS -->
   <section class="page" id="p-app">
     <div class="afilters">
-      <div class="toggle" id="aRange"><button data-v="7">7 days</button><button data-v="30">30 days</button><button data-v="" aria-pressed="true">all</button></div>
-      <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">everyone</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
+      <div class="toggle" id="aRange"><button data-v="7">7d</button><button data-v="30">30d</button><button data-v="" aria-pressed="true">all</button></div>
+      <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">all</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
     </div>
     <div class="card rise">
-      <div class="between"><div class="label">app store</div><span class="chip" id="asThru"></span></div>
-      <div class="row" style="align-items:flex-end;gap:10px;margin-top:8px"><div class="big" style="font-size:64px" id="asDl">0</div><div style="font-weight:800;color:var(--dim);padding-bottom:8px">downloads</div></div>
-      <div class="mini3"><div class="stat"><b id="asTr">0</b><span>free trials</span></div><div class="stat"><b id="asPd">0</b><span>paid</span></div><div class="stat"><b id="asRev">$0</b><span>revenue</span></div></div>
+      <div class="between"><div class="label">downloads</div><span class="tiny" id="asThru"></span></div>
+      <div class="big" style="font-size:64px;margin-top:6px" id="asDl">0</div>
       <div class="dbars" id="asBars"></div>
+      <div class="blist" id="aConv"></div>
     </div>
     <div class="card">
-      <div class="label">biggest leak</div>
-      <div class="leak"><div><div class="big" id="aLeak">no data yet</div><small id="aLeakSub">fills in once 1.2 is live</small></div><div class="loss" id="aLeakPct"></div></div>
+      <div class="between"><div class="label">onboarding</div><span class="chip warn" id="aLeak" hidden></span></div>
+      <div class="fbars" id="aFunnel"></div>
+      <div class="between tiny" id="aAxis" style="margin-top:8px"><span>welcome</span><span id="aDone"></span><span>results</span></div>
     </div>
     <div class="card">
-      <div class="between"><div class="label">install to paid</div><span class="chip" id="aSrc"></span></div>
-      <div class="steps4" id="aSteps"></div>
-    </div>
-    <div class="card">
-      <div class="label">every onboarding screen</div>
-      <div class="fl" id="aFunnel"></div>
-    </div>
-    <div class="card">
-      <div class="label">still opening the app</div>
+      <div class="between"><div class="label">come back</div><span class="tiny"><i class="kline"></i>gopeak <i class="kline bench"></i>typical</span></div>
       <div class="rchart" id="aRet"></div>
-      <div class="rkey"><span><i></i>gopeak</span><span><i class="bench"></i>typical app</span></div>
     </div>
   </section>
   <section class="page" id="p-videos">
@@ -615,60 +599,50 @@ for (const [id, k] of [["#aRange", "days"], ["#aRole", "role"]]) $(id).querySele
 async function loadApp() {
   let A; const body = {}; if (AF.days) body.p_days = +AF.days; if (AF.role) body.p_role = AF.role;
   document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = .6);
-  try { A = await rpc("hq_app_stats", body); } catch { return; } finally { document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = ""); }
+  const [a, w, sl] = await Promise.allSettled([rpc("hq_app_stats", body), rpc("hq_world"), rpc("hq_sales")]);
+  document.querySelectorAll("#p-app .card").forEach((c) => c.style.opacity = "");
+  A = a.value || { funnel: [], retention: [] };
   if (new URLSearchParams(location.search).has("appdemo")) A = appDemo();
-  // App Store (Apple sales reports + subscription notifications), real numbers
-  const [w, sl] = await Promise.allSettled([rpc("hq_world"), rpc("hq_sales")]);
+  // App Store: Apple sales reports (downloads) + subscription notifications (trials, paid, revenue)
   const since = AF.days ? new Date(Date.now() - AF.days * 864e5).toLocaleDateString("en-CA") : "0000";
   const dl = (w.value?.days || []).filter((d) => d.day >= since), sa = (sl.value || []).filter((d) => d.day >= since);
-  const sum = (a, k) => a.reduce((t, d) => t + (+d[k] || 0), 0);
+  const sum = (x, k) => x.reduce((t, d) => t + (+d[k] || 0), 0);
   const S = { dl: sum(dl, "downloads"), tr: sum(sa, "trials"), pd: sum(sa, "purchases"), rev: sum(sa, "revenue") };
-  $("#asDl").textContent = fmt(S.dl); $("#asTr").textContent = fmt(S.tr); $("#asPd").textContent = fmt(S.pd);
-  $("#asRev").textContent = "$" + (S.rev >= 1000 ? fmt(S.rev) : Math.round(S.rev));
   const last = (w.value?.days || []).slice(-1)[0]?.day;
-  $("#asThru").textContent = last ? "through " + new Date(last + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+  const md = (d) => new Date(d + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  $("#asDl").textContent = fmt(S.dl); $("#asThru").textContent = last ? md(last) : "";
   renderDlBars(dl, since, last);
-  const useStore = !A.installs;
-  $("#aSrc").textContent = useStore ? "app store" : "in app";
-  const base = useStore ? S.dl : (A.installs || A.started);
-  // install to paid
-  const s4 = useStore ? [["downloaded", S.dl], ["started trial", S.tr], ["paid", S.pd]]
-    : [["installed", A.installs], ["finished setup", A.completed], ["saw paywall", A.paywall], ["subscribed", A.subscribed]];
-  $("#aSteps").innerHTML = s4.map(([n, v]) => `<div tabindex="0" data-tip="<b>${fmt(v)}</b>${n}"><b>${base ? pct(v, base) + "%" : "-"}</b><span class="col"><i style="height:${base ? Math.max(3, pct(v, base)) : 0}%"></i></span><span>${n}</span></div>`).join("");
-  // every screen
+  const conv = A.installs ? [["installed", A.installs], ["finished setup", A.completed], ["subscribed", A.subscribed]]
+    : [["downloaded", S.dl], ["free trial", S.tr], ["paid", S.pd]];
+  const top = conv[0][1] || 1;
+  $("#aConv").innerHTML = conv.map(([n, v], i) => `<div><i style="width:${Math.max(1, 100 * v / top)}%"></i><span>${n}</span><b>${i ? `<em>${pct(v, top)}%</em>` : ""}${fmt(v)}</b></div>`).join("")
+    + (!A.installs && S.rev ? `<div><span class="tiny">revenue</span><b>$${Math.round(S.rev)}</b></div>` : "");
+  // onboarding: one bar per screen (PostHog-style), worst drop in amber
   const by = Object.fromEntries((A.funnel || []).map((f) => [f.step, f.users]));
   const rows = STEPS.filter(([k]) => by[k]).map(([k, n]) => ({ k, n, u: by[k] }));
   for (const f of A.funnel || []) if (!STEPS.some(([k]) => k === f.step)) rows.push({ k: f.step, n: f.step, u: f.users });
   let worst = -1, worstLoss = 0;
   rows.forEach((r, i) => { if (i < rows.length - 1) { const loss = r.u - rows[i + 1].u; if (loss > worstLoss) { worstLoss = loss; worst = i; } } });
-  if (!rows.length) {
-    $("#aFunnel").innerHTML = '<div class="empty">fills in once 1.2 is live</div>';
-    $("#aLeak").textContent = "no data yet"; $("#aLeakSub").textContent = "fills in once 1.2 is live"; $("#aLeakPct").textContent = "";
-  } else {
-    const top = rows[0].u;
+  const leak = $("#aLeak");
+  if (!rows.length) { $("#aFunnel").innerHTML = '<div class="fempty">starts with 1.2</div>'; leak.hidden = true; $("#aAxis").hidden = true; }
+  else {
+    const t = rows[0].u; $("#aAxis").hidden = false;
     $("#aFunnel").innerHTML = rows.map((r, i) => {
-      const lost = i < rows.length - 1 ? r.u - rows[i + 1].u : 0, lp = pct(lost, r.u);
-      const tip = `<b>${fmt(r.u)} people</b>${esc(r.n)}${lost > 0 ? ` · ${fmt(lost)} quit here (${lp}%)` : ""}`;
-      return `<div class="fl-row${i === worst ? " worst" : ""}" tabindex="0" data-tip="${esc(tip)}"><span class="nm">${esc(r.n)}</span><span class="bar"><i style="width:${Math.max(2, pct(r.u, top))}%"></i></span><span class="pc">${pct(r.u, top)}%</span></div>`
-        + (lost > 0 && lp >= 5 ? `<div class="fl-gap${i === worst ? " worst" : ""}">-${lp}%</div>` : "");
+      const lost = i < rows.length - 1 ? r.u - rows[i + 1].u : 0;
+      return `<div class="${i === worst ? "worst" : ""}" tabindex="0" data-tip="<b>${pct(r.u, t)}%</b>${esc(r.n)}${lost ? ` · -${pct(lost, r.u)}%` : ""}"><i style="height:${Math.max(1, pct(r.u, t))}%"></i></div>`;
     }).join("");
-    if (worst >= 0) {
-      const w = rows[worst];
-      $("#aLeak").textContent = w.n; $("#aLeakSub").textContent = `${fmt(worstLoss)} of ${fmt(w.u)} people quit on this screen`; $("#aLeakPct").textContent = "-" + pct(worstLoss, w.u) + "%";
-    } else { $("#aLeak").textContent = "no leaks yet"; $("#aLeakSub").textContent = "everyone made it through"; $("#aLeakPct").textContent = ""; }
+    leak.hidden = worst < 0; if (worst >= 0) leak.textContent = `${rows[worst].n} -${pct(worstLoss, rows[worst].u)}%`;
+    $("#aDone").textContent = pct(rows[rows.length - 1].u, t) + "% finish";
   }
   renderRetention(A.retention || []);
   wireTips($("#p-app"));
 }
 function renderDlBars(dl, since, lastDay) {
-  const first = since > "2026-10-24" ? since : "2026-10-24", today = lastDay || new Date().toLocaleDateString("en-CA");
+  const first = since > "2026-10-24" ? since : "2026-10-24", end = lastDay || new Date().toLocaleDateString("en-CA");
   const by = Object.fromEntries(dl.map((d) => [d.day, +d.downloads || 0])), days = [];
-  for (let t = new Date(first + "T12:00"); t.toLocaleDateString("en-CA") <= today; t.setDate(t.getDate() + 1)) days.push(t.toLocaleDateString("en-CA"));
-  const max = Math.max(1, ...days.map((d) => by[d] || 0)), lab = (d) => new Date(d + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  $("#asBars").innerHTML = days.map((d) => `<div tabindex="0" data-tip="<b>${by[d] || 0}</b>${lab(d)}"><i style="height:${Math.max(2, 100 * (by[d] || 0) / max)}%"></i></div>`).join("");
-  $("#asBars").insertAdjacentHTML("afterend", "");
-  const x = $("#asBars").nextElementSibling; if (x && x.classList.contains("dbars-x")) x.remove();
-  if (days.length) $("#asBars").insertAdjacentHTML("afterend", `<div class="dbars-x"><span>${lab(days[0])}</span><span>${lab(days[days.length - 1])}</span></div>`);
+  for (let t = new Date(first + "T12:00"); t.toLocaleDateString("en-CA") <= end; t.setDate(t.getDate() + 1)) days.push(t.toLocaleDateString("en-CA"));
+  const max = Math.max(1, ...days.map((d) => by[d] || 0));
+  $("#asBars").innerHTML = days.map((d) => `<div tabindex="0" data-tip="<b>${by[d] || 0}</b>${new Date(d + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}"><i style="height:${Math.max(3, 100 * (by[d] || 0) / max)}%"></i></div>`).join("");
 }
 function renderRetention(R) {
   const days = [0, 1, 3, 7, 14, 30], W = 320, H = 170, L = 30, T = 10, B = 22;
@@ -679,7 +653,7 @@ function renderRetention(R) {
   const bench = `<polyline fill="none" stroke="#55555e" stroke-width="2" stroke-dasharray="4 4" points="${days.map((d) => x(d) + "," + y(BENCH[d])).join(" ")}"/>`;
   const line = pts.length > 1 ? `<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" points="${pts.map((p) => x(p.d) + "," + y(p.v)).join(" ")}"/>` : "";
   const dots = pts.slice(1).map((p) => `<g tabindex="0" data-tip="<b>${p.v}%</b>day ${p.d} · ${fmt(p.n)} of ${fmt(p.of)} came back · typical ${BENCH[p.d]}%"><circle cx="${x(p.d)}" cy="${y(p.v)}" r="14" fill="transparent"/><circle cx="${x(p.d)}" cy="${y(p.v)}" r="5" fill="var(--blue)" stroke="var(--card)" stroke-width="2"/><text x="${x(p.d)}" y="${y(p.v) - 12}" text-anchor="middle" style="fill:#fff;font-size:12px;font-weight:800">${p.v}%</text></g>`).join("");
-  $("#aRet").innerHTML = `<svg viewBox="0 0 ${W} ${H}">${grid}${xl}${bench}${line}${dots}</svg>` + (pts.length < 2 ? '<div class="empty" style="padding:6px 0 0">fills in once installs are a day old</div>' : "");
+  $("#aRet").innerHTML = `<svg viewBox="0 0 ${W} ${H}">${grid}${xl}${bench}${line}${dots}</svg>`;
 }
 function appDemo() {
   const steps = STEPS.map(([k]) => k).filter((k) => !k.startsWith("puberty") && k !== "account");

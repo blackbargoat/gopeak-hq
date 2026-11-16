@@ -11,6 +11,7 @@
   #p-pipe .hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
   #p-pipe .cap{font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim)}
   #p-pipe button:active{transform:translateY(2px)}
+  .when{display:flex;gap:8px;margin-top:14px}.when input{flex:1;min-width:0;height:48px;border-radius:14px;border:0;background:#1c1c20;color:#fff;font:inherit;font-weight:700;padding:0 12px;color-scheme:dark}.when .btn3d{flex:none}
   #p-pipe .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:52px;margin-top:18px;border-radius:999px;font-weight:800;font-size:15px;color:#fff;
     background:var(--pa);box-shadow:0 5px 0 var(--pa-d);transition:transform .12s,box-shadow .12s}
   #p-pipe .gbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pa-d)}
@@ -301,7 +302,7 @@
     };
     $("#prail").innerHTML = rail(c);
 
-    const slots = P?.settings?.slots || ["11:00", "16:00", "20:30"];
+    const slots = P?.settings?.trial_slots || P?.settings?.slots || ["07:00", "19:00"];
     const today = dayKey(new Date());
     const at = (acc, day) => posts.filter((p) => p.account === acc && p.scheduled_at && dayKey(new Date(p.scheduled_at)) === day).sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
     const slotLbl = (s) => { const [h, m] = s.split(":").map(Number); return `${h % 12 || 12}${m ? ":" + String(m).padStart(2, "0") : ""}${h < 12 ? "a" : "p"}`; };
@@ -503,6 +504,9 @@
     }));
   }
 
+  // ET wall clock <-> ISO for the schedule picker
+  const toLocal = (iso) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: tz, hour12: false, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).formatToParts(new Date(iso)).map((x) => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}T${String(+p.hour % 24).padStart(2, "0")}:${p.minute}`; };
+  const fromLocal = (v) => { const g = new Date(v + ":00Z"); const l = toLocal(g.toISOString()); return new Date(g.getTime() - (new Date(l + ":00Z") - g)).toISOString(); };
   function openPost(id) {
     const p = P.posts.find((x) => x.id === id); if (!p) return;
     const fmt = FORMATS.find((f) => f[0] === p.format);
@@ -515,7 +519,8 @@
       ${p.sound?.url ? `<a class="btn3d ghost" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;height:48px" href="${esc(p.sound.url)}" target="_blank" rel="noopener">♪ use this sound on TikTok · ${esc(p.sound.name || "")}</a>` : ""}
       ${p.error ? `<div class="hook" style="color:#ffb020">${esc(p.error)}</div>` : ""}
       ${p.results?.instagram?.url ? `<a class="btn3d ghost" style="display:flex;align-items:center;justify-content:center;margin-top:12px;height:48px" href="${esc(p.results.instagram.url)}" target="_blank" rel="noopener">open on instagram</a>` : ""}
-      ${["posted", "posting"].includes(p.status) ? "" : `<div class="acts">
+      ${["posted", "posting"].includes(p.status) ? "" : `<div class="when"><input type="datetime-local" id="pwhen" value="${p.scheduled_at ? toLocal(p.scheduled_at) : ""}" step="900"><button class="btn3d" data-act="time">schedule</button></div>
+      <div class="acts">
         <button class="btn3d ghost" data-act="skip">skip</button>
         <button class="btn3d ghost" data-act="trial">${p.trial ? "make feed post" : "make trial"}</button>
         <button class="btn3d" data-act="approve">${p.status === "scheduled" ? "unapprove" : "approve"}</button></div>`}</div>`);
@@ -524,8 +529,9 @@
       const body = { p_key: PW, p_id: p.id, p_scheduled_at: null, p_status: null, p_trial: null };
       if (a === "skip") body.p_status = "skipped";
       else if (a === "trial") body.p_trial = !p.trial;
+      else if (a === "time") { const v = $("#pwhen").value; if (!v) { toast?.("pick a day and time"); return; } body.p_scheduled_at = fromLocal(v); body.p_status = "scheduled"; }
       else body.p_status = p.status === "scheduled" ? "rendered" : "scheduled";
-      if (!LOCAL) { try { await rpc("hq_pipe_post_set", body); toast?.(a === "approve" && body.p_status === "scheduled" ? "approved" : "saved"); } catch { toast?.("didn't save"); } }
+      if (!LOCAL) { try { await rpc("hq_pipe_post_set", body); toast?.(a === "time" ? "scheduled" : a === "approve" && body.p_status === "scheduled" ? "approved" : "saved"); } catch { toast?.("didn't save"); } }
       closeSheet(); loadPipe();
     }));
   }

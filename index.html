@@ -155,6 +155,7 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .post .v{position:absolute;left:6px;bottom:6px;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.8)}
 .post .v svg{width:13px;height:13px}
 .post .s{position:absolute;right:6px;top:6px;height:22px;padding:0 8px;border-radius:999px;background:rgba(19,127,249,.92);font-size:11px;font-weight:800;display:flex;align-items:center}
+.post .ttb{position:absolute;inset:0;display:grid;place-items:center;color:#fff;opacity:.85}.post .ttb svg{width:34px;height:34px}
 .post.best{outline:3px solid var(--blue-hi);outline-offset:-3px}
 .empty{padding:26px 10px;text-align:center;color:var(--dim);font-weight:700;font-size:14px}
 .empty svg{width:42px;height:42px;display:block;margin:0 auto 10px;opacity:.5}
@@ -752,7 +753,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp(); loadViews();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp(); loadViews(); loadTikTok();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -886,6 +887,12 @@ const accounts = () => [...new Set(D.ig.map((r) => r.account))];
 function sparkPath(vals, w = 96, h = 36) {
   const m = Math.max(1, ...vals); return vals.map((v, i) => `${i ? "L" : "M"}${(w * i) / Math.max(1, vals.length - 1)},${h - 3 - ((h - 6) * (v || 0)) / m}`).join("");
 }
+let TT = { posts: [], daily: [] };
+async function loadTikTok() {
+  const [p, d] = await Promise.allSettled([rpc("hq_tiktok_posts"), rpc("hq_tiktok_views")]);
+  TT = { posts: p.value || [], daily: d.value || [] }; renderVideos();
+}
+const TT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.8 5.8 0 1 0 5 5.7V9.1a7.4 7.4 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.3-1.6z"/></svg>';
 function renderVideos() {
   const accs = accounts(), days = [...Array(14)].map((_, i) => new Date(Date.now() - (13 - i) * 864e5).toLocaleDateString("en-CA"));
   const daysLeft = Math.round((Date.parse(TOKEN_EXPIRES) - Date.now()) / 864e5);
@@ -897,13 +904,20 @@ function renderVideos() {
       <svg class="spark" viewBox="0 0 96 36"><path d="${sparkPath(vals)}" fill="none" stroke="var(--blue-hi)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="mini3"><div class="stat"><b>${fmt(wk)}</b><span>views 7d</span></div><div class="stat"><b>${Math.round((wk * M.rate) / 1000)}</b><span>est. signups</span></div><div class="stat"><b>${last.day === today() ? fmt(last.reach) : "0"}</b><span>reach today</span></div></div>
       ${stale ? `<div class="chip warn" style="margin-top:12px">no data lately</div>` : ""}${daysLeft <= 14 ? `<div class="chip warn" style="margin-top:12px">token expires in ${daysLeft}d</div>` : ""}</div>`;
+  }).join("") + [...new Set(TT.posts.map((p) => p.handle))].map((h) => {
+    const mine = TT.posts.filter((p) => p.handle === h), tot = mine.reduce((t, p) => t + (+p.views || 0), 0);
+    return `<div class="card"><div class="acc"><div class="av" style="background:#fff;color:#000;box-shadow:0 3px 0 #9a9aa3">${TT_ICON}</div><div><b>@${esc(h)}</b><small>tiktok slideshows · dev</small></div>
+      <a class="chip" style="margin-left:auto" href="https://www.tiktok.com/@${esc(h)}" target="_blank" rel="noopener">open</a></div>
+      <div class="mini3"><div class="stat"><b>${fmt(tot)}</b><span>views</span></div><div class="stat"><b>${mine.length}</b><span>posts</span></div><div class="stat"><b>${fmt(mine.reduce((t, p) => t + (+p.likes || 0), 0))}</b><span>likes</span></div></div></div>`;
   }).join("") || `<div class="card"><div class="empty">no accounts yet</div></div>`;
-  $("#accFilter").innerHTML = ["all", ...accs].map((a) => `<button aria-pressed="${a === accSel}" data-a="${esc(a)}">${a === "all" ? "all" : esc(a.split(".")[0].slice(0, 9))}</button>`).join("");
+  const ttH = [...new Set(TT.posts.map((p) => p.handle))];
+  $("#accFilter").innerHTML = ["all", ...accs, ...ttH].map((a) => `<button aria-pressed="${a === accSel}" data-a="${esc(a)}">${a === "all" ? "all" : esc(a.split(".")[0].slice(0, 9))}</button>`).join("");
   $("#accFilter").querySelectorAll("button").forEach((b) => b.onclick = () => { accSel = b.dataset.a; renderVideos(); });
-  const posts = Object.values(D.posts).filter((p) => accSel === "all" || p.account === accSel).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 24);
+  const ttPosts = TT.posts.map((p) => ({ account: p.handle, permalink: p.url, views: p.views, likes: p.likes, caption: p.caption, timestamp: p.posted_at, tiktok: true }));
+  const posts = Object.values(D.posts).concat(ttPosts).filter((p) => accSel === "all" || p.account === accSel).sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, 24);
   const best = posts.reduce((m, p) => ((p.views || 0) > (m?.views || 0) ? p : m), null);
   $("#posts").innerHTML = posts.length ? posts.map((p) => `<a class="post${p === best ? " best" : ""}" href="${esc(p.permalink)}" target="_blank" rel="noopener" title="${esc(p.caption)}">
-      ${p.thumb ? `<img src="${BOT}${esc(p.thumb.replace(/^stats\//, ""))}" alt="" loading="lazy">` : ""}
+      ${p.thumb ? `<img src="${BOT}${esc(p.thumb.replace(/^stats\//, ""))}" alt="" loading="lazy">` : ""}${p.tiktok ? `<span class="ttb">${TT_ICON}</span>` : ""}
       ${p.views ? `<span class="s">+${Math.round((p.views * M.rate) / 1000)}</span>` : ""}
       <span class="v"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>${fmt(p.views ?? p.likes)}</span></a>`).join("")
     : `<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"/></svg>videos show up after the bot's next run</div>`;

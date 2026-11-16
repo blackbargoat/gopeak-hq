@@ -122,6 +122,17 @@ section.page{display:none;animation:in .35s ease}section.page.on{display:block}
 .fbars div.worst i{background:var(--warn)}
 .fbars div:hover i,.fbars div:focus i{background:var(--blue-hi)}.fbars div.worst:hover i{background:#ffc455}
 .fempty{flex:1;align-self:stretch;display:grid;place-items:center;text-align:center;color:var(--dim);font-weight:700;font-size:13px}
+.vtchart{position:relative;margin-top:14px}
+.vtchart svg{width:100%;height:170px;display:block;overflow:visible}
+.vtchart text{fill:var(--dim);font-size:11px;font-weight:700;font-family:var(--font)}
+.vtrows{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.vtrow{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:13px;font-weight:700}
+.vtrow .nm{color:#fff}.vtrow .val{color:var(--dim);text-align:right}.vtrow .val b{color:#fff;font-weight:900}
+.bullet{grid-column:1/-1;position:relative;height:16px;border-radius:5px;background:#1f1f24;overflow:hidden}
+.bullet .band{position:absolute;inset:0 auto 0 0;background:#2a2a31}
+.bullet .act{position:absolute;left:0;top:4px;bottom:4px;border-radius:3px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bullet .pace{position:absolute;top:4px;bottom:4px;border:1.5px dashed #8e8e98;border-left:0;border-radius:0 3px 3px 0}
+.bullet .tgt{position:absolute;top:1px;bottom:1px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--good)}
 .rchart{position:relative;margin-top:8px}
 .rchart svg{width:100%;height:180px;display:block;overflow:visible}
 .rchart text{fill:var(--dim);font-size:11px;font-weight:700;font-family:var(--font)}
@@ -440,7 +451,17 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <div class="toggle" id="aRange"><button data-v="7">7d</button><button data-v="30">30d</button><button data-v="" aria-pressed="true">all</button></div>
       <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">all</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
     </div>
-    <div class="card rise">
+    <div class="card rise" id="vtCard">
+      <div class="between"><div class="label">views to downloads</div><button class="chip" id="vtGoal"></button></div>
+      <div class="between" style="align-items:flex-end;margin-top:6px">
+        <div><div class="big" style="font-size:64px" id="vtDl">0</div><span class="tiny">downloads today, from views</span></div>
+        <div style="text-align:right"><b style="font-size:22px;font-weight:900" id="vtViews">0</b><br><span class="tiny">views today</span></div>
+      </div>
+      <div class="vtchart" id="vtChart"></div>
+      <div class="vtrows" id="vtRows"></div>
+      <div class="tiny" id="vtMath" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
       <div class="between"><div class="label">downloads</div><span class="tiny" id="asThru"></span></div>
       <div class="big" style="font-size:64px;margin-top:6px" id="asDl">0</div>
       <div class="dbars" id="asBars"></div>
@@ -586,6 +607,61 @@ $("#sheet").addEventListener("touchend", (e) => { if (sy != null && e.changedTou
 
 // ---------- data ----------
 const D = { site: [], refs: [], ig: [], posts: {}, outliers: null, creators: null, count: null, creatorsReady: true };
+// ---------- views -> downloads (IG daily views from the bot, TikTok from hq_tiktok_views, downloads from Apple) ----------
+const VT_ACC = [["mav.tallteen", "ig", "var(--blue)"], ["maverick.pranks", "ig", "var(--blue-hi)"], ["reachheightmaxxer", "tt", "#e8e8ee"]];
+const TT_FACTOR = 0.3; // TikTok slideshows have no link in bio: assume ~30% of Instagram's download rate
+let VT_GOAL = +(store.get("vtGoal") || 100);
+async function loadViews() {
+  const [d, t, w] = await Promise.allSettled([getJSON(BOT + "daily.json"), rpc("hq_tiktok_views"), rpc("hq_world")]);
+  const daily = d.value || [], tt = t.value || [], dlDays = w.value?.days || [];
+  const day0 = (n) => { const x = new Date(); x.setDate(x.getDate() - n); return x.toLocaleDateString("en-CA"); };
+  const days = Array.from({ length: 14 }, (_, i) => day0(13 - i)), today = days[13];
+  const V = {}; // V[day][handle] = views that day
+  for (const r of daily) (V[r.day] ||= {})[r.account] = +r.views || 0;
+  const byH = {}; for (const r of tt) (byH[r.handle] ||= []).push(r);
+  for (const h in byH) { let prev = null; for (const r of byH[h]) { if (prev != null) (V[r.day] ||= {})[h] = Math.max(0, r.total - prev); prev = r.total; } } // first snapshot = baseline, not views that day
+  // live rate: Apple downloads per 1k Instagram views over the last 14 full days that have both
+  const dlBy = Object.fromEntries(dlDays.map((x) => [x.day, +x.downloads || 0]));
+  let sv = 0, sd = 0; for (const dd of days.slice(0, 13)) { const v = (V[dd]?.["mav.tallteen"] || 0) + (V[dd]?.["maverick.pranks"] || 0); if (v && dlBy[dd] != null) { sv += v; sd += dlBy[dd]; } }
+  const rate = sv ? sd / sv * 1000 : 2; // downloads per 1k IG views
+  const per = (h) => (VT_ACC.find((a) => a[0] === h)[1] === "tt" ? rate * TT_FACTOR : rate) / 1000;
+  const dlOf = (dd) => VT_ACC.reduce((t, [h]) => t + (V[dd]?.[h] || 0) * per(h), 0);
+  const viewsOf = (dd) => VT_ACC.reduce((t, [h]) => t + (V[dd]?.[h] || 0), 0);
+  // pace: share of the ET day gone by
+  const et = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const frac = Math.max(0.08, (et.getHours() * 60 + et.getMinutes()) / 1440);
+  const goalViews = VT_GOAL / rate * 1000;
+  $("#vtGoal").textContent = `goal ${VT_GOAL}/day`;
+  $("#vtDl").textContent = Math.round(dlOf(today));
+  $("#vtViews").textContent = fmt(viewsOf(today));
+  // chart: stacked bars, dashed goal line, today's pace outline
+  const W = 340, H = 160, L = 4, B = 18, T = 8, bw = (W - L) / 14;
+  const max = Math.max(goalViews * 1.15, ...days.map((dd, i) => i === 13 ? viewsOf(dd) / frac : viewsOf(dd)), 1);
+  const y = (v) => T + (H - T - B) * (1 - v / max);
+  let bars = "";
+  days.forEach((dd, i) => {
+    let base = 0; const x = L + i * bw + 2, w = bw - 4;
+    const tip = `<b>${fmt(viewsOf(dd))} views</b>${new Date(dd + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })} · ≈${Math.round(dlOf(dd))} downloads`;
+    let g = `<g tabindex="0" data-tip="${esc(tip)}"><rect x="${x - 2}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent"/>`;
+    for (const [h, , col] of VT_ACC) { const v = V[dd]?.[h] || 0; if (!v) continue; g += `<rect x="${x}" y="${y(base + v)}" width="${w}" height="${y(base) - y(base + v)}" fill="${col}" rx="2"/>`; base += v; }
+    if (i === 13 && base) { const pace = base / frac; g += `<rect x="${x + .75}" y="${y(pace)}" width="${w - 1.5}" height="${y(base) - y(pace)}" fill="none" stroke="#8e8e98" stroke-width="1.5" stroke-dasharray="3 3" rx="2"/>`; }
+    bars += g + "</g>";
+    if (i % 3 === 1 || i === 13) bars += `<text x="${x + w / 2}" y="${H - 2}" text-anchor="middle">${i === 13 ? "today" : new Date(dd + "T12:00").toLocaleDateString("en-US", { month: "numeric", day: "numeric" })}</text>`;
+  });
+  const gl = `<line x1="${L}" x2="${W}" y1="${y(goalViews)}" y2="${y(goalViews)}" stroke="var(--good)" stroke-width="2" stroke-dasharray="6 5"/><text x="${W}" y="${y(goalViews) - 6}" text-anchor="end" style="fill:var(--good)">${fmt(goalViews)}</text>`;
+  $("#vtChart").innerHTML = `<svg viewBox="0 0 ${W} ${H}">${bars}${gl}</svg>`;
+  // bullet rows (Stephen Few): bar = today so far, dashed = pace to midnight, green tick = this account's share of the goal
+  const share = (h) => { const t = days.slice(0, 13).reduce((a, dd) => a + viewsOf(dd), 0), v = days.slice(0, 13).reduce((a, dd) => a + (V[dd]?.[h] || 0), 0); return t && v ? v / t : 0.1; };
+  $("#vtRows").innerHTML = VT_ACC.map(([h, k, col]) => {
+    const v = V[today]?.[h] || 0, tg = Math.max(1, goalViews * share(h)), pace = v / frac, scale = Math.max(tg * 1.25, pace) || 1;
+    const pc = (x) => Math.min(100, 100 * x / scale);
+    return `<div class="vtrow" tabindex="0" data-tip="<b>${fmt(v)} / ${fmt(tg)}</b>${h} · on pace for ${fmt(pace)}"><span class="nm">${h}</span><span class="val"><b>${fmt(v)}</b> ≈${Math.round(v * per(h))} dl</span>
+      <div class="bullet"><span class="band" style="width:${pc(tg)}%"></span><span class="pace" style="left:${pc(v)}%;width:${Math.max(0, pc(pace) - pc(v))}%"></span><span class="act" style="width:${pc(v)}%;background:${col}"></span><span class="tgt" style="left:${pc(tg)}%"></span></div></div>`; }).join("");
+  $("#vtMath").textContent = `1k instagram views ≈ ${rate.toFixed(1)} downloads · tiktok ≈ ${(rate * TT_FACTOR).toFixed(1)} (no link)`;
+  wireTips($("#vtCard"));
+}
+$("#vtGoal").onclick = () => { const g = [50, 100, 200, 500, 1000]; VT_GOAL = g[(g.indexOf(VT_GOAL) + 1) % g.length] || 100; store.set("vtGoal", VT_GOAL); loadViews(); };
+
 // ---------- app: onboarding drop-off + retention (App/Analytics.swift -> rpc hq_app_stats) ----------
 const STEPS = [["welcome","welcome"],["role","who are you"],["born","birthday"],["sex","sex"],["health","apple health"],["height","height"],["weight","weight"],["shoe","shoe size"],["reasons","reasons"],["sports","sports"],["exercise","exercise"],["sleep","sleep"],["parents","parents"],["relatives","relatives"],["spurtInfo","growth spurt"],["grewLastYear","grew last year"],["puberty(0)","puberty 1"],["puberty(1)","puberty 2"],["puberty(2)","puberty 3"],["puberty(3)","puberty 4"],["puberty(4)","puberty 5"],["model","how it works"],["accuracy","accuracy"],["habits","habits"],["growTaller","grow taller"],["optimize","optimize"],["helps","gopeak helps"],["food","food"],["sleepTrack","sleep tips"],["exercises","exercises"],["weekly","weekly"],["notifications","notifications"],["siri","siri"],["cost","cost of short"],["experts","experts"],["dream","dream height"],["account","account"],["loading","building plan"],["resultsIn","results in"],["results","results"]];
 // Typical consumer app N-day retention (rough industry medians: D1 ~27%, D30 ~4%)
@@ -676,7 +752,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp(); loadViews();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 

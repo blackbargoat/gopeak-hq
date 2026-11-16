@@ -403,6 +403,16 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <div class="hbars" id="salesBars" style="height:80px"></div>
       <em id="sKey1" hidden></em>
     </div>
+    <div class="card" id="vtCard">
+      <div class="between"><div class="label">views to downloads</div><button class="chip" id="vtGoal"></button></div>
+      <div class="between" style="align-items:flex-end;margin-top:6px">
+        <div><div class="big" style="font-size:64px" id="vtDl">0</div><span class="tiny">downloads today, from views</span></div>
+        <div style="text-align:right"><b style="font-size:22px;font-weight:900" id="vtViews">0</b><br><span class="tiny">views today</span></div>
+      </div>
+      <div class="vtchart" id="vtChart"></div>
+      <div class="vtrows" id="vtRows"></div>
+      <div class="tiny" id="vtMath" style="margin-top:12px"></div>
+    </div>
     <div class="card">
       <div class="between" hidden><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>world</span><span class="chip" id="wTotal" hidden>0</span></div>
       <div class="globe-wrap"><div class="globe" id="globe"></div><div class="globe-hud" id="globeHud" hidden></div></div>
@@ -451,17 +461,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
       <div class="toggle" id="aRange"><button data-v="7">7d</button><button data-v="30">30d</button><button data-v="" aria-pressed="true">all</button></div>
       <div class="toggle" id="aRole"><button data-v="" aria-pressed="true">all</button><button data-v="teen">teens</button><button data-v="parent">parents</button></div>
     </div>
-    <div class="card rise" id="vtCard">
-      <div class="between"><div class="label">views to downloads</div><button class="chip" id="vtGoal"></button></div>
-      <div class="between" style="align-items:flex-end;margin-top:6px">
-        <div><div class="big" style="font-size:64px" id="vtDl">0</div><span class="tiny">downloads today, from views</span></div>
-        <div style="text-align:right"><b style="font-size:22px;font-weight:900" id="vtViews">0</b><br><span class="tiny">views today</span></div>
-      </div>
-      <div class="vtchart" id="vtChart"></div>
-      <div class="vtrows" id="vtRows"></div>
-      <div class="tiny" id="vtMath" style="margin-top:12px"></div>
-    </div>
-    <div class="card">
+    <div class="card rise">
       <div class="between"><div class="label">downloads</div><span class="tiny" id="asThru"></span></div>
       <div class="big" style="font-size:64px;margin-top:6px" id="asDl">0</div>
       <div class="dbars" id="asBars"></div>

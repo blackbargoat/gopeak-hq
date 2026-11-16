@@ -1,0 +1,249 @@
+{
+ "updatedAt": "2026-11-15T17:29:39.818Z",
+ "formats": [
+  {
+   "key": "comment_bait",
+   "name": "Comment bait",
+   "desc": "Deadpan + colored legend (Tall / Potential / Cooked). People comment their height, the reply bot answers with the app. Your proven winner.",
+   "status": "fixed",
+   "video": "formats/comment_bait.mp4?v=1794763780955",
+   "poster": "formats/comment_bait.jpg?v=1794763780955"
+  },
+  {
+   "key": "bait_peek",
+   "name": "Bait + peek",
+   "desc": "Chart or legend, then only the Home-ring card + \"comment your height for a prediction\". Cut on the beat.",
+   "status": "fixed",
+   "video": "formats/bait_peek.mp4?v=1794763782572",
+   "poster": "formats/bait_peek.jpg?v=1794763782572"
+  },
+  {
+   "key": "corner",
+   "name": "Cooked + card",
+   "desc": "GoTall IG style (441K views): \"If you are 5'8 at 15... You MIGHT be COOKED\", then the centered Home ring + \"comment your height for a prediction\".",
+   "status": "fixed",
+   "video": "formats/corner.mp4?v=1794763783640",
+   "poster": "formats/corner.jpg?v=1794763783640"
+  },
+  {
+   "key": "claim",
+   "name": "Bold claim + card",
+   "desc": "\"EXTREMELY high chance of being 6ft+\", then the Home ring + \"comment your height for a prediction\".",
+   "status": "fixed",
+   "video": "formats/claim.mp4?v=1794763784743",
+   "poster": "formats/claim.jpg?v=1794763784743"
+  },
+  {
+   "key": "screen_payoff",
+   "name": "Screen payoff",
+   "desc": "Face hook, real app recording (parents, loading %), Home ring. Hard cuts on the beat.",
+   "status": "approved",
+   "video": "formats/screen_payoff.mp4?v=1794763786039",
+   "poster": "formats/screen_payoff.jpg?v=1794763786039"
+  },
+  {
+   "key": "app_reveal",
+   "name": "App reveal",
+   "desc": "GoTall outlier remake that ends on the GoPeak result screen.",
+   "status": "fixed",
+   "video": "formats/app_reveal.mp4?v=1794763787593",
+   "poster": "formats/app_reveal.jpg?v=1794763787593"
+  },
+  {
+   "key": "text_remake",
+   "name": "Remake",
+   "desc": "GoTall outlier remake, text only. Reach.",
+   "status": "review",
+   "video": "formats/text_remake.mp4?v=1794763788902",
+   "poster": "formats/text_remake.jpg?v=1794763788902"
+  }
+ ],
+ "sounds": [
+  {
+   "name": "original sound - EXO ™",
+   "creator": "@gotallkae",
+   "views": 620000,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7614208360556727062",
+   "video": "https://www.tiktok.com/@gotallkae/video/7642570802000350477",
+   "usedBy": [
+    "Remake",
+    "Comment bait",
+    "Bait + peek",
+    "Screen payoff"
+   ]
+  },
+  {
+   "name": "sonido original - tu mejor version",
+   "creator": "@bledarrrrg",
+   "views": 199600,
+   "tiktok": "https://www.tiktok.com/music/sonido-original-7454792227714370326",
+   "video": "https://www.tiktok.com/@bledarrrrg/video/7655086512194751758",
+   "usedBy": [
+    "App reveal",
+    "Comment bait",
+    "Bait + peek",
+    "Screen payoff"
+   ]
+  },
+  {
+   "name": "som original - Who Is Reina?",
+   "creator": "@mansuhn.gotall",
+   "views": 2000000,
+   "tiktok": "https://www.tiktok.com/music/som-original-7603219089250667282",
+   "video": "https://www.tiktok.com/@mansuhn.gotall/video/7650565359690321183",
+   "usedBy": [
+    "Remake",
+    "Comment bait",
+    "Bait + peek"
+   ]
+  },
+  {
+   "name": "som original - user14420459960",
+   "creator": "@gotallkae",
+   "views": 691700,
+   "tiktok": "https://www.tiktok.com/music/som-original-7652175968571788033",
+   "video": "https://www.tiktok.com/@gotallkae/video/7653751513633819918",
+   "usedBy": [
+    "App reveal",
+    "Comment bait",
+    "Bait + peek"
+   ]
+  },
+  {
+   "name": "original sound - ren",
+   "creator": "@mansuhn.gotall",
+   "views": 627100,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7654085411592997663",
+   "video": "https://www.tiktok.com/@mansuhn.gotall/video/7658023824717335839",
+   "usedBy": [
+    "App reveal",
+    "Bait + peek"
+   ]
+  },
+  {
+   "name": "original sound - ren",
+   "creator": "@mansuhn.gotall",
+   "views": 218800,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7654085411592997663",
+   "video": "https://www.tiktok.com/@mansuhn.gotall/video/7659169338003311885",
+   "usedBy": [
+    "App reveal",
+    "Bait + peek"
+   ]
+  },
+  {
+   "name": "original sound - Juliette",
+   "creator": "@bledarrrrg",
+   "views": 880600,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7582553092709813047",
+   "video": "https://www.tiktok.com/@bledarrrrg/video/7647636676449275167",
+   "usedBy": [
+    "App reveal"
+   ]
+  },
+  {
+   "name": "som original - USE HEADSET",
+   "creator": "@bledarrrrg",
+   "views": 776400,
+   "tiktok": "https://www.tiktok.com/music/som-original-7641675766942157586",
+   "video": "https://www.tiktok.com/@bledarrrrg/video/7659177300814073102",
+   "usedBy": [
+    "App reveal"
+   ]
+  },
+  {
+   "name": "оригинальный звук - Sinekrey",
+   "creator": "@brady.gotall",
+   "views": 690900,
+   "tiktok": "https://www.tiktok.com/music/%D0%BE%D1%80%D0%B8%D0%B3%D0%B8%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9-%D0%B7%D0%B2%D1%83%D0%BA-7611461675052894996",
+   "video": "https://www.tiktok.com/@brady.gotall/video/7644048049144073485",
+   "usedBy": [
+    "App reveal"
+   ]
+  },
+  {
+   "name": "original sound - Teddy",
+   "creator": "@bledarrrrg",
+   "views": 526900,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7578235105971030805",
+   "video": "https://www.tiktok.com/@bledarrrrg/video/7658798292490407182",
+   "usedBy": [
+    "App reveal"
+   ]
+  },
+  {
+   "name": "Video by gotall.app",
+   "creator": "@gotall.app",
+   "views": 0,
+   "tiktok": null,
+   "video": "https://www.instagram.com/reel/DVQCFQWEw8J/",
+   "usedBy": [
+    "Bait + peek"
+   ]
+  },
+  {
+   "name": "original sound - GoTall",
+   "creator": "@gotallapp",
+   "views": 905400,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7595999186202479415",
+   "video": "https://www.tiktok.com/@gotallapp/video/7595999160319364366",
+   "usedBy": []
+  },
+  {
+   "name": "Motivational - Drew",
+   "creator": "@brady.gotall",
+   "views": 752100,
+   "tiktok": "https://www.tiktok.com/music/Motivational-7298748072409942018",
+   "video": "https://www.tiktok.com/@brady.gotall/video/7696031824576777485",
+   "usedBy": []
+  },
+  {
+   "name": "original sound - GoTall",
+   "creator": "@gotallapp",
+   "views": 494800,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7590761854008412983",
+   "video": "https://www.tiktok.com/@gotallapp/video/7590761660176960823",
+   "usedBy": []
+  },
+  {
+   "name": "Motivational - Drew",
+   "creator": "@brady.gotall",
+   "views": 247100,
+   "tiktok": "https://www.tiktok.com/music/Motivational-7298748072409942018",
+   "video": "https://www.tiktok.com/@brady.gotall/video/7691813934591937806",
+   "usedBy": []
+  },
+  {
+   "name": "original sound - GoTall",
+   "creator": "@gotallapp",
+   "views": 219600,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7645380910015875854",
+   "video": "https://www.tiktok.com/@gotallapp/video/7645380802812906766",
+   "usedBy": []
+  },
+  {
+   "name": "original sound - GoTall",
+   "creator": "@gotallapp",
+   "views": 188700,
+   "tiktok": "https://www.tiktok.com/music/original-sound-7604156794914622221",
+   "video": "https://www.tiktok.com/@gotallapp/video/7604156736521506062",
+   "usedBy": []
+  },
+  {
+   "name": "Video by kh_ozodbekk",
+   "creator": "@kh_ozodbekk",
+   "views": 0,
+   "tiktok": null,
+   "video": "https://www.instagram.com/reel/DVn9APpjFlC/",
+   "usedBy": []
+  },
+  {
+   "name": "Video by itsgotall",
+   "creator": "@itsgotall",
+   "views": 0,
+   "tiktok": null,
+   "video": "https://www.instagram.com/reel/DUzysSCEsX7/",
+   "usedBy": []
+  }
+ ]
+}

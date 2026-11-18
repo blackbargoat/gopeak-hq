@@ -407,7 +407,7 @@ form.cf input:focus,form.cf select:focus{box-shadow:inset 0 0 0 2px var(--blue)}
     <div class="card" id="vtCard">
       <div class="between"><div class="label">views to downloads</div><button class="chip" id="vtGoal"></button></div>
       <div class="between" style="align-items:flex-end;margin-top:6px">
-        <div><div class="big" style="font-size:64px" id="vtDl">0</div><span class="tiny">downloads today, from views</span></div>
+        <div><div class="big" style="font-size:64px" id="vtDl">0</div><span class="tiny">downloads today · live</span></div>
         <div style="text-align:right"><b style="font-size:22px;font-weight:900" id="vtViews">0</b><br><span class="tiny">views today</span></div>
       </div>
       <div class="vtchart" id="vtChart"></div>
@@ -613,8 +613,10 @@ const VT_ACC = [["mav.tallteen", "ig", "var(--blue)"], ["maverick.pranks", "ig",
 const TT_FACTOR = 0.3; // TikTok slideshows have no link in bio: assume ~30% of Instagram's download rate
 let VT_GOAL = +(store.get("vtGoal") || 100);
 async function loadViews() {
-  const [d, t, w] = await Promise.allSettled([getJSON(BOT + "daily.json"), rpc("hq_tiktok_views"), rpc("hq_world")]);
+  const [d, t, w, lv] = await Promise.allSettled([getJSON(BOT + "daily.json"), rpc("hq_tiktok_views"), rpc("hq_world"), rpc("hq_live")]);
   const daily = d.value || [], tt = t.value || [], dlDays = w.value?.days || [];
+  // live installs from the app itself (no Apple delay); Apple's reports fill older days
+  const liveBy = Object.fromEntries((lv.value?.days || []).map((x) => [x.day, +x.installs || 0]));
   const day0 = (n) => { const x = new Date(); x.setDate(x.getDate() - n); return x.toLocaleDateString("en-CA"); };
   const days = Array.from({ length: 14 }, (_, i) => day0(13 - i)), today = days[13];
   const V = {}; // V[day][handle] = views that day
@@ -623,6 +625,7 @@ async function loadViews() {
   for (const h in byH) { let prev = null; for (const r of byH[h]) { if (prev != null) (V[r.day] ||= {})[h] = Math.max(0, r.total - prev); prev = r.total; } } // first snapshot = baseline, not views that day
   // live rate: Apple downloads per 1k Instagram views over the last 14 full days that have both
   const dlBy = Object.fromEntries(dlDays.map((x) => [x.day, +x.downloads || 0]));
+  for (const k in liveBy) dlBy[k] = Math.max(dlBy[k] || 0, liveBy[k]);
   let sv = 0, sd = 0; for (const dd of days.slice(0, 13)) { const v = (V[dd]?.["mav.tallteen"] || 0) + (V[dd]?.["maverick.pranks"] || 0); if (v && dlBy[dd] != null) { sv += v; sd += dlBy[dd]; } }
   const rate = sv ? sd / sv * 1000 : 2; // downloads per 1k IG views
   const per = (h) => (VT_ACC.find((a) => a[0] === h)[1] === "tt" ? rate * TT_FACTOR : rate) / 1000;
@@ -633,7 +636,7 @@ async function loadViews() {
   const frac = Math.max(0.08, (et.getHours() * 60 + et.getMinutes()) / 1440);
   const goalViews = VT_GOAL / rate * 1000;
   $("#vtGoal").textContent = `goal ${VT_GOAL}/day`;
-  $("#vtDl").textContent = Math.round(dlOf(today));
+  $("#vtDl").textContent = liveBy[today] != null ? liveBy[today] : Math.round(dlOf(today));
   $("#vtViews").textContent = fmt(viewsOf(today));
   // chart: stacked bars, dashed goal line, today's pace outline
   const W = 340, H = 160, L = 4, B = 18, T = 8, bw = (W - L) / 14;
@@ -686,10 +689,13 @@ async function loadApp() {
   if (new URLSearchParams(location.search).has("appdemo")) A = appDemo();
   // App Store: Apple sales reports (downloads) + subscription notifications (trials, paid, revenue)
   const since = AF.days ? new Date(Date.now() - AF.days * 864e5).toLocaleDateString("en-CA") : "0000";
-  const dl = (w.value?.days || []).filter((d) => d.day >= since), sa = (sl.value || []).filter((d) => d.day >= since);
+  let live = null; try { live = await rpc("hq_live"); } catch {}
+  const merged = Object.fromEntries((w.value?.days || []).map((d) => [d.day, { ...d }]));
+  for (const x of live?.days || []) merged[x.day] = { day: x.day, ...merged[x.day], downloads: Math.max(+merged[x.day]?.downloads || 0, +x.installs || 0), live: true };
+  const dl = Object.values(merged).sort((a, b) => (a.day < b.day ? -1 : 1)).filter((d) => d.day >= since), sa = (sl.value || []).filter((d) => d.day >= since);
   const sum = (x, k) => x.reduce((t, d) => t + (+d[k] || 0), 0);
   const S = { dl: sum(dl, "downloads"), tr: sum(sa, "trials"), pd: sum(sa, "purchases"), rev: sum(sa, "revenue") };
-  const last = (w.value?.days || []).slice(-1)[0]?.day;
+  const last = dl.slice(-1)[0]?.day;
   const md = (d) => new Date(d + "T12:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
   $("#asDl").textContent = fmt(S.dl); $("#asThru").textContent = last ? md(last) : "";
   renderDlBars(dl, since, last);

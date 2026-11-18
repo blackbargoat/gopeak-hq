@@ -205,6 +205,7 @@
   .ag.up .want b{display:block;font-size:14px;font-weight:800}.ag.up .want small{display:block;font-size:12px;font-weight:600;color:var(--dim);margin-top:2px}
   .ag.up .want[aria-pressed=true]{background:#2f8cff;box-shadow:0 4px 0 #1a5fbf}.ag.up .want[aria-pressed=true] small{color:rgba(255,255,255,.8)}
   .ag.up .save{width:100%;margin-top:18px}
+  .pv .rm[data-sure]{background:#ff6b5e;color:#fff;box-shadow:0 4px 0 #c2443a}
   .pv .mslots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .pv .mslot{position:relative;height:56px;border-radius:16px;background:#1c1c20;box-shadow:0 4px 0 #0a0a0c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
   .pv .mslot b{font-size:13px;font-weight:800;position:relative}.pv .mslot small{font-size:10px;font-weight:700;color:var(--dim);position:relative}
@@ -582,9 +583,22 @@
       ${["posted", "posting"].includes(p.status) ? "" : `<div class="when"><input type="datetime-local" id="pwhen" value="${p.scheduled_at ? toLocal(p.scheduled_at) : ""}" step="900"><button class="btn3d" data-act="time">schedule</button></div>
       <div class="gt" style="margin:16px 4px 8px">move to</div><div class="mslots">${slotChoices(p).map((c, i) => `<button class="mslot${c.other ? " taken" : ""}${c.now ? " now" : ""}" data-slot="${i}">${c.other ? `<img src="${esc(c.other.thumb_url)}" alt="">` : ""}<b>${c.label}</b><small>${c.now ? "next check" : c.other ? "swap" : "free"}</small></button>`).join("")}</div>
       <div class="acts">
-        <button class="btn3d ghost" data-act="skip">skip</button>
-        <button class="btn3d ghost" data-act="trial">${p.trial ? "make feed post" : "make trial"}</button>
-        <button class="btn3d" data-act="approve">${p.status === "scheduled" ? "unapprove" : "approve"}</button></div>`}</div>`);
+        <button class="btn3d ghost rm" data-act="skip">remove</button>
+        <button class="btn3d" data-act="approve">${p.status === "scheduled" ? "unapprove" : "approve"}</button></div>`}
+      ${p.video_url ? `<button class="btn3d ghost" id="psave" style="width:100%;margin-top:10px;height:48px">save video</button>` : ""}</div>`);
+    // Save to camera roll: the file is fetched as soon as the sheet opens, so the tap can open the share sheet
+    // right away (iPhone only allows it straight from a tap). Share sheet > Save Video puts it in Photos.
+    let file = null;
+    if (p.video_url) fetch(p.video_url).then((r) => r.blob()).then((b) => (file = new File([b], `gopeak-${p.variant.replace(/[^\w-]+/g, "")}.mp4`, { type: "video/mp4" }))).catch(() => {});
+    const sv = $("#psave");
+    if (sv) sv.onclick = async () => {
+      if (!file) { sv.textContent = "loading video, tap again in a sec"; return; }
+      try {
+        if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+        const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(file), download: file.name });
+        document.body.append(a); a.click(); a.remove(); sv.textContent = "downloaded";
+      } catch (e) { if (e.name !== "AbortError") window.open(p.video_url, "_blank", "noopener"); }
+    };
     const choices = slotChoices(p);
     $("#sheetBody").querySelectorAll("[data-slot]").forEach((b) => (b.onclick = async () => {
       const c = choices[+b.dataset.slot];
@@ -593,12 +607,14 @@
     }));
     $("#sheetBody").querySelectorAll("[data-act]").forEach((b) => (b.onclick = async () => {
       const a = b.dataset.act;
+      // remove asks twice so a stray tap can't take a video off the schedule
+      if (a === "skip" && !b.dataset.sure) { b.dataset.sure = "1"; b.textContent = "tap again to remove"; return; }
       const body = { p_key: PW, p_id: p.id, p_scheduled_at: null, p_status: null, p_trial: null };
       if (a === "skip") body.p_status = "skipped";
       else if (a === "trial") body.p_trial = !p.trial;
       else if (a === "time") { const v = $("#pwhen").value; if (!v) { toast?.("pick a day and time"); return; } body.p_scheduled_at = fromLocal(v); body.p_status = "scheduled"; }
       else body.p_status = p.status === "scheduled" ? "rendered" : "scheduled";
-      if (!LOCAL) { try { await rpc("hq_pipe_post_set", body); toast?.(a === "time" ? "scheduled" : a === "approve" && body.p_status === "scheduled" ? "approved" : "saved"); } catch { toast?.("didn't save"); } }
+      if (!LOCAL) { try { await rpc("hq_pipe_post_set", body); toast?.(a === "time" ? "scheduled" : a === "skip" ? "removed" : a === "approve" && body.p_status === "scheduled" ? "approved" : "saved"); } catch { toast?.("didn't save"); } }
       closeSheet(); loadPipe();
     }));
   }

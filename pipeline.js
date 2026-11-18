@@ -271,7 +271,7 @@
     </div>
     <div class="glass tilt"><div class="hd"><span class="cap">formats</span><span class="cap" style="text-transform:none;letter-spacing:0">tap to watch</span></div><div class="fmts" id="pfmts"></div></div>
     <div class="glass tilt"><div class="hd"><span class="cap">sounds</span><span class="cap" style="text-transform:none;letter-spacing:0">add these in the TikTok app when you post</span></div><div class="snds" id="psnds"></div></div>
-    <div class="glass tilt"><div class="hd"><span class="cap">clips</span><span class="cap">4 uses max</span></div><div class="clips" id="pclips"></div></div>`;
+    <div class="glass tilt"><div class="hd"><span class="cap">clips</span><span class="cap">5 videos each</span></div><div class="clips" id="pclips"></div></div>`;
 
   // ---------- interaction: small 3D tilt (max ~1.5°) ----------
   const fine = matchMedia("(pointer:fine)").matches && !matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -341,7 +341,7 @@
 
     $("#pclips").innerHTML = clips.length ? clips.map((cl) => {
       const used = posts.filter((p) => p.clip_id === cl.id);
-      const pips = [...Array(4)].map((_, i) => `<i class="${used[i] ? ACC[used[i].account]?.c : ""}"></i>`).join("");
+      const pips = [...Array(5)].map((_, i) => `<i class="${used[i] ? ACC[used[i].account]?.c : ""}"></i>`).join("");
       const st = ["uploading", "queued", "processing", "failed"].includes(cl.status) ? `<span class="cst ${cl.status}">${CLIP_ST[cl.status]}</span>` : "";
       return `<button class="clip" data-clip="${esc(cl.id)}">${cl.thumb_url ? `<img src="${esc(cl.thumb_url)}" alt="" loading="lazy">` : ""}${st}<div class="pips">${pips}</div></button>`;
     }).join("") : `<div class="empty" style="grid-column:1/-1">no clips yet</div>`;
@@ -417,10 +417,10 @@
   const AG_DEFAULT = {
     inbox: { auto: true },
     cut: { trimSetup: true, cutSilence: true, strength: "normal" },
-    style: { usesPerClip: 4, perAccountMax: 2, learn: true, mix: { comment_bait: 0.3, bait_peek: 0.25, app_reveal: 0.25, text_remake: 0.2 },
+    style: { usesPerClip: 5, perAccountMax: 3, learn: true, mix: { comment_bait: 0.3, bait_peek: 0.25, app_reveal: 0.25, text_remake: 0.2 },
       vary: { mirror: true, crop: true, speed: true, grade: true, audio: true, caption: true }, cta: "your full prediction in the app, link in bio" },
-    queue: { slots: ["11:00", "16:00", "20:30"], gapDays: 2, notSameDay: true },
-    live: { autopilot: true, tiktok: "drafts", instagram: "trial", graduateAt: 10000 },
+    queue: { slots: ["07:00", "19:00"], gapDays: 2, notSameDay: true },
+    live: { autopilot: false, tiktok: "drafts", instagram: "trial", graduateAt: 10000 },
   };
   const merge = (a, b) => { const o = { ...a }; for (const k in b || {}) o[k] = b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) ? merge(a[k] || {}, b[k]) : b[k]; return o; };
   const agents = () => merge(AG_DEFAULT, LOCAL ? JSON.parse(ls.get("pipe-agents", "{}")) : P?.settings?.agents);
@@ -446,7 +446,7 @@
       const learnRows = Object.keys(names).map((f) => { const st = L.stats?.[f];
         return `<div class="lr"><span>${names[f]}</span><div class="bars"><i style="width:${Math.round((lm[f] || 0) * 100)}%"></i><i class="you" style="width:${Math.round(A.style.mix[f] * 100)}%"></i></div><b>${Math.round((lm[f] || 0) * 100)}%</b></div>
           ${st ? `<div class="note" style="margin:-4px 0 0 106px">${st.posts} videos · ${fmt(st.medianViews)} typical views · ${st.commentsPer1k} comments per 1k</div>` : ""}`; }).join("");
-      return `<div class="gt">how many videos per clip</div><div class="grp">${row("Videos from one clip", "Each one gets different text and audio", stp("style.usesPerClip", A.style.usesPerClip, 1, 12))}
+      return `<div class="gt">how many videos per clip</div><div class="grp">${row("Videos from one clip", "2 feed posts + the rest as trial reels", stp("style.usesPerClip", A.style.usesPerClip, 1, 12))}
         ${row("Max per account", "", stp("style.perAccountMax", A.style.perAccountMax, 1, 6))}</div>
         <div class="gt">make each trial reel different</div><div class="grp">
         ${row("Mirror the video", "Flips you left to right (text stays normal)", sw("style.vary.mirror", A.style.vary.mirror))}

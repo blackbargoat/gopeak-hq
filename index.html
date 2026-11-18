@@ -753,7 +753,7 @@ async function load() {
   if (posts.status === "fulfilled") D.posts = posts.value;
   if (out.status === "fulfilled") D.outliers = out.value;
   if (count.status === "fulfilled") D.count = typeof count.value === "number" ? count.value : count.value?.[0]?.waitlist_count ?? null;
-  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp(); loadViews(); loadTikTok();
+  model(); renderToday(); renderVideos(); renderBio(); renderIdeas(); loadMake().then(renderIdeas); loadTeam(); loadSales(); loadWorld(); loadSignups(); loadLaunch(); loadApp(); loadViews(); loadTikTok();
   $("#updated").innerHTML = `<span class="live"></span><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span>`;
 }
 
@@ -952,7 +952,7 @@ function renderIdeas() {
       ${o.thumb ? `<img src="${esc(o.thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.classList.remove('has');this.remove()">` : ""}${fresh ? `<span class="new">new</span>` : ""}
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${f.i}</svg>
       <span class="mult">${o.multiple ? Math.round(o.multiple) + "x" : fmt(o.views)}</span>${PLAT[o.platform || "instagram"] ? `<span class="plat"><svg viewBox="0 0 24 24">${PLAT[o.platform || "instagram"]}</svg></span>` : ""}
-      ${refByUrl(o.url)?.visible ? `<span class="eye">creators</span>` : ""}</div><div class="meta"><b>${esc((o.on_screen_text || o.hook_paraphrase || "").slice(0, 46))}</b><small><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>${fmt(o.views)}<span class="dots">${[1, 2, 3].map((k) => `<i class="${k <= d ? "on" : ""}"></i>`).join("")}</span></small></div>
+      ${refByUrl(o.url)?.visible ? `<span class="eye">creators</span>` : ""}${MAKE[o.url] && MAKE_ST[MAKE[o.url].status] ? `<span class="eye" style="top:auto;bottom:8px">${MAKE_ST[MAKE[o.url].status]}</span>` : ""}</div><div class="meta"><b>${esc((o.on_screen_text || o.hook_paraphrase || "").slice(0, 46))}</b><small><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>${fmt(o.views)}<span class="dots">${[1, 2, 3].map((k) => `<i class="${k <= d ? "on" : ""}"></i>`).join("")}</span></small></div>
       ${refByUrl(o.url) ? `<span class="appr${refByUrl(o.url).visible ? " on" : ""}" role="button" data-appr="${o.i}">${refByUrl(o.url).visible ? "approved" : "approve"}</span>` : ""}</button>`;
   }).join("");
   $("#ideas").querySelectorAll(".idea").forEach((b) => b.onclick = (e) => {
@@ -960,6 +960,16 @@ function renderIdeas() {
     if (ap) { e.stopPropagation(); return setVisible(O[ap.dataset.appr], !refByUrl(O[ap.dataset.appr].url).visible); }
     openIdea(O[b.dataset.i]);
   });
+}
+// "make it": the pipeline remakes the idea on Mav's latest clip (pipe_requests, cloud worker)
+let MAKE = {};
+const MAKE_ST = { approved: "in line", making: "making", ready: "made, check pipeline", needs_clip: "upload a clip first", failed: "didn't work", cancelled: "" };
+async function loadMake() { try { MAKE = Object.fromEntries((await rpc("hq_ideas_state", { p_key: PW })).map((r) => [r.url, r])); } catch { MAKE = {}; } }
+async function makeIdea(o) {
+  const keep = ["platform", "url", "account", "views", "length_sec", "format", "hook_paraphrase", "on_screen_text", "audio_name", "audio_url", "id"];
+  try { const st = await rpc("hq_idea_make", { p_key: PW, p_url: o.url, p_idea: Object.fromEntries(keep.map((k) => [k, o[k] ?? null])) });
+    MAKE[o.url] = { status: st }; toast(st === "ready" ? "already made" : "making it, check the pipeline in ~10 min"); renderIdeas(); }
+  catch { toast("couldn't save"); }
 }
 // Approve = creators see it in their ideas tab as a video to remake
 async function setVisible(o, on) {
@@ -986,7 +996,10 @@ function openIdea(o) {
     ${o.local_file ? `<div class="chip good" style="margin-top:12px">iCloud · GoPeak References · ${esc(o.local_file)}</div>` : ""}
     <div class="kv" style="grid-template-columns:1fr"><div><b>+${Math.round((o.views || M.typical) * 0.25 * M.rate / 1000)}</b><span>signups if it gets a quarter of their views</span></div></div>
     ${refByUrl(o.url) ? `<div class="card flat between" style="margin-top:12px;padding:14px 16px"><b style="font-size:15px">show to creators</b><button class="switch" role="switch" aria-checked="${!!refByUrl(o.url).visible}" id="vis" aria-label="Show to creators"></button></div>` : ""}
-    <div class="row" style="margin-top:16px"><a class="btn3d" style="flex:1;display:grid;place-items:center" href="${esc(o.url)}" target="_blank" rel="noopener">watch original</a><button class="btn3d ghost" onclick="closeSheet()">close</button></div>`);
+    <button class="btn3d" id="makeIt" style="width:100%;margin-top:16px;height:54px;font-size:16px">${MAKE[o.url] && MAKE_ST[MAKE[o.url].status] ? MAKE_ST[MAKE[o.url].status] : "make it"}</button>
+    ${MAKE[o.url]?.error ? `<div class="label" style="margin-top:8px;color:#ffb020">${esc(MAKE[o.url].error)}</div>` : ""}
+    <div class="row" style="margin-top:12px"><a class="btn3d ghost" style="flex:1;display:grid;place-items:center" href="${esc(o.url)}" target="_blank" rel="noopener">watch original</a><button class="btn3d ghost" onclick="closeSheet()">close</button></div>`);
+  setTimeout(() => { const m = $("#makeIt"); if (m) m.onclick = () => { const st = MAKE[o.url]?.status; if (["approved", "making", "ready"].includes(st)) return toast(MAKE_ST[st]); makeIdea(o); closeSheet(); }; }, 0);
 }
 
 

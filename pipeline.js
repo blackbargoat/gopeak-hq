@@ -191,6 +191,20 @@
   .pv .dslot{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;padding:0;border:3px solid}
   .pv .dslot img{width:100%;height:100%;object-fit:cover;display:block}
   .pv .dslot span{position:absolute;left:0;right:0;bottom:0;padding:14px 6px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:11px;font-weight:800}
+
+  #p-pipe.dropping #pfac{outline:3px dashed var(--pa);outline-offset:4px}
+  #p-pipe .clip{padding:0;border:0;background:#1c1c20;cursor:pointer}
+  #p-pipe .cst{position:absolute;left:6px;top:6px;height:20px;padding:0 8px;border-radius:999px;display:flex;align-items:center;font-size:10px;font-weight:900;letter-spacing:.4px;background:#fff;color:#000}
+  #p-pipe .cst.processing{background:var(--pa);color:#fff}#p-pipe .cst.failed{background:var(--pb);color:#fff}
+  .ag.up .ubar{width:96px;height:8px;border-radius:999px;background:#111114;overflow:hidden;flex:none}
+  .ag.up .ubar i{display:block;height:100%;width:0;background:#2f8cff;transition:width .2s}
+  .ag.up .ubar i.ok{width:100%!important;background:#34c77b}.ag.up .ubar i.bad{width:100%!important;background:#ff6b5e}
+  .ag.up .wants{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+  .ag.up .want{text-align:left;padding:12px 14px;border-radius:18px;background:#1c1c20;box-shadow:0 4px 0 #0a0a0c;color:#fff}
+  .ag.up .want:first-child{grid-column:1/-1}
+  .ag.up .want b{display:block;font-size:14px;font-weight:800}.ag.up .want small{display:block;font-size:12px;font-weight:600;color:var(--dim);margin-top:2px}
+  .ag.up .want[aria-pressed=true]{background:#2f8cff;box-shadow:0 4px 0 #1a5fbf}.ag.up .want[aria-pressed=true] small{color:rgba(255,255,255,.8)}
+  .ag.up .save{width:100%;margin-top:18px}
   `;
   document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`);
 
@@ -227,6 +241,7 @@
   const ls = { get: (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
   let P = null, VIEW = ls.get("pipe-view", "week"), TYPE = ls.get("pipe-type", "all"), OFF = 0;
   const DAY = 864e5;
+  const CLIP_ST = { uploading: "uploading", queued: "waiting", processing: "editing", ready: "done", failed: "failed", archived: "hidden" };
   const noonOf = (key) => new Date(key + "T12:00:00");
   const isTrial = (p) => !!p.trial;
   const keep = (p) => TYPE === "all" || (TYPE === "trial" ? isTrial(p) : !isTrial(p));
@@ -237,7 +252,7 @@
     <div class="glass tilt" id="pfac">
       <div class="hd"><span class="cap">pipeline</span><span class="cap" style="text-transform:none;letter-spacing:0">tap a step to change how it works</span></div>
       <div class="rail" id="prail"></div>
-      <button class="gbtn" id="pdrop">${ic("up", 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"')}drop raw clips</button>
+      <button class="gbtn" id="pdrop">${ic("up", 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"')}upload clips</button>
     </div>
     <div class="glass tilt"><div class="hd"><span class="cap">today</span></div><div id="ptoday"></div></div>
     <div class="glass tilt" id="pcalCard">
@@ -294,7 +309,7 @@
     const clips = P?.clips || [];
     const now = Date.now();
     const c = {
-      inbox: clips.filter((x) => x.status === "queued").length,
+      inbox: clips.filter((x) => x.status === "queued" || x.status === "uploading").length,
       cut: clips.filter((x) => x.status === "processing").length,
       style: posts.filter((p) => p.status === "rendered").length,
       plan: posts.filter((p) => p.status === "scheduled").length,
@@ -322,7 +337,8 @@
     $("#pclips").innerHTML = clips.length ? clips.map((cl) => {
       const used = posts.filter((p) => p.clip_id === cl.id);
       const pips = [...Array(4)].map((_, i) => `<i class="${used[i] ? ACC[used[i].account]?.c : ""}"></i>`).join("");
-      return `<div class="clip"><img src="${esc(cl.thumb_url || "")}" alt="" loading="lazy"><div class="pips">${pips}</div></div>`;
+      const st = ["uploading", "queued", "processing", "failed"].includes(cl.status) ? `<span class="cst ${cl.status}">${CLIP_ST[cl.status]}</span>` : "";
+      return `<button class="clip" data-clip="${esc(cl.id)}">${cl.thumb_url ? `<img src="${esc(cl.thumb_url)}" alt="" loading="lazy">` : ""}${st}<div class="pips">${pips}</div></button>`;
     }).join("") : `<div class="empty" style="grid-column:1/-1">no clips yet</div>`;
 
     sec.querySelectorAll("[data-post]").forEach((b) => (b.onclick = () => openPost(b.dataset.post)));
@@ -404,7 +420,7 @@
   const merge = (a, b) => { const o = { ...a }; for (const k in b || {}) o[k] = b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) ? merge(a[k] || {}, b[k]) : b[k]; return o; };
   const agents = () => merge(AG_DEFAULT, LOCAL ? JSON.parse(ls.get("pipe-agents", "{}")) : P?.settings?.agents);
   const AG_INFO = {
-    inbox: ["inbox", "Picks up raw clips you drop in your GoPeak Queue folder on Google Drive."],
+    inbox: ["inbox", "Clips you upload here wait for the cloud editor, which checks every 5 minutes."],
     cut: ["cut", "Trims the phone setup at the start and end, and cuts silent gaps in talking clips."],
     style: ["style", "Turns one clip into several videos: picks references, text, audio, and makes each one a little different."],
     plan: ["queue", "Puts every video into a posting slot so no clip shows up twice too close together."],
@@ -414,8 +430,8 @@
   const stp = (path, v, min, max) => `<div class="stp"><button data-step="${path}" data-d="-1" data-min="${min}" data-max="${max}">−</button><b>${v}</b><button data-step="${path}" data-d="1" data-min="${min}" data-max="${max}">+</button></div>`;
   const row = (title, sub, control) => `<div class="arow"><div><b>${title}</b>${sub ? `<small>${sub}</small>` : ""}</div>${control}</div>`;
   function agentBody(k, A) {
-    if (k === "inbox") return `<div class="grp"><div class="folder">${ic("inbox")}<b>GoPeak Queue</b><a class="chip blue" href="https://drive.google.com/drive/folders/1f7ekHjbg3rwQDRVQHfP_scBi64KKRUS-" target="_blank" rel="noopener">open</a></div>
-      ${row("Start editing on its own", "As soon as a clip lands in the folder", sw("inbox.auto", A.inbox.auto))}</div>`;
+    if (k === "inbox") return `<div class="grp">${row("Start editing on its own", "As soon as an upload finishes", sw("inbox.auto", A.inbox.auto))}</div>
+      <button class="btn3d save" style="width:100%;margin-top:14px" onclick="document.getElementById('pdrop').click()">upload clips</button>`;
     if (k === "cut") return `<div class="grp">${row("Trim the phone setup", "Removes you setting the phone down and picking it up", sw("cut.trimSetup", A.cut.trimSetup))}
       ${row("Cut silences", "Only for talking clips", sw("cut.cutSilence", A.cut.cutSilence))}</div>`;
     if (k === "style") {
@@ -536,7 +552,67 @@
     }));
   }
 
-  $("#pdrop").onclick = () => window.open("https://drive.google.com/drive/folders/1f7ekHjbg3rwQDRVQHfP_scBi64KKRUS-", "_blank", "noopener");
+  // ---------- upload raw clips: split into 45 MB parts (storage caps one file at 50 MB), signed URLs from the pipe function ----------
+  const PIPE_FN = "https://etdbjahwegsmuelcawgf.supabase.co/functions/v1/pipe/";
+  const PART = 45 * 1024 * 1024;
+  const pfn = (route, body) => fetch(PIPE_FN + route, { method: "POST", headers: { apikey: KEY, "content-type": "application/json", "x-hq-key": PW || "" }, body: JSON.stringify(body) })
+    .then(async (r) => { const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || r.status); return j; });
+  const putPart = (url, blob, onp) => new Promise((ok, bad) => {
+    const x = new XMLHttpRequest(); x.open("PUT", url); x.setRequestHeader("content-type", "application/octet-stream");
+    x.upload.onprogress = (e) => e.lengthComputable && onp(e.loaded); x.onload = () => (x.status < 300 ? ok() : bad(new Error("upload " + x.status))); x.onerror = () => bad(new Error("connection lost")); x.send(blob);
+  });
+  const mb = (n) => (n / 1e6).toFixed(n > 1e8 ? 0 : 1) + " MB";
+  function openUpload(files) {
+    let busy = false;
+    const draw = () => {
+      openSheet(`<div class="ag up"><div class="top"><div class="ico">${ic("up")}</div><div><h3>new clips</h3><p>Each one becomes 2 feed posts and 3 trial reels. They show up here for you to approve in about 10 minutes.</p></div></div>
+        <div class="gt">clips</div><div class="grp">${files.map((f, i) => `<div class="arow"><div style="min-width:0"><b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(f.name)}</b><small>${mb(f.size)}</small></div><div class="ubar"><i id="ub${i}"></i></div></div>`).join("")}</div>
+        <button class="btn3d save" id="ugo">${busy ? "uploading…" : `upload ${files.length} clip${files.length > 1 ? "s" : ""}`}</button></div>`);
+      $("#ugo").onclick = go;
+    };
+    async function go() {
+      if (busy) return; busy = true; $("#ugo").textContent = "uploading…"; $("#ugo").disabled = true;
+      let ok = 0;
+      for (const [i, f] of files.entries()) {
+        const bar = () => $("#ub" + i);
+        try {
+          const parts = Math.max(1, Math.ceil(f.size / PART));
+          const { id, urls } = await pfn("upload-start", { name: f.name, size: f.size, parts });
+          let sent = 0;
+          for (let k = 0; k < parts; k++) {
+            const blob = f.slice(k * PART, Math.min(f.size, (k + 1) * PART));
+            await putPart(urls[k], blob, (n) => { const b = bar(); if (b) b.style.width = ((sent + n) / f.size) * 100 + "%"; });
+            sent += blob.size;
+          }
+          await pfn("upload-done", { id });
+          bar()?.classList.add("ok"); ok++;
+        } catch (e) { console.warn(e); bar()?.classList.add("bad"); }
+      }
+      toast?.(ok === files.length ? "uploaded, editing now" : `${files.length - ok} failed, try again`);
+      if (ok === files.length) setTimeout(closeSheet, 700); else { busy = false; $("#ugo").disabled = false; $("#ugo").textContent = "try again"; }
+      loadPipe();
+    }
+    draw();
+  }
+  const picker = Object.assign(document.createElement("input"), { type: "file", accept: "video/*", multiple: true, hidden: true });
+  document.body.append(picker);
+  picker.onchange = () => { const f = [...picker.files]; picker.value = ""; if (f.length) openUpload(f); };
+  $("#pdrop").onclick = () => { if (!PW) return toast?.("sign in to HQ first"); picker.click(); };
+  // desktop: drop files anywhere on the pipeline tab
+  sec.addEventListener("dragover", (e) => { e.preventDefault(); sec.classList.add("dropping"); });
+  sec.addEventListener("dragleave", (e) => { if (!sec.contains(e.relatedTarget)) sec.classList.remove("dropping"); });
+  sec.addEventListener("drop", (e) => { e.preventDefault(); sec.classList.remove("dropping"); const f = [...e.dataTransfer.files].filter((x) => x.type.startsWith("video/")); if (f.length) openUpload(f); });
+  // clip status: tap a failed clip to retry it, a finished one to hide it
+  sec.addEventListener("click", async (e) => {
+    const c = e.target.closest("[data-clip]"); if (!c) return;
+    const cl = P?.clips?.find((x) => x.id === c.dataset.clip); if (!cl) return;
+    const st = CLIP_ST[cl.status] || cl.status;
+    openSheet(`<div class="pv">${cl.thumb_url ? `<img src="${esc(cl.thumb_url)}" alt="" style="width:46%;border-radius:18px;display:block;margin:0 auto">` : ""}
+      <div class="meta"><b>${esc(cl.upload_name || cl.source_name)}</b><span class="chip" style="margin-left:auto">${st}</span></div>
+      ${cl.error ? `<div class="hook" style="color:#ffb020;font-size:14px">${esc(cl.error)}</div>` : ""}
+      <div class="acts">${["failed", "ready"].includes(cl.status) ? `<button class="btn3d ghost" data-ca="clip-retry">${cl.status === "failed" ? "try again" : "make more"}</button>` : "<span></span>"}<button class="btn3d ghost" data-ca="clip-archive">hide</button></div></div>`);
+    $("#sheetBody").querySelectorAll("[data-ca]").forEach((b) => (b.onclick = async () => { try { await pfn(b.dataset.ca, { id: cl.id }); toast?.("done"); } catch { toast?.("didn't work"); } closeSheet(); loadPipe(); }));
+  });
   window.loadPipe = loadPipe;
   render();
   loadPipe(); loadFormats(); setInterval(loadPipe, 60e3);

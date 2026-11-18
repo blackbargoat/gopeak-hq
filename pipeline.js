@@ -205,6 +205,11 @@
   .ag.up .want b{display:block;font-size:14px;font-weight:800}.ag.up .want small{display:block;font-size:12px;font-weight:600;color:var(--dim);margin-top:2px}
   .ag.up .want[aria-pressed=true]{background:#2f8cff;box-shadow:0 4px 0 #1a5fbf}.ag.up .want[aria-pressed=true] small{color:rgba(255,255,255,.8)}
   .ag.up .save{width:100%;margin-top:18px}
+  .pv .mslots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pv .mslot{position:relative;height:56px;border-radius:16px;background:#1c1c20;box-shadow:0 4px 0 #0a0a0c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+  .pv .mslot b{font-size:13px;font-weight:800;position:relative}.pv .mslot small{font-size:10px;font-weight:700;color:var(--dim);position:relative}
+  .pv .mslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.28}
+  .pv .mslot.now{background:#ffd23f;color:#000;box-shadow:0 4px 0 #b8932a}.pv .mslot.now small{color:rgba(0,0,0,.6)}
   `;
   document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`);
 
@@ -374,7 +379,7 @@
       return `<div class="mx" title="${name}: ${n} · target ${Math.round(tgt * 100)}%">${ic(k)}<span>${name}</span><div class="bar"><i style="width:${Math.round(sh * 100)}%"></i><u style="left:${tgt * 100}%"></u></div><b>${n}</b></div>`;
     }).join("");
     const onDay = (k) => posts.filter((p) => p.scheduled_at && dayKey(new Date(p.scheduled_at)) === k).sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
-    const thumb = (p) => `<button class="mini ${ACC[p.account]?.c} ${keep(p) ? "" : "dim"}" data-post="${esc(p.id)}" title="${esc(`@${p.account} · ${hm(p.scheduled_at)} · ${isTrial(p) ? "trial reel" : "post"}`)}"><img src="${esc(p.thumb_url)}" alt="" loading="lazy"><span class="ty ${isTrial(p) ? "tr" : ""}">${isTrial(p) ? "TRIAL" : "POST"}</span></button>`;
+    const thumb = (p) => `<button draggable="${!["posted", "posting"].includes(p.status)}" class="mini ${ACC[p.account]?.c} ${keep(p) ? "" : "dim"}" data-post="${esc(p.id)}" title="${esc(`@${p.account} · ${hm(p.scheduled_at)} · ${isTrial(p) ? "trial reel" : "post"}`)}"><img src="${esc(p.thumb_url)}" alt="" loading="lazy"><span class="ty ${isTrial(p) ? "tr" : ""}">${isTrial(p) ? "TRIAL" : "POST"}</span></button>`;
     if (VIEW === "week") {
       $("#pcal").innerHTML = `<div class="week">${R.days.map((d) => {
         const k = dayKey(d), list = onDay(k);
@@ -523,6 +528,45 @@
   // ET wall clock <-> ISO for the schedule picker
   const toLocal = (iso) => { const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: tz, hour12: false, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).formatToParts(new Date(iso)).map((x) => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}T${String(+p.hour % 24).padStart(2, "0")}:${p.minute}`; };
   const fromLocal = (v) => { const g = new Date(v + ":00Z"); const l = toLocal(g.toISOString()); return new Date(g.getTime() - (new Date(l + ":00Z") - g)).toISOString(); };
+  // ---------- moving posts: next open slots for the post's account (trial or feed times), swap when taken ----------
+  const set = (body) => rpc("hq_pipe_post_set", { p_key: PW, p_scheduled_at: null, p_status: null, p_trial: null, ...body });
+  function slotChoices(p) {
+    const S = p.trial ? P?.settings?.trial_slots || ["07:00", "19:00"] : P?.settings?.feed_slots || ["12:00", "17:00"];
+    const soon = Date.now() + 5 * 60e3, out = [{ at: new Date(Date.now() + 60e3), label: "now", now: true }];
+    for (let d = 0; d < 8 && out.length < 9; d++) {
+      const day = dayKey(new Date(Date.now() + d * DAY));
+      for (const t of S) {
+        const at = new Date(fromLocal(`${day}T${t}`));
+        if (+at < soon || (p.scheduled_at && Math.abs(new Date(p.scheduled_at) - at) < 60e3)) continue;
+        const other = P.posts.find((q) => q.id !== p.id && q.account === p.account && q.scheduled_at && q.status === "scheduled" && Math.abs(new Date(q.scheduled_at) - at) < 60e3);
+        const label = (d === 0 ? "today" : d === 1 ? "tmrw" : at.toLocaleDateString("en-US", { timeZone: tz, weekday: "short" })) + " " + hm(at);
+        out.push({ at, other, label });
+        if (out.length >= 9) break;
+      }
+    }
+    return out;
+  }
+  async function movePost(p, at, other) {
+    if (LOCAL) return;
+    if (other) {
+      // the other post takes this one's old time, or goes back to waiting if this one had none
+      if (p.scheduled_at) await set({ p_id: other.id, p_scheduled_at: p.scheduled_at, p_status: "scheduled" });
+      else await set({ p_id: other.id, p_status: "rendered" });
+    }
+    await set({ p_id: p.id, p_scheduled_at: at.toISOString(), p_status: "scheduled" });
+  }
+  // desktop: drag a post onto another post in the week view to swap their times
+  sec.addEventListener("dragstart", (e) => { const m = e.target.closest(".mini[data-post]"); if (m) e.dataTransfer.setData("text/gp-post", m.dataset.post); });
+  sec.addEventListener("drop", async (e) => {
+    const id = e.dataTransfer.getData("text/gp-post"), t = e.target.closest(".mini[data-post]");
+    if (!id || !t || t.dataset.post === id) return;
+    e.stopPropagation(); e.preventDefault();
+    const a = P.posts.find((x) => x.id === id), b = P.posts.find((x) => x.id === t.dataset.post);
+    if (!a || !b || a.account !== b.account || !b.scheduled_at || [a.status, b.status].some((s) => ["posted", "posting"].includes(s))) return toast?.("same account, not posted yet");
+    try { await movePost(a, new Date(b.scheduled_at), b); toast?.("swapped"); } catch { toast?.("didn't save"); }
+    loadPipe();
+  }, true);
+
   function openPost(id) {
     const p = P.posts.find((x) => x.id === id); if (!p) return;
     const fmt = FORMATS.find((f) => f[0] === p.format);
@@ -536,10 +580,17 @@
       ${p.error ? `<div class="hook" style="color:#ffb020">${esc(p.error)}</div>` : ""}
       ${p.results?.instagram?.url ? `<a class="btn3d ghost" style="display:flex;align-items:center;justify-content:center;margin-top:12px;height:48px" href="${esc(p.results.instagram.url)}" target="_blank" rel="noopener">open on instagram</a>` : ""}
       ${["posted", "posting"].includes(p.status) ? "" : `<div class="when"><input type="datetime-local" id="pwhen" value="${p.scheduled_at ? toLocal(p.scheduled_at) : ""}" step="900"><button class="btn3d" data-act="time">schedule</button></div>
+      <div class="gt" style="margin:16px 4px 8px">move to</div><div class="mslots">${slotChoices(p).map((c, i) => `<button class="mslot${c.other ? " taken" : ""}${c.now ? " now" : ""}" data-slot="${i}">${c.other ? `<img src="${esc(c.other.thumb_url)}" alt="">` : ""}<b>${c.label}</b><small>${c.now ? "next check" : c.other ? "swap" : "free"}</small></button>`).join("")}</div>
       <div class="acts">
         <button class="btn3d ghost" data-act="skip">skip</button>
         <button class="btn3d ghost" data-act="trial">${p.trial ? "make feed post" : "make trial"}</button>
         <button class="btn3d" data-act="approve">${p.status === "scheduled" ? "unapprove" : "approve"}</button></div>`}</div>`);
+    const choices = slotChoices(p);
+    $("#sheetBody").querySelectorAll("[data-slot]").forEach((b) => (b.onclick = async () => {
+      const c = choices[+b.dataset.slot];
+      try { await movePost(p, c.at, c.other); toast?.(c.other ? "swapped" : "moved"); } catch { toast?.("didn't save"); }
+      closeSheet(); loadPipe();
+    }));
     $("#sheetBody").querySelectorAll("[data-act]").forEach((b) => (b.onclick = async () => {
       const a = b.dataset.act;
       const body = { p_key: PW, p_id: p.id, p_scheduled_at: null, p_status: null, p_trial: null };
@@ -599,7 +650,7 @@
   picker.onchange = () => { const f = [...picker.files]; picker.value = ""; if (f.length) openUpload(f); };
   $("#pdrop").onclick = () => { if (!PW) return toast?.("sign in to HQ first"); picker.click(); };
   // desktop: drop files anywhere on the pipeline tab
-  sec.addEventListener("dragover", (e) => { e.preventDefault(); sec.classList.add("dropping"); });
+  sec.addEventListener("dragover", (e) => { e.preventDefault(); if (e.dataTransfer.types.includes("Files")) sec.classList.add("dropping"); });
   sec.addEventListener("dragleave", (e) => { if (!sec.contains(e.relatedTarget)) sec.classList.remove("dropping"); });
   sec.addEventListener("drop", (e) => { e.preventDefault(); sec.classList.remove("dropping"); const f = [...e.dataTransfer.files].filter((x) => x.type.startsWith("video/")); if (f.length) openUpload(f); });
   // clip status: tap a failed clip to retry it, a finished one to hide it

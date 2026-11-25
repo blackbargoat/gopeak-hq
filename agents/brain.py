@@ -56,8 +56,8 @@ _last_call = [0.0]
 
 
 def gemini(parts, temperature=0.4, as_json=True):
-    # free tier: stay under ~10 requests a minute
-    wait = 7 - (time.time() - _last_call[0])
+    # gentle pacing between calls
+    wait = 2 - (time.time() - _last_call[0])
     if wait > 0:
         time.sleep(wait)
     _last_call[0] = time.time()

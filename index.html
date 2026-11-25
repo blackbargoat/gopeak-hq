@@ -621,7 +621,7 @@ $("#sheet").addEventListener("touchend", (e) => { if (sy != null && e.changedTou
 // ---------- data ----------
 const D = { site: [], refs: [], ig: [], posts: {}, outliers: null, creators: null, count: null, creatorsReady: true };
 // ---------- views -> downloads (IG daily views from the bot, TikTok from hq_tiktok_views, downloads from Apple) ----------
-const VT_ACC = [["mav.tallteen", "ig", "var(--blue)"], ["maverick.pranks", "ig", "var(--blue-hi)"], ["reachheightmaxxer", "tt", "#e8e8ee"]];
+const VT_ACC = [["mav.tallteen", "ig", "var(--blue)"], ["maverick.pranks", "ig", "var(--blue-hi)"], ["gopeak.app", "ig", "#1a5fbf"], ["reachheightmaxxer", "tt", "#e8e8ee"]];
 const TT_FACTOR = 0.3; // TikTok slideshows have no link in bio: assume ~30% of Instagram's download rate
 let VT_GOAL = +(store.get("vtGoal") || 100);
 async function loadViews() {
@@ -638,7 +638,7 @@ async function loadViews() {
   // live rate: Apple downloads per 1k Instagram views over the last 14 full days that have both
   const dlBy = Object.fromEntries(dlDays.map((x) => [x.day, +x.downloads || 0]));
   for (const k in liveBy) dlBy[k] = Math.max(dlBy[k] || 0, liveBy[k]);
-  let sv = 0, sd = 0; for (const dd of days.slice(0, 13)) { const v = (V[dd]?.["mav.tallteen"] || 0) + (V[dd]?.["maverick.pranks"] || 0); if (v && dlBy[dd] != null) { sv += v; sd += dlBy[dd]; } }
+  let sv = 0, sd = 0; for (const dd of days.slice(0, 13)) { const v = VT_ACC.filter((a) => a[1] === "ig").reduce((t, [h]) => t + (V[dd]?.[h] || 0), 0); if (v && dlBy[dd] != null) { sv += v; sd += dlBy[dd]; } }
   const rate = sv ? sd / sv * 1000 : 2; // downloads per 1k IG views
   const per = (h) => (VT_ACC.find((a) => a[0] === h)[1] === "tt" ? rate * TT_FACTOR : rate) / 1000;
   const dlOf = (dd) => VT_ACC.reduce((t, [h]) => t + (V[dd]?.[h] || 0) * per(h), 0);

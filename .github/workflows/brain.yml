@@ -1,0 +1,33 @@
+name: Research brain
+# GoPeak research agents (agents/brain.py). Runs in the cloud, PC can be off.
+on:
+  schedule:
+    - cron: "15 12 * * *"     # daily ~8:15 AM ET: scout, analyst, brain, writer, predictor
+    - cron: "15 */3 * * *"    # every 3 h: predictor only (new pipeline videos)
+    - cron: "45 12 * * 1"     # Monday: creator finder + weekly report
+  workflow_dispatch:
+    inputs:
+      agents: { description: "agents to run", default: "collect analyze learn ideas predict" }
+concurrency: { group: brain, cancel-in-progress: false }
+jobs:
+  brain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q -U yt-dlp
+      - name: Agents
+        env:
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          BRAIN_KEY: ${{ secrets.BRAIN_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          case "${{ github.event.schedule }}" in
+            "15 12 * * *") A="collect analyze learn ideas predict" ;;
+            "15 */3 * * *") A="predict" ;;
+            "45 12 * * 1") A="creators report" ;;
+            *) A="${{ inputs.agents }}" ;;
+          esac
+          python agents/brain.py $A

@@ -145,6 +145,22 @@ def main():
 
     data["generated"] = datetime.now(timezone.utc).isoformat()
     json.dump(data, open(OUT, "w"), indent=1, ensure_ascii=False)
+
+    # 3. GoTall tab (data/gotall.json): Instagram thumbnail links expire, refresh them + views
+    gt_path = os.path.join(ROOT, "data/gotall.json")
+    if os.path.exists(gt_path):
+        gt = json.load(open(gt_path))
+        for v in gt.get("videos", []):
+            j = ytdlp("-J", "--skip-download", v["url"], timeout=90)
+            try:
+                info = json.loads(j) if j else {}
+            except ValueError:
+                info = {}
+            v["thumb"] = info.get("thumbnail") or v.get("thumb")
+            v["likes"] = info.get("like_count") or v.get("likes")
+            v["comments"] = info.get("comment_count") or v.get("comments")
+            time.sleep(1)
+        json.dump(gt, open(gt_path, "w"), indent=1, ensure_ascii=False)
     print(f"{len(data['outliers'])} references, {min(len(found), MAX_NEW)} new")
 
 

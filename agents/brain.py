@@ -278,7 +278,7 @@ def lifts(videos):
     vs = [v for v in videos if v.get("features") and v.get("multiple")]
     if len(vs) < 8:
         return {"n": len(vs), "groups": {}}
-    base = statistics.median(v["multiple"] for v in vs) or 1
+    base = statistics.median(min(v["multiple"], 20) for v in vs) or 1
     groups = {}
     for k in FEATURE_KEYS:
         by = {}
@@ -289,9 +289,9 @@ def lifts(videos):
             by.setdefault(str(val).lower(), []).append(v)
         rows = []
         for val, g in by.items():
-            if len(g) < 3:
+            if len(g) < 4:
                 continue
-            med = statistics.median(x["multiple"] for x in g)
+            med = statistics.median(min(x["multiple"], 20) for x in g)   # one 300x video shouldn't define a group
             rows.append({"value": val, "n": len(g), "median_multiple": round(med, 2), "lift": round(med / base, 2),
                          "outlier_rate": round(sum(x["is_outlier"] for x in g) / len(g), 2)})
         groups[k] = sorted(rows, key=lambda r: -r["lift"])
@@ -308,7 +308,7 @@ def learn():
     top = sorted([v for v in comp if v["is_outlier"]], key=lambda v: -(v["multiple"] or 0))[:15]
     prompt = ("You are GoPeak's market research lead. GoPeak is a height prediction app for teens (Instagram accounts mav.tallteen, maverick.pranks, gopeak.app). "
               "Below is measured data: 'lift' = how many times a feature beats the account's normal views (1.0 = average). 'competitors' = GoTall, HeightGPT and UGC creators; "
-              "'own' = our posts. Plus the top outlier videos with their breakdowns. Write what performs, only from this evidence, citing numbers. "
+              "'own' = our posts. Plus the top outlier videos with their breakdowns. Write what performs, only from this evidence, citing numbers. Each group has n = number of videos: trust n >= 8, call n < 8 'early signal', and never present a single viral video as a pattern. "
               "Return JSON: {headline (max 14 words), what_works: [5 to 7 short findings, each with the number that backs it], what_flops: [2 to 4], "
               "our_gap (max 30 words: what competitors do that we don't), next_posts: [3 concrete post ideas for GoPeak]}. No em dashes or en dashes.\n"
               + json.dumps({"patterns": body, "top_outliers": [{"handle": v["handle"], "views": v["views"], "multiple": v["multiple"], "features": v["features"]} for v in top]})[:60000])
@@ -351,15 +351,18 @@ def predict():
             val = str(f.get(k)).lower()
             for src in ("own", "competitors"):
                 g = next((r for r in (pat.get(src, {}).get("groups", {}).get(k) or []) if r["value"] == val), None)
-                if g:
-                    lift = 1 + (g["lift"] - 1) * g["n"] / (g["n"] + 6)   # shrink small samples toward 1
-                    logm += math.log(max(lift, 0.05))
+                if g and g["n"] >= 5:
+                    raw = min(max(g["lift"], 1 / 3), 3)                 # cap any one feature at 3x either way
+                    lift = math.exp(math.log(raw) * g["n"] / (g["n"] + 15))  # shrink small samples toward 1
+                    logm += math.log(lift)
                     used.append({"feature": k, "value": val, "lift": round(lift, 2), "from": src, "n": g["n"]})
                     break
-        mult = math.exp(logm)
+        # average effect across the features we have evidence for, scaled up a little for agreement; total capped 0.25x to 4x
+        mult = math.exp(logm / max(1, len(used)) * min(3, 1 + len(used) / 4)) if used else 1.0
+        mult = min(max(mult, 0.25), 4)
         base = int(meds.get(p["account"]) or 1000)
         exp_v = int(base * mult)
-        score = max(1, min(99, round(50 + 22 * math.log2(mult))))
+        score = max(1, min(99, round(50 + 24 * math.log2(mult))))
         try:
             critique = gemini([{"text": "GoPeak height app short video about to post. Features: " + json.dumps(f) + "\nWhat performs (measured): " + json.dumps(summ)[:8000]
                                 + "\nGive JSON {reasons: [2 or 3 short reasons it will or won't do well], fix: one concrete change that would raise views (max 18 words)}. No em dashes."}], 0.3)

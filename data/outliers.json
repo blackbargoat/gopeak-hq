@@ -58,6 +58,15 @@
    "videos_checked": 29,
    "outliers": 0,
    "notes": "Top video 4K (4.8x); too small to include."
+  },
+  {
+   "handle": "@danniell.hite",
+   "platform": "instagram",
+   "followers": 445,
+   "median_views": 85200,
+   "videos_checked": 18,
+   "outliers": 9,
+   "notes": "HeightGPT / Hite UGC creator (#heightgptapp, bio link heightgpt.app). Added by hand 2026-11-25; the daily scout only scans TikTok."
   }
  ],
  "patterns": [
@@ -69,7 +78,8 @@
   "Winners get re-filmed: the same hook in a new location hit outlier level again (torso question twice, wrist bump twice, age chart twice).",
   "Audio is almost always a quiet 'original sound' loop or the creator's own voice, not a big trending song.",
   "CTA is soft: caption tag of the app; the strongest show the app result as the payoff at the end.",
-  "Engine (per a public write-up of GoTall's founder): 10 TikToks a day to find a format, then DM about 50 creators a day to copy it, then paid ads behind organic winners."
+  "Engine (per a public write-up of GoTall's founder): 10 TikToks a day to find a format, then DM about 50 creators a day to copy it, then paid ads behind organic winners.",
+  "HeightGPT (Hite) UGC on Instagram: a 445-follower account gets 130K to 1.1M views with 6 to 7 sec deadpan selfie cams under an 'Avg Height by age' list, then a 1 sec flash of the app's prediction screen. 7 of its 9 outliers are that exact format, re-filmed in new outfits and rooms."
  ],
  "reference_bledarrrrg": {
   "handle": "@bledarrrrg",
@@ -630,6 +640,321 @@
    "est_film_minutes": 10,
    "id": "7604156736521506062",
    "thumb": "https://p16-common-sign.tiktokcdn-us.com/tos-useast5-p-0068-tx/oMphpMXA4dEBPBgladkHqIi9UaiGHaY3IZZBv~tplv-tiktokx-origin.image?dr=9636&x-expires=1795734000&x-signature=fU%2BJeXXfZjD1rWDV4QZ00Trscmk%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=useast5"
+  },
+  {
+   "platform": "instagram",
+   "id": "DXWKsU2Dx1M",
+   "url": "https://www.instagram.com/reel/DXWKsU2Dx1M/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 1100000,
+   "account_median_views": 85200,
+   "multiple": 12.9,
+   "posted_date": "2026-04-20",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/01_1.1M_DXWKsU2Dx1M.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/671133921_1921156205190188_3576394886691616506_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3OTMzNTE1NTUzMDE0NTEwMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=eBclA4Pfh18Q7kNvwEQ84k3&_nc_oc=AdoHyy4gQhWZs6Wqdl5o215OBz78R4WOrY72I0No-DR5s4IMt7HeclYTEEbUqGSXfAEw21Z3konXYWHwk7KrRw2u&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=MNbx5e1YtVwUfKT40Ud5og&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQScHX7kfuNyF_25G7sujFO4vdPtQvyxAFiXgh4rMa5x1Q&oe=6B0D1492",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DZ3L9VFSX38",
+   "url": "https://www.instagram.com/reel/DZ3L9VFSX38/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 592000,
+   "account_median_views": 85200,
+   "multiple": 6.9,
+   "posted_date": "2026-06-21",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/02_592K_DZ3L9VFSX38.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/729729061_1016932247480595_2711634850436596794_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&_nc_map=urlgen_bucketless&ig_cache_key=MzkyNDY1ODE5MzMxMzY2MDQxMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=DLZrt30XTGEQ7kNvwGmCMos&_nc_oc=AdrcSjzCHZNNBHCvOiAnj6TAbblfZK7noiyIm2owGU-QFvvigElVBAFlR74Lfoe5ein61z27FwT77ET5Xb_nmsZn&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=h0IWNa1T1u5BBsReWIws1w&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQR8PA_O5SWdGNeJs9WfPOKCqx-O4F4qTUFT87W70FMgsw&oe=6B0CFC84",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DXQvMJdD1EE",
+   "url": "https://www.instagram.com/reel/DXQvMJdD1EE/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 478000,
+   "account_median_views": 85200,
+   "multiple": 5.6,
+   "posted_date": "2026-04-18",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/03_478K_DXQvMJdD1EE.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/670840082_1675015130518248_7750004431153499270_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3NzgwNjgyMjEzNjk1OTIzNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=nNjP8H_0BqsQ7kNvwE8xS3U&_nc_oc=Adp10Ne5vWcgrr-81O96I-311PnglB0HFEvri94692qlyCkay50dA4H4AvznAv4LNjD8Mpbu_wFKneAvAlDBy4JC&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=Z2IXgavwDL128x7r-pIewA&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQQIAr2-1lpRojfXXAtbtM0fHUmURUe3fu57esRCd3PoKA&oe=6B0CFBB1",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DZ6AzVYvY9a",
+   "url": "https://www.instagram.com/reel/DZ6AzVYvY9a/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 271000,
+   "account_median_views": 85200,
+   "multiple": 3.2,
+   "posted_date": "2026-06-22",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/04_271K_DZ6AzVYvY9a.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/730558684_1720690852513886_7465438247265108002_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=MzkyNTQ1MzU1Mjg2Mzc3NjYwMg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=eTJYCsEpensQ7kNvwGpatVs&_nc_oc=AdpHTE-27abkbg_au2MMQCH_3sxuhxBgSR6Twb75ptIr1VGjU89yMAY6ASuMRfSvguGIADaek7EZ-asm_ceBirJy&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=pzUAx4MjjmW4eVPa7qXiDQ&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQRMNF9MFJYOP0x22dMryplcleWxXl91Eph3R2s4tk8kZA&oe=6B0D0FD2",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "'Would you rather be 5'9 instantly or 50/50 to be either 5'3 or 6'4' over a selfie cam, then the app's prediction screen",
+   "structure": [
+    "selfie cam in a gym or outside, cap on",
+    "would-you-rather text centered for ~5 sec",
+    "last ~1 sec: app prediction screen"
+   ],
+   "why_it_works": "Forces a choice, so everyone comments their pick. Comment-heavy and loops.",
+   "cta": "Caption: 'link in bio for height predictor'",
+   "shot_list": [
+    "selfie cam, cap, bright location",
+    "would-you-rather text centered",
+    "last 1 sec: GoPeak Home ring"
+   ],
+   "on_screen_text": "Would you rather\nBe 5'9 instantly\nOr\n50/50 to be either 5'3 or 6'4",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DXJNHokjxBk",
+   "url": "https://www.instagram.com/reel/DXJNHokjxBk/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 251000,
+   "account_median_views": 85200,
+   "multiple": 2.9,
+   "posted_date": "2026-04-15",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/05_251K_DXJNHokjxBk.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/670298669_937946855755508_8237119353671956424_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3NTY4NjY1MzUzMzAzMjU0OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=nLdGN5c2zhYQ7kNvwHuOT9u&_nc_oc=AdrPHpoTiF9tTEU-s2-4Ni2mU1SalkWHYmkLySg1cZ2aguODCj3_X_pVTsEA8r6GezDQnG2GKyCLZAiNhtOIzA5l&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=uMnEPQhSW21Nt9qQfmuVQA&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQTLPjvYAprGvusSo-c69NMRdYKTyccnunuGPtHJp3PhRw&oe=6B0CE890",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DXTjifiD7UD",
+   "url": "https://www.instagram.com/reel/DXTjifiD7UD/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 180000,
+   "account_median_views": 85200,
+   "multiple": 2.1,
+   "posted_date": "2026-04-19",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/06_180K_DXTjifiD7UD.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/670836675_1602903247671985_8146375430310526631_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3ODYwMDAwNjA0MzY3Nzk1NQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=k9VAnvsg4eAQ7kNvwEPnLcA&_nc_oc=Adp-5v3T2eDTm6BVZqZrO6jGe6-Gjxp70tfSa1B4gz9suFslVOLgDjj-DZF1VBGy3UL155gf1h6oiGK2119mLkxj&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=EwrlCEINJfLbMi2djgt4WQ&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQT5AXkbbUUkGv4NbjVCqvnodwjTZm8hgoQIkF53mUAdkQ&oe=6B0CFBAE",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DZ37UoXvyru",
+   "url": "https://www.instagram.com/reel/DZ37UoXvyru/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 150000,
+   "account_median_views": 85200,
+   "multiple": 1.8,
+   "posted_date": "2026-06-22",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/07_150K_DZ37UoXvyru.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/729799669_2166945687417684_7987130001632448326_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ig_cache_key=MzkyNDg2NjUwMjc1ODQ0Mzc1OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=lFUliB1y2lYQ7kNvwFSqU29&_nc_oc=AdoA_vLFOMLy3qGBKS1NGxqEihovRXNnb-0HxlBrWrT_TSF7o6EGo6ozKsS-e57NGk5TaY7_2fqw4SLBb36i_tWN&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=5znfbiNp-KGo9aOXuw3G8Q&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQSlSFMsMffcLlsB_Ds7O5-Meq65kMfRWdzvAivAo-eSJQ&oe=6B0D1679",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "'The shortest people are born on: 1st, 2nd, 3rd...' list of birth dates, then 'use the app to predict your height'",
+   "structure": [
+    "selfie cam, messy hair, no talking",
+    "fake 'birthday' list covering most dates so almost everyone is on it",
+    "last ~1.5 sec: app screen + 'use <app> to predict your height'"
+   ],
+   "why_it_works": "Pure bait: viewers check their birthday and comment to argue. Most dates are listed so it hits nearly everyone.",
+   "cta": "End text: 'use Hite to predict your height'",
+   "shot_list": [
+    "selfie cam, plain wall",
+    "birthday list text",
+    "last 1.5 sec: GoPeak Home ring + 'use GoPeak to predict your height'"
+   ],
+   "on_screen_text": "The shortest people are born on:\n1st, 2nd, 3rd, 5th, 7th, ...",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 6
+  },
+  {
+   "platform": "instagram",
+   "id": "DW8W6R0D9FC",
+   "url": "https://www.instagram.com/reel/DW8W6R0D9FC/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 140000,
+   "account_median_views": 85200,
+   "multiple": 1.6,
+   "posted_date": "2026-04-10",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/08_140K_DW8W6R0D9FC.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/669797378_954509616957501_1535437656060005088_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3MjA3MDU0MTUxMTc0MTc2Mg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=sLDGjh_mRZIQ7kNvwFXgl8j&_nc_oc=Adpiq2N3J0HdCdHwFjY7DHuW_QIsGlOgHY2eRqRioz9wNaPQMEa6o63ImbIl-eFg--5Kp3Wd6NjAt9Vs68f9cXEa&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=umkYPBJT3Ny5xvmnPqpdQA&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQSIDzEr9b3Fmu8TQn-HgGpAXUTncA5UbieS3RAXmHeAFQ&oe=6B0D0840",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
+  },
+  {
+   "platform": "instagram",
+   "id": "DXN0S4qD4Hl",
+   "url": "https://www.instagram.com/reel/DXN0S4qD4Hl/",
+   "account": "danniell.hite",
+   "followers": 445,
+   "views": 130000,
+   "account_median_views": 85200,
+   "multiple": 1.5,
+   "posted_date": "2026-04-17",
+   "audio_name": "Original audio - danniell.hite",
+   "audio_url": null,
+   "local_file": "heightgpt danniell.hite/09_130K_DXN0S4qD4Hl.mp4",
+   "thumb": "https://scontent-bos5-1.cdninstagram.com/v/t51.71878-15/670438137_1891532428173328_7449748661254631710_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ig_cache_key=Mzg3Njk4NDg1MDQ0MDIyNTI1Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=TWKDkTs9ZyEQ7kNvwHjNXMk&_nc_oc=Adq1LYRphnkk4qvaCk93OuUMU5vEDATnrOwWA2d0kwESQIfZi7mH1L-FOdT1-mbDW87DHmmunbH0eQa-9wGqXFmO&_nc_zt=23&_nc_ht=scontent-bos5-1.cdninstagram.com&_nc_gid=3UB7V9siccJfItsCRWfLPw&_nc_ss=79789&_nc_ct=RQosPBUIFQQlBAAAAA&oh=00_AQTpqcK907i0MqiFjz5XkT4tVLunvJIOQ363l4hQmFesAw&oe=6B0D0E02",
+   "added": "2026-11-25",
+   "format": "text-on-screen-pov",
+   "hook_paraphrase": "Deadpan selfie cam under an 'Avg Height' list by age (12 to 21), app prediction screen pops up in the last second",
+   "structure": [
+    "selfie cam at arm's length, no talking, slight head tilt or blink",
+    "'Avg Height' title + age-height list centered over the face for ~5 sec",
+    "hard cut: phone screenshot of the app's prediction ring overlaid on the face for the last ~1 sec"
+   ],
+   "why_it_works": "Viewers compare their own age and height to the list, then see a real prediction number, so they comment their height or tap the link. Very short (6 to 7 sec) so it loops.",
+   "cta": "Caption: 'link in bio for the height predictor' or 'follow for more'. Bio link to the app.",
+   "shot_list": [
+    "selfie cam, plain room, tank top or hoodie, natural light",
+    "overlay 'Avg Height' + ages 12 to 21 with real CDC averages (do not copy their numbers)",
+    "last 1 sec: GoPeak Home ring screenshot centered over the face"
+   ],
+   "on_screen_text": "Avg Height\n12 - ...\n13 - ...\n... (to 21)",
+   "audio_idea": "the creator's own original audio loop (MP3 saved in sounds/)",
+   "difficulty": "easy",
+   "est_film_minutes": 3,
+   "length_sec": 7
   }
  ]
 }

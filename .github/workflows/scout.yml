@@ -15,8 +15,6 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install -q -U yt-dlp
       - run: python scout/scout.py
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       - name: Save
         run: |
           git config user.name "gopeak-scout"; git config user.email "scout@users.noreply.github.com"

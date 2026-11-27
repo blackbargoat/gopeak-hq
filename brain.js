@@ -53,6 +53,7 @@
     const comp = (B.accounts || []).filter((a) => a.role !== "own");
     sec.innerHTML = `
       <div class="bc"><div class="cap3">research brain</div><h2>${esc(s?.headline || "learning what performs")}</h2>
+        <div class="none">AI updates are paused. Saved research is still available; reference tracking continues.</div>
         <div class="st3"><div><b>${k(B.counts?.videos)}</b><span>videos tracked</span></div><div><b>${k(B.counts?.analyzed)}</b><span>watched by AI</span></div><div><b>${k(B.counts?.outliers)}</b><span>outliers</span></div></div></div>
       <div class="bc"><div class="cap3">agents · run in the cloud, pc off</div>${AG.map(([id, n, d]) => { const r = runs[id];
         return `<div class="ag"><span class="dot ${r ? (r.ok ? "ok" : "bad") : ""}"></span><div><b>${n}</b><small>${esc(r?.summary || d)}</small></div><span class="when">${ago(r?.finished_at || r?.started_at)}</span></div>`; }).join("")}</div>

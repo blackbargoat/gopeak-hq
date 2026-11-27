@@ -9,7 +9,8 @@ Agents (python agents/brain.py <agent> [<agent> ...]):
   creators  Creator finder: hashtag search (Apify) for small creators with height outliers; competitor UGC gets tracked
   report    Weekly report: our numbers, what worked, what to post next
 Data lives in private Supabase tables (supabase/brain.sql); HQ reads it via rpc hq_brain. Videos are never stored.
-Secrets: SUPABASE_SERVICE_KEY, BRAIN_KEY (Gemini relay, FREE-tier key only), optional APIFY_TOKEN.
+HQ Gemini research is paused. Only collect and creators run; saved research stays available.
+Secrets: SUPABASE_SERVICE_KEY, optional APIFY_TOKEN.
 """
 import json, math, os, random, statistics, subprocess, sys, tempfile, time, base64, urllib.request, urllib.error, urllib.parse
 from datetime import datetime, timezone, timedelta
@@ -471,6 +472,9 @@ AGENTS = {"collect": collect, "analyze": analyze, "learn": learn, "predict": pre
 if __name__ == "__main__":
     failed = False
     for name in sys.argv[1:]:
+        if name in {"analyze", "learn", "predict", "ideas", "report"}:
+            print(f"[{name}] skipped: HQ Gemini research is paused")
+            continue
         try:
             AGENTS[name]()
         except Exception as e:

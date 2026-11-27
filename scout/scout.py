@@ -4,7 +4,7 @@
 2. Scans the watchlist (data/watchlist.json) of competitor / UGC accounts for new outliers:
    >= 3x the account's median views, >= 100k views, posted in the last 60 days.
 3. Has Gemini watch each new outlier and write the hook, beats, a GoPeak shot list, on-screen text and effort
-   (max 5 new per run). Without GEMINI_API_KEY new outliers are still added, just without the breakdown.
+   (max 5 new per run). Without a separate GEMINI_FREE_KEY new outliers are still added, just without the breakdown.
 Writes data/outliers.json. Text and links only: videos are never stored in this (public) repo.
 """
 import base64, json, os, re, statistics, subprocess, sys, tempfile, time, urllib.request
@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT, WATCH = os.path.join(ROOT, "data/outliers.json"), os.path.join(ROOT, "data/watchlist.json")
-GEMINI = os.environ.get("GEMINI_API_KEY")
+GEMINI = os.environ.get("GEMINI_FREE_KEY")
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 MIN_VIEWS, MIN_MULT, MAX_NEW, MAX_AGE_D = 100_000, 3.0, int(os.environ.get("MAX_NEW", 5)), 60
 FORMATS = ["face-cam-reaction", "green-screen", "text-on-screen-pov", "transformation/before-after", "tutorial/routine",
